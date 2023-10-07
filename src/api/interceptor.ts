@@ -6,7 +6,7 @@ import { getToken } from '@/utils/auth';
 
 export interface HttpResponse<T = unknown> {
   status: number;
-  msg: string;
+  message: string;
   code: number;
   data: T;
 }
@@ -26,7 +26,7 @@ axios.interceptors.request.use(
       if (!config.headers) {
         config.headers = {};
       }
-      config.headers.Authorization = `Bearer ${token}`;
+      config.headers.Authorization = `${token}`;
     }
     return config;
   },
@@ -40,9 +40,9 @@ axios.interceptors.response.use(
   (response: AxiosResponse<HttpResponse>) => {
     const res = response.data;
     // if the custom code is not 20000, it is judged as an error.
-    if (res.code !== 20000) {
+    if (res.code !== 0) {
       Message.error({
-        content: res.msg || 'Error',
+        content: res.message || 'Error',
         duration: 5 * 1000,
       });
       // 50008: Illegal token; 50012: Other clients logged in; 50014: Token expired;
@@ -63,15 +63,68 @@ axios.interceptors.response.use(
           },
         });
       }
-      return Promise.reject(new Error(res.msg || 'Error'));
+      return Promise.reject(new Error(res.message || 'Error'));
     }
     return res;
   },
-  (error) => {
-    Message.error({
-      content: error.msg || 'Request Error',
-      duration: 5 * 1000,
-    });
+  async (error) => {
+    const userStore = useUserStore();
+
+    if (error && error.response) {
+      const { message } = error.response.data;
+      let responseError = message || '未知错误';
+      switch (error.response.status) {
+        case 400:
+          responseError = message || '请求错误';
+          break;
+        case 401:
+          responseError = '未授权，请登录';
+          await userStore.logout();
+          window.location.reload();
+          break;
+        case 403:
+          responseError = '拒绝访问';
+          break;
+        case 404:
+          responseError = `请求地址出错: ${error.response.config.url}`;
+          break;
+        case 408:
+          responseError = '请求超时';
+          break;
+        case 500:
+          responseError = '服务器内部错误';
+          break;
+        case 501:
+          responseError = '服务未实现';
+          break;
+        case 502:
+          responseError = '网关错误';
+          break;
+        // case 503:
+        //   const serverName = getServerNameByUrl(error?.config?.url);
+        //   responseError = `${serverName}服务不可用`;
+        //   break;
+        case 504:
+          responseError = '网关超时';
+          break;
+        case 505:
+          responseError = 'HTTP版本不受支持';
+          break;
+        default:
+          break;
+      }
+      Message.error({
+        content: responseError,
+        duration: 5 * 1000,
+      });
+    } else {
+      const otherError = new Error((error && error.message) || '网络连接错误');
+      Message.error({
+        content: otherError.message || 'Request Error',
+        duration: 5 * 1000,
+      });
+    }
+
     return Promise.reject(error);
   }
 );

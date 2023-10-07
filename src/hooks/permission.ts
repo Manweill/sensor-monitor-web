@@ -5,6 +5,7 @@ export default function usePermission() {
   const userStore = useUserStore();
   return {
     accessRouter(route: RouteLocationNormalized | RouteRecordRaw) {
+      // todo 改造权限
       return (
         !route.meta?.requiresAuth ||
         !route.meta?.roles ||
