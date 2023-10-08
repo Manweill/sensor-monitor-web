@@ -8,6 +8,7 @@
   "scripts": {
     "dev": "vite --config ./config/vite.config.dev.ts",
     "build": "vue-tsc --noEmit && vite build --config ./config/vite.config.prod.ts",
+    "build:api":"node ./__swagger__/codegen.js",
     "report": "cross-env REPORT=true npm run build",
     "preview": "npm run build && vite preview --host",
     "type:check": "vue-tsc --noEmit --skipLibCheck",
@@ -82,6 +83,7 @@
     "stylelint-config-recommended-vue": "^1.4.0",
     "stylelint-config-standard": "^29.0.0",
     "stylelint-order": "^5.0.0",
+    "swagger-axios-codegen": "^0.15.12",
     "typescript": "^4.8.4",
     "unplugin-vue-components": "^0.24.1",
     "vite": "^3.2.5",
