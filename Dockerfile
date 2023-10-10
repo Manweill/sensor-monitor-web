@@ -1,17 +1,21 @@
-FROM node:16-alpine as build-stage
+FROM node:20 as build-stage
 LABEL authors="haojiachen"
 
 WORKDIR /app
-RUN corepack enable
-RUN corepack prepare pnpm@7.32.1 --activate
 
-RUN npm config set registry https://registry.npmmirror.com
-
-COPY .npmrc package.json pnpm-lock.yaml ./
-RUN pnpm install --frozen-lockfile
+#RUN npm config set registry https://registry.npmmirror.com
+#
+#RUN npm install -g pnpm
+#
+#COPY package.json pnpm-lock.yaml ./
+#
+#RUN pnpm install
 
 COPY . .
-RUN pnpm build
+
+RUN yarn && yarn build
+
+#RUN pnpm build
 
 FROM nginx:stable-alpine as production-stage
 
