@@ -150,6 +150,8 @@
         startTime: dayjs(startTime).startOf('d').toISOString(),
         endTime: dayjs(endTime).endOf('d').toISOString(),
         deviceId: props.deviceId as unknown as number,
+        sorting: 'upTime',
+        sortingDirection: 'DESC',
       });
       tableData.value = result.items as DeviceFieldDataDto[];
       pagination.total = result.totalCount;

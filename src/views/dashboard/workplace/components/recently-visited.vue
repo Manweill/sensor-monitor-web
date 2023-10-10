@@ -21,20 +21,7 @@
 </template>
 
 <script lang="ts" setup>
-  const links = [
-    {
-      text: 'workplace.contentManagement',
-      icon: 'icon-storage',
-    },
-    {
-      text: 'workplace.contentStatistical',
-      icon: 'icon-file',
-    },
-    {
-      text: 'workplace.advanced',
-      icon: 'icon-settings',
-    },
-  ];
+  const links = [{ text: '设备列表', icon: 'icon-apps' }];
 </script>
 
 <style lang="less" scoped>

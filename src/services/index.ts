@@ -769,7 +769,7 @@ export interface DeviceDetailDto {
   /** 设备物联ID */
   devEui?: string;
 
-  /** 设备属性 */
+  /** 设备的相关属性 */
   deviceFieldList?: DeviceFieldDto[];
 
   /** 设备名 */
@@ -786,6 +786,9 @@ export interface DeviceDetailDto {
 
   /** id */
   id?: number;
+
+  /** 设备是否在线，true表示在线 , 默认是false */
+  online?: boolean;
 }
 
 export interface DeviceDto {
@@ -812,6 +815,9 @@ export interface DeviceDto {
 
   /** id */
   id?: number;
+
+  /** 设备是否在线，true表示在线 , 默认是false */
+  online?: boolean;
 }
 
 export interface DeviceFieldDataDto {
@@ -903,6 +909,9 @@ export interface ListDeviceOutputDto {
 
   /** id */
   id?: number;
+
+  /** 设备是否在线，true表示在线 , 默认是false */
+  online?: boolean;
 }
 
 export interface LoginDto {

@@ -24,11 +24,10 @@
 
 <script lang="ts" setup>
   const links = [
-    { text: 'workplace.contentManagement', icon: 'icon-file' },
-    { text: 'workplace.contentStatistical', icon: 'icon-storage' },
-    { text: 'workplace.advanced', icon: 'icon-settings' },
-    { text: 'workplace.onlinePromotion', icon: 'icon-mobile' },
-    { text: 'workplace.contentPutIn', icon: 'icon-fire' },
+    { text: '设备列表', icon: 'icon-apps' },
+    { text: '告警记录', icon: 'icon-message' },
+    { text: '统计分析', icon: 'icon-bar-chart' },
+    { text: '用户管理', icon: 'icon-settings' },
   ];
 </script>
 

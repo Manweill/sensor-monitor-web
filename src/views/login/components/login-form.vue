@@ -1,7 +1,9 @@
 <template>
   <div class="login-form-wrapper">
-    <div class="login-form-title">{{ $t('login.form.title') }}</div>
-    <div class="login-form-sub-title">{{ $t('login.form.title') }}</div>
+    <div class="login-form-title">{{ appName }}</div>
+    <div class="login-form-sub-title">
+      环境实时监测 ｜ 智能预警 ｜多维度数据展示
+    </div>
     <div class="login-form-error-msg">{{ errorMessage }}</div>
     <a-form
       ref="loginForm"
@@ -75,6 +77,8 @@
   const errorMessage = ref('');
   const { loading, setLoading } = useLoading();
   const userStore = useUserStore();
+
+  const appName = import.meta.env.VITE_APP_NAME;
 
   const loginConfig = useStorage('login-config', {
     rememberPassword: true,

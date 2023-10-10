@@ -64,10 +64,10 @@
         :bordered="false"
         @page-change="onPageChange"
       >
-        <template #enabled="{ record }">
-          <span v-if="!record.enabled" class="circle"></span>
+        <template #online="{ record }">
+          <span v-if="!record.online" class="circle"></span>
           <span v-else class="circle pass"></span>
-          {{ record.enabled ? '在线' : '离线' }}
+          {{ record.online ? '在线' : '离线' }}
         </template>
         <template #operations="{ record }">
           <a-button type="text" size="small" @click="onView(record)">
@@ -132,8 +132,8 @@
     },
     {
       title: '状态',
-      dataIndex: 'enabled',
-      slotName: 'enabled',
+      dataIndex: 'online',
+      slotName: 'online',
     },
     {
       title: '操作',
