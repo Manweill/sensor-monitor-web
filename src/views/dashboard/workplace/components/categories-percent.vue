@@ -7,9 +7,7 @@
         padding: '20px',
       }"
     >
-      <template #title>
-        {{ $t('workplace.categoriesPercent') }}
-      </template>
+      <template #title> 设备接入统计 </template>
       <Chart height="310px" :option="chartOption" />
     </a-card>
   </a-spin>
@@ -26,7 +24,7 @@
     return {
       legend: {
         left: 'center',
-        data: ['纯文本', '图文类', '视频类'],
+        data: ['温湿度传感器', '环境监测传感器', '人体红外传感器'],
         bottom: 0,
         icon: 'circle',
         itemWidth: 8,
@@ -48,7 +46,7 @@
             left: 'center',
             top: '40%',
             style: {
-              text: '内容量',
+              text: '设备数量',
               textAlign: 'center',
               fill: isDark ? '#ffffffb3' : '#4E5969',
               fontSize: 14,
@@ -59,7 +57,7 @@
             left: 'center',
             top: '50%',
             style: {
-              text: '928,531',
+              text: '213',
               textAlign: 'center',
               fill: isDark ? '#ffffffb3' : '#1D2129',
               fontSize: 16,
@@ -84,22 +82,22 @@
           },
           data: [
             {
-              value: [148564],
-              name: '纯文本',
+              value: [126],
+              name: '温湿度传感器',
               itemStyle: {
                 color: isDark ? '#3D72F6' : '#249EFF',
               },
             },
             {
-              value: [334271],
-              name: '图文类',
+              value: [78],
+              name: '环境监测传感器',
               itemStyle: {
                 color: isDark ? '#A079DC' : '#313CA9',
               },
             },
             {
-              value: [445694],
-              name: '视频类',
+              value: [9],
+              name: '人体红外传感器',
               itemStyle: {
                 color: isDark ? '#6CAAF5' : '#21CCFF',
               },

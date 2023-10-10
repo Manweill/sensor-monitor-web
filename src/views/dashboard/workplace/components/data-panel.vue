@@ -12,15 +12,14 @@
           />
         </a-avatar>
         <a-statistic
-          :title="$t('workplace.onlineContent')"
-          :value="373.5"
-          :precision="1"
+          title="设备数量"
+          :value="35"
           :value-from="0"
           animation
           show-group-separator
         >
           <template #suffix>
-            W+ <span class="unit">{{ $t('workplace.pecs') }}</span>
+            <span class="unit">{{ $t('workplace.pecs') }}</span>
           </template>
         </a-statistic>
       </a-space>
@@ -37,8 +36,8 @@
           />
         </a-avatar>
         <a-statistic
-          :title="$t('workplace.putIn')"
-          :value="368"
+          title="上报数据量"
+          :value="10156"
           :value-from="0"
           animation
           show-group-separator
@@ -61,8 +60,8 @@
           />
         </a-avatar>
         <a-statistic
-          :title="$t('workplace.newDay')"
-          :value="8874"
+          title="消息数量"
+          :value="74"
           :value-from="0"
           animation
           show-group-separator
@@ -85,13 +84,7 @@
             src="//p3-armor.byteimg.com/tos-cn-i-49unhts6dw/c8b36e26d2b9bb5dbf9b74dd6d7345af.svg~tplv-49unhts6dw-image.image"
           />
         </a-avatar>
-        <a-statistic
-          :title="$t('workplace.newFromYesterday')"
-          :value="2.8"
-          :precision="1"
-          :value-from="0"
-          animation
-        >
+        <a-statistic title="今日数据量" :value="598" :value-from="0" animation>
           <template #suffix> % <icon-caret-up class="up-icon" /> </template>
         </a-statistic>
       </a-space>

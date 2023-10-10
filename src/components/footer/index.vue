@@ -1,8 +1,10 @@
 <template>
-  <a-layout-footer class="footer">Arco Pro</a-layout-footer>
+  <a-layout-footer class="footer">{{ appName }}</a-layout-footer>
 </template>
 
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+  const appName = import.meta.env.VITE_APP_NAME;
+</script>
 
 <style lang="less" scoped>
   .footer {

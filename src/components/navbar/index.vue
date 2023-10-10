@@ -2,15 +2,12 @@
   <div class="navbar">
     <div class="left-side">
       <a-space>
-        <img
-          alt="logo"
-          src="//p3-armor.byteimg.com/tos-cn-i-49unhts6dw/dfdba5317c0c20ce20e64fac803d52bc.svg~tplv-49unhts6dw-image.image"
-        />
+        <a-image alt="logo" :src="logo" width="33" />
         <a-typography-title
           :style="{ margin: 0, fontSize: '18px' }"
           :heading="5"
         >
-          Arco Pro
+          {{ appName }}
         </a-typography-title>
         <icon-menu-fold
           v-if="!topMenu && appStore.device === 'mobile'"
@@ -23,7 +20,7 @@
       <Menu v-if="topMenu" />
     </div>
     <ul class="right-side">
-      <li>
+      <li v-if="false">
         <a-tooltip :content="$t('settings.search')">
           <a-button class="nav-btn" type="outline" :shape="'circle'">
             <template #icon>
@@ -32,7 +29,7 @@
           </a-button>
         </a-tooltip>
       </li>
-      <li>
+      <li v-if="false">
         <a-tooltip :content="$t('settings.language')">
           <a-button
             class="nav-btn"
@@ -82,7 +79,7 @@
           </a-button>
         </a-tooltip>
       </li>
-      <li>
+      <li v-if="false">
         <a-tooltip :content="$t('settings.navbar.alerts')">
           <div class="message-box-trigger">
             <a-badge :count="9" dot>
@@ -130,7 +127,7 @@
           </a-button>
         </a-tooltip>
       </li>
-      <li>
+      <li v-if="false">
         <a-tooltip :content="$t('settings.title')">
           <a-button
             class="nav-btn"
@@ -148,12 +145,17 @@
         <a-dropdown trigger="click">
           <a-avatar
             :size="32"
-            :style="{ marginRight: '8px', cursor: 'pointer' }"
+            :style="{
+              marginRight: '8px',
+              cursor: 'pointer',
+              backgroundColor: '#4b74ea',
+            }"
           >
-            <img alt="avatar" :src="avatar" />
+            {{ userStore.userName }}
+            <!--            <img alt="avatar" :src="avatar" />-->
           </a-avatar>
           <template #content>
-            <a-doption>
+            <a-doption v-if="false">
               <a-space @click="switchRoles">
                 <icon-tag />
                 <span>
@@ -161,7 +163,7 @@
                 </span>
               </a-space>
             </a-doption>
-            <a-doption>
+            <a-doption v-if="false">
               <a-space @click="$router.push({ name: 'Info' })">
                 <icon-user />
                 <span>
@@ -169,7 +171,7 @@
                 </span>
               </a-space>
             </a-doption>
-            <a-doption>
+            <a-doption v-if="false">
               <a-space @click="$router.push({ name: 'Setting' })">
                 <icon-settings />
                 <span>
@@ -201,6 +203,7 @@
   import useLocale from '@/hooks/locale';
   import useUser from '@/hooks/user';
   import Menu from '@/components/menu/index.vue';
+  import logo from '@/assets/logo.png';
   import MessageBox from '../message-box/index.vue';
 
   const appStore = useAppStore();
@@ -208,10 +211,11 @@
   const { logout } = useUser();
   const { changeLocale, currentLocale } = useLocale();
   const { isFullscreen, toggle: toggleFullScreen } = useFullscreen();
+  const appName = import.meta.env.VITE_APP_NAME;
   const locales = [...LOCALE_OPTIONS];
-  const avatar = computed(() => {
-    return userStore.avatar;
-  });
+  // const avatar = computed(() => {
+  //   return userStore.avatar;
+  // });
   const theme = computed(() => {
     return appStore.theme;
   });

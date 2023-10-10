@@ -1,7 +1,9 @@
 <template>
   <div class="login-form-wrapper">
-    <div class="login-form-title">{{ $t('login.form.title') }}</div>
-    <div class="login-form-sub-title">{{ $t('login.form.title') }}</div>
+    <div class="login-form-title">{{ appName }}</div>
+    <div class="login-form-sub-title">
+      环境实时监测 ｜ 智能预警 ｜多维度数据展示
+    </div>
     <div class="login-form-error-msg">{{ errorMessage }}</div>
     <a-form
       ref="loginForm"
@@ -11,13 +13,13 @@
       @submit="handleSubmit"
     >
       <a-form-item
-        field="username"
+        field="userName"
         :rules="[{ required: true, message: $t('login.form.userName.errMsg') }]"
         :validate-trigger="['change', 'blur']"
         hide-label
       >
         <a-input
-          v-model="userInfo.username"
+          v-model="userInfo.userName"
           :placeholder="$t('login.form.userName.placeholder')"
         >
           <template #prefix>
@@ -26,13 +28,13 @@
         </a-input>
       </a-form-item>
       <a-form-item
-        field="password"
+        field="pwd"
         :rules="[{ required: true, message: $t('login.form.password.errMsg') }]"
         :validate-trigger="['change', 'blur']"
         hide-label
       >
         <a-input-password
-          v-model="userInfo.password"
+          v-model="userInfo.pwd"
           :placeholder="$t('login.form.password.placeholder')"
           allow-clear
         >
@@ -50,13 +52,9 @@
           >
             {{ $t('login.form.rememberPassword') }}
           </a-checkbox>
-          <a-link>{{ $t('login.form.forgetPassword') }}</a-link>
         </div>
         <a-button type="primary" html-type="submit" long :loading="loading">
           {{ $t('login.form.login') }}
-        </a-button>
-        <a-button type="text" long class="login-form-register-btn">
-          {{ $t('login.form.register') }}
         </a-button>
       </a-space>
     </a-form>
@@ -80,14 +78,16 @@
   const { loading, setLoading } = useLoading();
   const userStore = useUserStore();
 
+  const appName = import.meta.env.VITE_APP_NAME;
+
   const loginConfig = useStorage('login-config', {
     rememberPassword: true,
-    username: 'admin', // 演示默认值
-    password: 'admin', // demo default value
+    userName: 'admin', // 演示默认值
+    pwd: 'sd#2023',
   });
   const userInfo = reactive({
-    username: loginConfig.value.username,
-    password: loginConfig.value.password,
+    userName: loginConfig.value.userName,
+    pwd: loginConfig.value.pwd,
   });
 
   const handleSubmit = async ({
@@ -111,11 +111,11 @@
         });
         Message.success(t('login.form.login.success'));
         const { rememberPassword } = loginConfig.value;
-        const { username, password } = values;
+        const { userName, pwd } = values;
         // 实际生产环境需要进行加密存储。
         // The actual production environment requires encrypted storage.
-        loginConfig.value.username = rememberPassword ? username : '';
-        loginConfig.value.password = rememberPassword ? password : '';
+        loginConfig.value.userName = rememberPassword ? userName : '';
+        loginConfig.value.pwd = rememberPassword ? pwd : '';
       } catch (err) {
         errorMessage.value = (err as Error).message;
       } finally {

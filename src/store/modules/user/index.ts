@@ -13,21 +13,27 @@ import useAppStore from '../app';
 const useUserStore = defineStore('user', {
   state: (): UserState => ({
     name: undefined,
-    avatar: undefined,
-    job: undefined,
-    organization: undefined,
-    location: undefined,
+    // avatar: undefined,
+    // job: undefined,
+    // organization: undefined,
+    // location: undefined,
     email: undefined,
-    introduction: undefined,
-    personalWebsite: undefined,
-    jobName: undefined,
-    organizationName: undefined,
-    locationName: undefined,
+    // introduction: undefined,
+    // personalWebsite: undefined,
+    // jobName: undefined,
+    // organizationName: undefined,
+    // locationName: undefined,
     phone: undefined,
-    registrationDate: undefined,
-    accountId: undefined,
-    certification: undefined,
-    role: '',
+    // registrationDate: undefined,
+    // accountId: undefined,
+    // certification: undefined,
+    role: 'admin',
+    id: '',
+    userName: '',
+    userNo: '',
+    faceImage: undefined,
+    permissions: [],
+    roles: [],
   }),
 
   getters: {
@@ -64,7 +70,7 @@ const useUserStore = defineStore('user', {
     async login(loginForm: LoginData) {
       try {
         const res = await userLogin(loginForm);
-        setToken(res.data.token);
+        setToken(res.data);
       } catch (err) {
         clearToken();
         throw err;

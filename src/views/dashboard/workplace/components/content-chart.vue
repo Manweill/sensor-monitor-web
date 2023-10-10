@@ -6,7 +6,7 @@
       :body-style="{
         paddingTop: '20px',
       }"
-      :title="$t('workplace.contentData')"
+      title="每日数据量"
     >
       <template #extra>
         <a-link>{{ $t('workplace.viewMore') }}</a-link>
@@ -20,10 +20,11 @@
   import { ref } from 'vue';
   import { graphic } from 'echarts';
   import useLoading from '@/hooks/loading';
-  import { queryContentData, ContentDataRecord } from '@/api/dashboard';
+  import { ContentDataRecord } from '@/api/dashboard';
   import useChartOption from '@/hooks/chart-option';
   import { ToolTipFormatterParams } from '@/types/echarts';
   import { AnyObject } from '@/types/global';
+  import dayjs from 'dayjs';
 
   function graphicFactory(side: AnyObject) {
     return {
@@ -99,7 +100,7 @@
         axisLabel: {
           formatter(value: any, idx: number) {
             if (idx === 0) return value;
-            return `${value}k`;
+            return `${value}`;
           },
         },
         splitLine: {
@@ -116,8 +117,8 @@
           const [firstElement] = params as ToolTipFormatterParams[];
           return `<div>
             <p class="tooltip-title">${firstElement.axisValueLabel}</p>
-            <div class="content-panel"><span>总内容量</span><span class="tooltip-value">${(
-              Number(firstElement.value) * 10000
+            <div class="content-panel"><span>数据量</span><span class="tooltip-value">${Number(
+              firstElement.value
             ).toLocaleString()}</span></div>
           </div>`;
         },
@@ -177,7 +178,18 @@
   const fetchData = async () => {
     setLoading(true);
     try {
-      const { data: chartData } = await queryContentData();
+      // const { data: chartData } = await queryContentData();
+      const presetData = [581, 813, 1534, 989, 1640, 1188, 1149, 598];
+      const getLineData = () => {
+        const count = 8;
+        return new Array(count).fill(0).map((el, idx) => ({
+          x: dayjs()
+            .day(idx - 5)
+            .format('YYYY-MM-DD'),
+          y: presetData[idx],
+        }));
+      };
+      const chartData = [...getLineData()];
       chartData.forEach((el: ContentDataRecord, idx: number) => {
         xAxis.value.push(el.x);
         chartsData.value.push(el.y);
