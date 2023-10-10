@@ -1,0 +1,242 @@
+<template>
+  <div class="container">
+    <a-space direction="vertical" :size="16" fill>
+      <a-card class="general-card" title="基础属性">
+        <template #extra>
+          <a-space>
+            <a-button @click="onBack">返回</a-button>
+          </a-space>
+        </template>
+        <a-space>
+          <a-image width="150px" :src="deviceTypeImage[formData.deviceType]" />
+          <a-descriptions
+            :label-style="{
+              textAlign: 'right',
+              width: '200px',
+              paddingRight: '10px',
+              color: 'rgb(var(--gray-8))',
+            }"
+            :column="2"
+            :value-style="{ width: '450px' }"
+            :data="formFiled"
+          >
+            <template #label="{ label }">{{ $t(label) }} :</template>
+            <template #value="{ value }">
+              <a-skeleton v-if="loading" :animation="true">
+                <a-skeleton-line :widths="['200px']" :rows="1" />
+              </a-skeleton>
+              <span v-else>{{ formData[value] || '--' }}</span>
+            </template>
+          </a-descriptions>
+        </a-space>
+      </a-card>
+      <a-card class="general-card" title="设备详情">
+        <a-tabs default-active-key="1" type="rounded">
+          <a-tab-pane key="1" title="设备属性" style="padding: 20px">
+            <a-table
+              row-key="id"
+              :loading="loading"
+              :columns="filedListColumns"
+              :data="deviceFieldList"
+              :bordered="false"
+              :pagination="false"
+            >
+              <template #upTime="{ record }">
+                {{ dayjs(record.upTime).format('YYYY-MM-DD HH:mm:ss') }}
+              </template>
+            </a-table>
+          </a-tab-pane>
+          <a-tab-pane key="2" title="遥测数据" style="padding: 20px">
+            <KvTable :device-id="id" :filed-list="deviceFieldList" />
+          </a-tab-pane>
+          <a-tab-pane key="3" title="告警配置" style="padding: 20px">
+            <a-table
+              row-key="id"
+              :loading="loading"
+              :columns="alarmConfigColumns"
+              :data="[]"
+              :bordered="false"
+              :pagination="false"
+            >
+              <template #upTime="{ record }">
+                {{ dayjs(record.upTime).format('YYYY-MM-DD HH:mm:ss') }}
+              </template>
+            </a-table>
+          </a-tab-pane>
+          <a-tab-pane key="4" title="告警记录" style="padding: 20px">
+            <a-table
+              row-key="id"
+              :loading="loading"
+              :columns="alarmColumns"
+              :data="[]"
+              :bordered="false"
+              :pagination="false"
+            >
+              <template #upTime="{ record }">
+                {{ dayjs(record.upTime).format('YYYY-MM-DD HH:mm:ss') }}
+              </template>
+            </a-table>
+          </a-tab-pane>
+          <a-tab-pane key="5" title="设备配置">
+            <a-form
+              class="form"
+              :label-col-props="{ span: 8 }"
+              :wrapper-col-props="{ span: 16 }"
+            >
+              <a-form-item field="email" label="心跳时间（秒）">
+                <a-input-number :model-value="30" />
+              </a-form-item>
+              <a-form-item field="email" label="离线提醒">
+                <a-switch :model-value="true" />
+              </a-form-item>
+              <a-form-item>
+                <a-space>
+                  <a-button type="primary"> 更新 </a-button>
+                </a-space>
+              </a-form-item>
+            </a-form>
+          </a-tab-pane>
+        </a-tabs>
+      </a-card>
+    </a-space>
+  </div>
+</template>
+
+<script setup lang="ts">
+  import { useRoute, useRouter } from 'vue-router';
+  import { DeviceDetailDto, DeviceFieldDto, DeviceService } from '@/services';
+  import { computed, onMounted, ref } from 'vue';
+  import useLoading from '@/hooks/loading';
+  import eppImage from '@/assets/images/Environmental_Parameters_Profile.png';
+  import hispImage from '@/assets/images/Human_Infrared_Sensor_Profile.png';
+  import thpImage from '@/assets/images/Temperature_Humidity_Profile.png';
+
+  import dayjs from 'dayjs';
+  import KvTable from './components/kv-table.vue';
+
+  const { loading, setLoading } = useLoading(true);
+  const router = useRouter();
+  const route = useRoute();
+  const { id = '' } = route.query;
+
+  const formData = ref<DeviceDetailDto>({});
+
+  const deviceFieldList = computed<DeviceFieldDto[]>(() => {
+    return formData.value.deviceFieldList || [];
+  });
+
+  const deviceTypeImage = {
+    Environmental_Parameters_Profile: eppImage,
+    Human_Infrared_Sensor_Profile: hispImage,
+    Temperature_Humidity_Profile: thpImage,
+  };
+
+  const formFiled = ref([
+    {
+      label: '设备名称',
+      value: 'deviceName',
+    },
+    {
+      label: '设备描述',
+      value: 'description',
+    },
+
+    {
+      label: '设备类型编码',
+      value: 'deviceType',
+    },
+    {
+      label: '设备类型',
+      value: 'deviceTypeDisplayName',
+    },
+    {
+      label: 'EUI',
+      value: 'devEui',
+    },
+  ]);
+
+  const filedListColumns = [
+    {
+      title: '属性名称',
+      dataIndex: 'fieldName',
+    },
+    {
+      title: '描述',
+      dataIndex: 'description',
+    },
+    {
+      title: '类型',
+      dataIndex: 'fieldType',
+    },
+    {
+      title: '最新值',
+      dataIndex: 'value',
+    },
+    {
+      title: '上报时间',
+      dataIndex: 'upTime',
+      slotName: 'upTime',
+    },
+  ];
+
+  const alarmConfigColumns = [
+    {
+      title: '告警类型',
+      dataIndex: 'fieldName',
+    },
+    {
+      title: '告警等级',
+      dataIndex: 'fieldName',
+    },
+    {
+      title: '告警内容',
+      dataIndex: 'fieldName',
+    },
+    {
+      title: '告警条件',
+      dataIndex: 'fieldName',
+    },
+  ];
+
+  const alarmColumns = [
+    {
+      title: '告警类型',
+      dataIndex: 'fieldName',
+    },
+    {
+      title: '告警时间',
+      dataIndex: 'fieldName',
+    },
+    {
+      title: '告警内容',
+      dataIndex: 'fieldName',
+    },
+  ];
+
+  const onBack = () => {
+    router.back();
+  };
+
+  onMounted(async () => {
+    if (id) {
+      setLoading(true);
+      try {
+        formData.value = await DeviceService.getDetailById({
+          id: id as unknown as number,
+        });
+      } finally {
+        setLoading(false);
+      }
+    }
+  });
+</script>
+
+<style scoped lang="less">
+  .container {
+    padding: 20px;
+  }
+  .form {
+    width: 540px;
+    margin: 0 auto;
+  }
+</style>

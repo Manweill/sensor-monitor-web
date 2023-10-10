@@ -815,6 +815,9 @@ export interface DeviceDto {
 }
 
 export interface DeviceFieldDataDto {
+  /** 属性值对应的类型 */
+  fieldType?: EnumDeviceFieldDataDtoFieldType;
+
   /** 设备属性名 */
   key?: string;
 
@@ -822,7 +825,7 @@ export interface DeviceFieldDataDto {
   upTime?: Date;
 
   /** 设备属性值 */
-  valueDouble?: number;
+  value?: string;
 }
 
 export interface DeviceFieldDto {
@@ -837,6 +840,12 @@ export interface DeviceFieldDto {
 
   /** id */
   id?: number;
+
+  /** 数据上报时间 */
+  upTime?: Date;
+
+  /** 属性值 */
+  value?: string;
 }
 
 export interface EnumOutputDto {
@@ -1053,10 +1062,20 @@ export interface UserDto {
   userNo?: string;
 }
 export enum EnumDeviceDetailDtoDeviceType {
-  'TC_TH_D1' = 'TC_TH_D1',
+  'Environmental_Parameters_Profile' = 'Environmental_Parameters_Profile',
+  'Human_Infrared_Sensor_Profile' = 'Human_Infrared_Sensor_Profile',
+  'Temperature_Humidity_Profile' = 'Temperature_Humidity_Profile',
 }
 export enum EnumDeviceDtoDeviceType {
-  'TC_TH_D1' = 'TC_TH_D1',
+  'Environmental_Parameters_Profile' = 'Environmental_Parameters_Profile',
+  'Human_Infrared_Sensor_Profile' = 'Human_Infrared_Sensor_Profile',
+  'Temperature_Humidity_Profile' = 'Temperature_Humidity_Profile',
+}
+export enum EnumDeviceFieldDataDtoFieldType {
+  'DOUBLE' = 'DOUBLE',
+  'STRING' = 'STRING',
+  'BOOLEAN' = 'BOOLEAN',
+  'LONG' = 'LONG',
 }
 export enum EnumDeviceFieldDtoFieldType {
   'DOUBLE' = 'DOUBLE',
@@ -1069,5 +1088,7 @@ export enum EnumGetUserListInputDtoSortingDirection {
   'DESC' = 'DESC',
 }
 export enum EnumListDeviceOutputDtoDeviceType {
-  'TC_TH_D1' = 'TC_TH_D1',
+  'Environmental_Parameters_Profile' = 'Environmental_Parameters_Profile',
+  'Human_Infrared_Sensor_Profile' = 'Human_Infrared_Sensor_Profile',
+  'Temperature_Humidity_Profile' = 'Temperature_Humidity_Profile',
 }

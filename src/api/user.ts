@@ -32,15 +32,15 @@ export interface UserDto {
   userNo?: string;
 }
 export function login(data: LoginData) {
-  return axios.post('/login', data);
+  return axios.post('/api/login', data);
 }
 
 export function logout() {
-  return axios.post('/logout');
+  return axios.post('/api/logout');
 }
 
 export function getUserInfo() {
-  return axios.post<UserState>('/mine');
+  return axios.post<UserState>('/api/mine');
 }
 
 export function getMenuList() {
@@ -48,13 +48,13 @@ export function getMenuList() {
 }
 
 export function getUserList(inputDto: UserListInputDto) {
-  return axios.post('/user/list', { ...inputDto });
+  return axios.post('/api/user/list', { ...inputDto });
 }
 
 export function saveUser(userDto: UserDto) {
-  return axios.post('/user/save', { ...userDto });
+  return axios.post('/api/user/save', { ...userDto });
 }
 
 export function delUser(id: string) {
-  return axios.post('/user/delete', {}, { params: { id } });
+  return axios.post('/api/user/delete', {}, { params: { id } });
 }

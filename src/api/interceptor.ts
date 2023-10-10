@@ -4,6 +4,8 @@ import { Message, Modal } from '@arco-design/web-vue';
 import { useUserStore } from '@/store';
 import { getToken } from '@/utils/auth';
 
+import { serviceOptions } from '@/services/serviceOptions';
+
 export interface HttpResponse<T = unknown> {
   status: number;
   message: string;
@@ -128,3 +130,6 @@ axios.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
+serviceOptions.axios = axios;
+serviceOptions.loading = true;
