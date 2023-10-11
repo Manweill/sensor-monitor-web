@@ -49,9 +49,7 @@
   import CategoriesPercent from './components/categories-percent.vue';
   import RecentlyVisited from './components/recently-visited.vue';
   import QuickOperation from './components/quick-operation.vue';
-  import Announcement from './components/announcement.vue';
   import Carousel from './components/carousel.vue';
-  import Docs from './components/docs.vue';
 </script>
 
 <script lang="ts">

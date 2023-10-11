@@ -89,7 +89,7 @@
           userName: 'admin', // 演示默认值
           pwd: 'sd#2023',
         }
-      : {}
+      : {},
   );
 
   const userInfo = reactive({
