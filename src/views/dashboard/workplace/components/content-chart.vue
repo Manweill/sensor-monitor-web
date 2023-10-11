@@ -118,7 +118,7 @@
           return `<div>
             <p class="tooltip-title">${firstElement.axisValueLabel}</p>
             <div class="content-panel"><span>数据量</span><span class="tooltip-value">${Number(
-              firstElement.value
+              firstElement.value,
             ).toLocaleString()}</span></div>
           </div>`;
         },
