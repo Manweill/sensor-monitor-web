@@ -25,8 +25,7 @@
       "eslint --fix"
     ],
     "*.{less,css}": [
-      "stylelint --fix",
-      "prettier --write"
+      "stylelint --fix"
     ]
   },
   "dependencies": {
@@ -48,8 +47,6 @@
   },
   "devDependencies": {
     "@arco-plugins/vite-vue": "^1.4.5",
-    "@commitlint/cli": "^17.7.2",
-    "@commitlint/config-conventional": "^17.7.0",
     "@types/lodash": "^4.14.199",
     "@types/mockjs": "^1.0.8",
     "@types/nprogress": "^0.2.1",
@@ -74,11 +71,8 @@
     "mockjs": "^1.1.0",
     "postcss-html": "^1.5.0",
     "prettier": "^3.0.3",
-    "rollup": "^4.0.2",
     "rollup-plugin-visualizer": "^5.9.2",
     "stylelint": "^15.10.3",
-    "stylelint-config-prettier": "^9.0.5",
-    "stylelint-config-rational-order": "^0.1.2",
     "stylelint-config-recommended-vue": "^1.5.0",
     "stylelint-config-standard": "^34.0.0",
     "stylelint-order": "^6.0.3",
@@ -97,7 +91,6 @@
   },
   "resolutions": {
     "bin-wrapper": "npm:bin-wrapper-china",
-    "rollup": "^2.56.3",
     "gifsicle": "5.2.0"
   }
 }
