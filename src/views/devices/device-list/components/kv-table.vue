@@ -62,11 +62,14 @@
       :bordered="false"
       @page-change="onPageChange"
     >
-      <template #key="{ record }">
+      <template #description="{ record }">
         {{
           filedList.find((n) => n.fieldName === record.key)?.description ||
           record.key
         }}
+      </template>
+      <template #value="{ record }">
+        {{ formatValue(record) }}
       </template>
       <template #upTime="{ record }">
         {{ dayjs(record.upTime).format('YYYY-MM-DD HH:mm:ss') }}
@@ -115,13 +118,19 @@
   const tableData = ref<DeviceFieldDataDto[]>([]);
   const columns = computed<TableColumnData[]>(() => [
     {
-      title: '属性',
+      title: '属性标识',
       dataIndex: 'key',
       slotName: 'key',
     },
     {
-      title: '值',
+      title: '属性描述',
+      dataIndex: 'description',
+      slotName: 'description',
+    },
+    {
+      title: '属性值',
       dataIndex: 'value',
+      slotName: 'value',
     },
     {
       title: '时间',
@@ -177,6 +186,18 @@
     searchModel.value = generateSearchModel();
   };
 
+  const formatValue = (record: any) => {
+    let result = '';
+    switch (record.key) {
+      case 'human':
+        result = Number(record.value) === 1 ? '有人' : '无人';
+        break;
+      default:
+        result = record.value;
+        break;
+    }
+    return result;
+  };
   // 初始化
   queryTable();
 </script>

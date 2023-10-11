@@ -11,15 +11,16 @@
             label-align="left"
           >
             <a-row :gutter="16">
-              <a-col :span="8">
+              <a-col :span="12">
                 <a-form-item field="name" label="日期">
                   <a-date-picker
                     v-model="searchModel.date"
+                    style="width: 100%"
                     placeholder="请输入日期"
                   />
                 </a-form-item>
               </a-col>
-              <a-col :span="8">
+              <a-col :span="12">
                 <a-form-item field="name" label="温湿度设备">
                   <a-select
                     v-model="searchModel.deviceId"
@@ -253,7 +254,9 @@
           humidity: _.isNaN(parseFloat(humidity))
             ? humidity
             : parseFloat(humidity),
-          upTime: dayjs(n.upTime).format('YYYY-MM-DD HH:00'),
+          upTime: `${dayjs(searchModel.value.date).format('YYYY-MM-DD')} ${
+            n.dateHour
+          }`,
         };
       }),
     );
