@@ -84,7 +84,7 @@
 </template>
 
 <script lang="ts" setup>
-  import { computed, reactive, ref } from 'vue';
+  import { computed, reactive, ref, toRaw } from 'vue';
   import { Message, TableColumnData } from '@arco-design/web-vue';
   import { Pagination } from '@/types/global';
   import useLoading from '@/hooks/loading';
@@ -94,6 +94,8 @@
     ListDeviceOutputDto,
   } from '@/services';
   import dayjs from 'dayjs';
+  import ExcelJS from 'exceljs';
+  import FileSaver from 'file-saver';
 
   import _ from 'lodash';
 
@@ -175,6 +177,7 @@
           .sort((a, b) => b.upTime - a.upTime)[0];
         return {
           dateHour,
+          upTime: humidityValue?.upTime,
           humidity: humidityValue?.value || '--',
           temperature: temperatureValue?.value || '--',
         };
@@ -214,7 +217,70 @@
   // 初始化
   queryDeviceList();
 
-  const onExportToExcel = () => {};
+  const onExportToExcel = async () => {
+    if (tableData.value.length === 0) {
+      Message.error({
+        content: '请查询数据后导出！',
+      });
+      return;
+    }
+    // 初始化
+    const workbook = new ExcelJS.Workbook();
+    workbook.created = new Date();
+    const workSheet = workbook.addWorksheet('Sheet1');
+
+    // 数据
+    workSheet.columns = [
+      {
+        header: '时间',
+        key: 'upTime',
+        width: 20,
+        alignment: { vertical: 'middle', horizontal: 'center' },
+      },
+      { header: '温度（℃）', key: 'temperature', width: 30 },
+      { header: '湿度（%）.', key: 'humidity', width: 30 },
+    ];
+
+    workSheet.addRows(
+      toRaw(tableData.value).map((n) => {
+        const { temperature, humidity } = n;
+
+        return {
+          ...n,
+          temperature: _.isNaN(parseFloat(temperature))
+            ? temperature
+            : parseFloat(temperature),
+          humidity: _.isNaN(parseFloat(humidity))
+            ? humidity
+            : parseFloat(humidity),
+          upTime: dayjs(n.upTime).format('YYYY-MM-DD HH:00'),
+        };
+      }),
+    );
+
+    // 配置
+    workSheet.getColumn('upTime').alignment = {
+      vertical: 'middle',
+      horizontal: 'center',
+    };
+    workSheet.getColumn('temperature').alignment = {
+      vertical: 'middle',
+      horizontal: 'center',
+    };
+    workSheet.getColumn('humidity').alignment = {
+      vertical: 'middle',
+      horizontal: 'center',
+    };
+
+    // 下载
+    const buffer = await workbook.xlsx.writeBuffer();
+    FileSaver.saveAs(
+      new Blob([buffer]),
+      `温湿度日报表(${dayjs(searchModel.value.date).format(
+        'YYYY-MM-DD',
+      )})_${Date.now()}.xlsx`,
+    );
+  };
 </script>
 
 <style lang="less" scoped>
