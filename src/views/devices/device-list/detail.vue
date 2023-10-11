@@ -8,7 +8,10 @@
           </a-space>
         </template>
         <a-space>
-          <a-image width="150px" :src="deviceTypeImage[formData.deviceType]" />
+          <a-image
+            width="150px"
+            :src="deviceTypeImage[formData.deviceType as string]"
+          />
           <a-descriptions
             :label-style="{
               textAlign: 'right',
@@ -25,7 +28,9 @@
               <a-skeleton v-if="loading" :animation="true">
                 <a-skeleton-line :widths="['200px']" :rows="1" />
               </a-skeleton>
-              <span v-else>{{ formData[value] || '--' }}</span>
+              <span v-else>{{
+                formData[value as keyof DeviceDetailDto] || '--'
+              }}</span>
             </template>
           </a-descriptions>
         </a-space>
@@ -125,7 +130,7 @@
     return formData.value.deviceFieldList || [];
   });
 
-  const deviceTypeImage = {
+  const deviceTypeImage: Record<string, any> = {
     Environmental_Parameters_Profile: eppImage,
     Human_Infrared_Sensor_Profile: hispImage,
     Temperature_Humidity_Profile: thpImage,
