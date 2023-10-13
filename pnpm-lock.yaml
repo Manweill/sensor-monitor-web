@@ -65,6 +65,9 @@ devDependencies:
   '@arco-plugins/vite-vue':
     specifier: ^1.4.5
     version: 1.4.5
+  '@types/file-saver':
+    specifier: ^2.0.5
+    version: 2.0.5
   '@types/lodash':
     specifier: ^4.14.199
     version: 4.14.199
@@ -962,6 +965,10 @@ packages:
 
   /@types/estree@1.0.2:
     resolution: {integrity: sha512-VeiPZ9MMwXjO32/Xu7+OwflfmeoRwkE/qzndw42gGtgJwZopBnzy2gD//NN1+go1mADzkDcqf/KnFRSjTJ8xJA==}
+    dev: true
+
+  /@types/file-saver@2.0.5:
+    resolution: {integrity: sha512-zv9kNf3keYegP5oThGLaPk8E081DFDuwfqjtiTzm6PoxChdJ1raSuADf2YGCVIyrSynLrgc8JWv296s7Q7pQSQ==}
     dev: true
 
   /@types/glob@7.2.0:

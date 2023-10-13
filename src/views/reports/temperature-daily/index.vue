@@ -71,8 +71,25 @@
             </a-button>
           </a-space>
         </a-col>
+        <a-col
+          :span="12"
+          style="display: flex; align-items: center; justify-content: end"
+        >
+          <a-button
+            type="text"
+            :disabled="tableData.length === 0"
+            @click="toggleChart()"
+          >
+            <template #icon>
+              <icon-sync />
+            </template>
+            {{ showChart ? '切换表格' : '切换图表' }}
+          </a-button>
+        </a-col>
       </a-row>
+
       <a-table
+        v-if="!showChart"
         row-key="id"
         :loading="loading"
         :pagination="false"
@@ -80,6 +97,14 @@
         :data="tableData"
       >
       </a-table>
+
+      <a-card
+        v-else
+        class="general-card"
+        :header-style="{ paddingBottom: '16px' }"
+      >
+        <Chart style="width: 100%; height: 370px" :option="chartOption" />
+      </a-card>
     </a-card>
   </div>
 </template>
@@ -97,6 +122,8 @@
   import dayjs from 'dayjs';
   import ExcelJS from 'exceljs';
   import FileSaver from 'file-saver';
+
+  import useChartOption from '@/hooks/chart-option';
 
   import _ from 'lodash';
 
@@ -284,6 +311,124 @@
       )})_${Date.now()}.xlsx`,
     );
   };
+
+  const showChart = ref(false);
+
+  const toggleChart = () => {
+    showChart.value = !showChart.value;
+  };
+
+  const { chartOption } = useChartOption((isDark) => {
+    return {
+      grid: {
+        left: '50',
+        right: '50',
+        top: '40',
+        // bottom: '100',
+      },
+      legend: {
+        bottom: 0,
+        icon: 'circle',
+        textStyle: {
+          color: '#4E5969',
+        },
+      },
+      tooltip: {
+        trigger: 'axis',
+      },
+      toolbox: {
+        show: true,
+        feature: {
+          magicType: { show: true, type: ['line', 'bar'] },
+          restore: { show: true },
+          saveAsImage: { show: true },
+        },
+      },
+      xAxis: {
+        type: 'category',
+        data: tableData.value.map((n) => n.dateHour),
+        axisTick: {
+          alignWithLabel: true,
+        },
+        boundaryGap: false,
+      },
+      yAxis: [
+        {
+          type: 'value',
+          name: '温度',
+          alignTicks: true,
+          axisLine: {
+            show: true,
+          },
+          axisLabel: {
+            formatter: '{value} °C',
+          },
+        },
+        {
+          type: 'value',
+          name: '湿度',
+          alignTicks: true,
+          max: 100,
+          min: 10,
+          axisLine: {
+            show: true,
+          },
+          axisLabel: {
+            formatter: '{value} %',
+          },
+        },
+      ],
+      series: [
+        {
+          name: '温度',
+          data: tableData.value.map((n) => n.temperature),
+          type: 'line',
+          smooth: true,
+          showSymbol: false,
+          color: isDark ? '#3D72F6' : '#246EFF',
+          symbol: 'circle',
+          symbolSize: 10,
+          emphasis: {
+            focus: 'series',
+            itemStyle: {
+              borderWidth: 2,
+              borderColor: '#E0E3FF',
+            },
+          },
+          markPoint: {
+            data: [
+              { type: 'max', name: 'Max' },
+              { type: 'min', name: 'Min' },
+            ],
+          },
+        },
+        {
+          name: '湿度',
+          data: tableData.value.map((n) => n.humidity),
+          type: 'line',
+          yAxisIndex: 1,
+          smooth: true,
+          showSymbol: false,
+          color: isDark ? '#A079DC' : '#00B2FF',
+          symbol: 'circle',
+          symbolSize: 10,
+          emphasis: {
+            focus: 'series',
+            itemStyle: {
+              borderWidth: 2,
+              borderColor: '#E2F2FF',
+            },
+          },
+          markPoint: {
+            data: [
+              { type: 'max', name: 'Max' },
+              { type: 'min', name: 'Min' },
+            ],
+          },
+        },
+      ],
+    };
+  });
 </script>
 
 <style lang="less" scoped>
