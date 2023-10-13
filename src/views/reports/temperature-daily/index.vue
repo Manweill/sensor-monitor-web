@@ -336,14 +336,14 @@
       tooltip: {
         trigger: 'axis',
       },
-      toolbox: {
-        show: true,
-        feature: {
-          magicType: { show: true, type: ['line', 'bar'] },
-          restore: { show: true },
-          saveAsImage: { show: true },
-        },
-      },
+      // toolbox: {
+      //   show: true,
+      //   feature: {
+      //     magicType: { show: true, type: ['line', 'bar'] },
+      //     restore: { show: true },
+      //     saveAsImage: { show: true },
+      //   },
+      // },
       xAxis: {
         type: 'category',
         data: tableData.value.map((n) => n.dateHour),
@@ -395,12 +395,12 @@
               borderColor: '#E0E3FF',
             },
           },
-          markPoint: {
-            data: [
-              { type: 'max', name: 'Max' },
-              { type: 'min', name: 'Min' },
-            ],
-          },
+          // markPoint: {
+          //   data: [
+          //     { type: 'max', name: 'Max' },
+          //     { type: 'min', name: 'Min' },
+          //   ],
+          // },
         },
         {
           name: '湿度',
@@ -419,12 +419,12 @@
               borderColor: '#E2F2FF',
             },
           },
-          markPoint: {
-            data: [
-              { type: 'max', name: 'Max' },
-              { type: 'min', name: 'Min' },
-            ],
-          },
+          // markPoint: {
+          //   data: [
+          //     { type: 'max', name: 'Max' },
+          //     { type: 'min', name: 'Min' },
+          //   ],
+          // },
         },
       ],
     };
