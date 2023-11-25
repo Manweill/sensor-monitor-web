@@ -13,13 +13,13 @@
       @submit="handleSubmit"
     >
       <a-form-item
-        field="userName"
+        field="username"
         :rules="[{ required: true, message: $t('login.form.userName.errMsg') }]"
         :validate-trigger="['change', 'blur']"
         hide-label
       >
         <a-input
-          v-model="userInfo.userName"
+          v-model="userInfo.username"
           :placeholder="$t('login.form.userName.placeholder')"
         >
           <template #prefix>
@@ -28,13 +28,13 @@
         </a-input>
       </a-form-item>
       <a-form-item
-        field="pwd"
+        field="password"
         :rules="[{ required: true, message: $t('login.form.password.errMsg') }]"
         :validate-trigger="['change', 'blur']"
         hide-label
       >
         <a-input-password
-          v-model="userInfo.pwd"
+          v-model="userInfo.password"
           :placeholder="$t('login.form.password.placeholder')"
           allow-clear
         >
@@ -86,15 +86,15 @@
     mode === 'development'
       ? {
           rememberPassword: true,
-          userName: 'admin', // 演示默认值
-          pwd: 'sd#2023',
+          username: 'admin', // 演示默认值
+          password: '123456',
         }
       : {},
   );
 
   const userInfo = reactive({
-    userName: loginConfig.value.userName,
-    pwd: loginConfig.value.pwd,
+    username: loginConfig.value.username,
+    password: loginConfig.value.password,
   });
 
   const handleSubmit = async ({

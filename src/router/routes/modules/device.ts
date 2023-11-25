@@ -19,7 +19,7 @@ const DASHBOARD: AppRouteRecordRaw = {
       meta: {
         locale: '设备列表',
         requiresAuth: true,
-        roles: ['*'],
+        permissions: ['*'],
       },
     },
     {
@@ -30,7 +30,7 @@ const DASHBOARD: AppRouteRecordRaw = {
         hideInMenu: true,
         locale: '设备详情',
         requiresAuth: true,
-        roles: ['*'],
+        permissions: ['*'],
       },
     },
   ],

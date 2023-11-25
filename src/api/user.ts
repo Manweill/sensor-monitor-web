@@ -1,10 +1,10 @@
 import axios from 'axios';
-import type { RouteRecordNormalized } from 'vue-router';
-import { UserState } from '@/store/modules/user/types';
 
 export interface LoginData {
-  userName: string;
-  pwd: string;
+  username: string;
+  password: string;
+  captcha: string;
+  key: string;
 }
 
 export interface UserListInputDto {
@@ -32,19 +32,11 @@ export interface UserDto {
   userNo?: string;
 }
 export function login(data: LoginData) {
-  return axios.post('/api/login', data);
+  return axios.post('/api/auth/login', data);
 }
 
 export function logout() {
-  return axios.post('/api/logout');
-}
-
-export function getUserInfo() {
-  return axios.post<UserState>('/api/mine');
-}
-
-export function getMenuList() {
-  return axios.post<RouteRecordNormalized[]>('/api/user/menu');
+  return axios.post('/api/auth/token-auth/logout');
 }
 
 export function getUserList(inputDto: UserListInputDto) {

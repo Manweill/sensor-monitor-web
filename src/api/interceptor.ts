@@ -24,7 +24,7 @@ axios.interceptors.request.use(
     // please modify it according to the actual situation
     const token = getToken();
     if (token) {
-      config.headers.Authorization = `${token}`;
+      config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
   },

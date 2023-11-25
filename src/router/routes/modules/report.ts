@@ -19,7 +19,7 @@ const DASHBOARD: AppRouteRecordRaw = {
       meta: {
         locale: '温湿度日报表',
         requiresAuth: true,
-        roles: ['*'],
+        permissions: ['*'],
       },
     },
   ],
