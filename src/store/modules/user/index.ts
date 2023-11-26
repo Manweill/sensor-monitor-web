@@ -51,11 +51,9 @@ const useUserStore = defineStore('user', {
       }
     },
     logoutCallBack() {
-      const appStore = useAppStore();
       this.resetInfo();
       clearToken();
       removeRouteListener();
-      appStore.clearServerMenu();
     },
     // Logout
     async logout() {

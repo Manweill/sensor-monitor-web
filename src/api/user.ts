@@ -39,13 +39,13 @@ export function logout() {
   return axios.post('/api/auth/token-auth/logout');
 }
 
-export function getUserList(inputDto: UserListInputDto) {
-  return axios.post('/api/user/list', { ...inputDto });
-}
+// export function getUserList(inputDto: UserListInputDto) {
+//   return axios.post('/api/user/list', { ...inputDto });
+// }
 
-export function saveUser(userDto: UserDto) {
-  return axios.post('/api/user/save', { ...userDto });
-}
+// export function saveUser(userDto: UserDto) {
+//   return axios.post('/api/user/save', { ...userDto });
+// }
 
 export function delUser(id: string) {
   return axios.post('/api/user/delete', {}, { params: { id } });

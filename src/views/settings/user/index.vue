@@ -64,10 +64,26 @@
         :bordered="false"
         @page-change="onPageChange"
       >
+        <template #active="{ record }">
+          <span v-if="!record.active" class="circle"></span>
+          <span v-else class="circle pass"></span>
+          {{ record.active ? '已激活' : '未激活' }}
+        </template>
+        <template #lock="{ record }">
+          <span v-if="record.lock" class="circle"></span>
+          <span v-else class="circle pass"></span>
+          {{ record.lock ? '已锁定' : '未锁定' }}
+        </template>
         <template #operations="{ record }">
           <a-button type="text" size="small" @click="onEdit(record)">
             修改
           </a-button>
+          <!--          <a-button type="text" size="small" @click="onChangePassword(record)">-->
+          <!--            重置密码-->
+          <!--          </a-button>-->
+          <a-popconfirm content="确认解锁用户?" @ok="onUnlockUser(record)">
+            <a-button type="text" size="small"> 解锁用户 </a-button>
+          </a-popconfirm>
           <a-popconfirm content="确认删除?" @ok="onDel(record)">
             <a-button type="text" status="danger" size="small"> 删除 </a-button>
           </a-popconfirm>
@@ -84,9 +100,6 @@
         >
           <a-input v-model="formData.name" />
         </a-form-item>
-        <a-form-item field="userNo" label="工号">
-          <a-input v-model="formData.userNo" />
-        </a-form-item>
         <a-form-item
           field="userName"
           label="用户名"
@@ -98,15 +111,18 @@
         </a-form-item>
         <a-form-item
           v-if="!isEdit"
-          field="pwd"
+          field="password"
           label="密码"
           :rules="[{ required: true, message: '密码不能为空' }]"
           :validate-trigger="['change', 'blur']"
         >
-          <a-input v-model="formData.pwd" />
+          <a-input v-model="formData.password" />
+        </a-form-item>
+        <a-form-item field="active" label="是否激活">
+          <a-switch v-model="formData.active" />
         </a-form-item>
         <a-form-item
-          field="phone"
+          field="phoneNo"
           label="手机号"
           :rules="[
             {
@@ -117,15 +133,15 @@
           ]"
           :validate-trigger="['change', 'blur']"
         >
-          <a-input v-model="formData.phone" />
+          <a-input v-model="formData.phoneNo" />
         </a-form-item>
         <a-form-item
-          field="email"
+          field="emailAddress"
           label="email"
           :rules="[{ type: 'email', message: '请输入正确的email' }]"
           :validate-trigger="['change', 'blur']"
         >
-          <a-input v-model="formData.email" />
+          <a-input v-model="formData.emailAddress" />
         </a-form-item>
       </a-form>
     </a-modal>
@@ -134,11 +150,11 @@
 
 <script lang="ts" setup>
   import { computed, ref, reactive } from 'vue';
-  import { TableColumnData } from '@arco-design/web-vue';
+  import { Message, TableColumnData } from '@arco-design/web-vue';
   import { Pagination } from '@/types/global';
   import useLoading from '@/hooks/loading';
-  import { delUser, getUserList, saveUser } from '@/api/user';
   import { ValidatedError } from '@arco-design/web-vue/es/form/interface';
+  import { UserEditDto, UserListDto, UserService } from '@/services';
 
   const { loading, setLoading } = useLoading(false);
 
@@ -160,15 +176,11 @@
   const searchModel = ref(generateSearchModel());
 
   // 表格
-  const tableData = ref([]);
+  const tableData = ref<UserListDto[]>([]);
   const columns = computed<TableColumnData[]>(() => [
     {
       title: '姓名',
       dataIndex: 'name',
-    },
-    {
-      title: '工号',
-      dataIndex: 'userNo',
     },
     {
       title: '用户名',
@@ -176,11 +188,21 @@
     },
     {
       title: '手机号',
-      dataIndex: 'phone',
+      dataIndex: 'phoneNo',
     },
     {
       title: 'email',
-      dataIndex: 'email',
+      dataIndex: 'emailAddress',
+    },
+    {
+      title: '是否激活',
+      dataIndex: 'active',
+      slotName: 'active',
+    },
+    {
+      title: '是否锁定',
+      dataIndex: 'lock',
+      slotName: 'lock',
     },
     {
       title: '操作',
@@ -192,12 +214,16 @@
   const queryTable = async () => {
     setLoading(true);
     try {
-      const { data } = await getUserList({
+      // const { data } = await getUserList({
+      //   ...pagination,
+      //   ...searchModel.value,
+      // });
+      const { items, totalCount } = await UserService.getUsers({
         ...pagination,
         ...searchModel.value,
       });
-      tableData.value = data.items;
-      pagination.total = data.totalCount;
+      tableData.value = items as UserListDto[];
+      pagination.total = totalCount;
     } catch (err) {
       // you can report use errorHandler or other
     } finally {
@@ -231,14 +257,15 @@
   const generateFormData = () => {
     return {
       name: '',
-      userNo: '',
       userName: '',
-      pwd: '',
-      phone: '',
-      email: '',
+      password: '',
+      phoneNo: '',
+      workNumber: '',
+      emailAddress: '',
+      active: true,
     };
   };
-  const formData = ref(generateFormData());
+  const formData = ref<UserEditDto>(generateFormData());
 
   const onAdd = () => {
     isEdit.value = false;
@@ -250,15 +277,31 @@
     modelVisible.value = true;
     formData.value = { ...record };
   };
+  const onUnlockUser = (record: any) => {
+    UserService.unlockUser({ entityDto: { id: record.id } });
+    Message.success('解锁成功');
+  };
+  // todo 修改密码
+  const onChangePassword = (record: any) => {
+    UserService.listChangePwd({
+      input: { userId: record.id, newPwd: '123456' },
+    });
+    Message.success('修改密码成功');
+  };
+
   const onDel = async (record: any) => {
-    await delUser(record.id);
+    await UserService.deleteUser({ entityDto: { id: record.id } });
     queryTable();
   };
   const onOk = async () => {
     const errors: Record<string, ValidatedError> | undefined =
       await formRef.value.validate();
     if (!errors) {
-      await saveUser(formData.value);
+      await UserService.createOrUpdateUser({
+        createOrUpdateUserInput: {
+          user: formData.value,
+        },
+      });
       queryTable();
       return true;
     }
