@@ -12,10 +12,10 @@
           >
             <a-row :gutter="16">
               <a-col :span="8">
-                <a-form-item field="name" label="关键字">
+                <a-form-item field="name" label="角色名">
                   <a-input
                     v-model="searchModel.filter"
-                    placeholder="请输入关键字"
+                    placeholder="请输入角色名"
                   />
                 </a-form-item>
               </a-col>
@@ -64,6 +64,9 @@
         :bordered="false"
         @page-change="onPageChange"
       >
+        <template #createTime="{ record }">
+          {{ dayjs(record.createTime).format('YYYY-MM-DD HH:mm:ss') }}
+        </template>
         <template #operations="{ record }">
           <a-button type="text" size="small" @click="onEdit(record)">
             修改
@@ -80,22 +83,43 @@
     <a-modal v-model:visible="modelVisible" title="角色管理" @before-ok="onOk">
       <a-form ref="formRef" :model="formData">
         <a-form-item
-          field="code"
+          field="roleCode"
           label="编码"
           :rules="[{ required: true, message: '编码不能为空' }]"
           :validate-trigger="['change', 'blur']"
         >
-          <a-input v-model="formData.code" />
+          <a-input v-model="formData.roleCode" />
         </a-form-item>
         <a-form-item
-          field="name"
+          field="roleName"
           label="名称"
           :rules="[{ required: true, message: '名称不能为空' }]"
           :validate-trigger="['change', 'blur']"
         >
-          <a-input v-model="formData.name" />
+          <a-input v-model="formData.roleName" />
         </a-form-item>
       </a-form>
+    </a-modal>
+    <a-modal
+      v-model:visible="authModelVisible"
+      title="权限配置"
+      :mask-closable="false"
+      :fullscreen="true"
+      @before-ok="onAuthOk"
+    >
+      <div>
+        <a-typography-text>节点联动</a-typography-text>
+        <a-switch v-model="isStrictly" style="margin-left: 12px" />
+      </div>
+      <a-tree
+        v-model:checked-keys="checkedKeys"
+        v-model:expanded-keys="expandedKeys"
+        :data="treeData"
+        :check-strictly="!isStrictly"
+        :checkable="true"
+        :show-line="true"
+        :default-expand-all="true"
+      />
     </a-modal>
   </div>
 </template>
@@ -105,8 +129,10 @@
   import { TableColumnData } from '@arco-design/web-vue';
   import { Pagination } from '@/types/global';
   import useLoading from '@/hooks/loading';
-  import { delUser, getUserList, saveUser } from '@/api/user';
   import { ValidatedError } from '@arco-design/web-vue/es/form/interface';
+  import { RoleDto, RoleService } from '@/services';
+  import dayjs from 'dayjs';
+  import { convertToTree } from '@/utils/convert';
 
   const { loading, setLoading } = useLoading(false);
 
@@ -128,19 +154,20 @@
   const searchModel = ref(generateSearchModel());
 
   // 表格
-  const tableData = ref([]);
+  const tableData = ref<RoleDto[]>([]);
   const columns = computed<TableColumnData[]>(() => [
     {
       title: '编码',
-      dataIndex: 'code',
+      dataIndex: 'roleCode',
     },
     {
       title: '名称',
-      dataIndex: 'name',
+      dataIndex: 'roleName',
     },
     {
       title: '创建时间',
       dataIndex: 'createTime',
+      slotName: 'createTime',
     },
     {
       title: '操作',
@@ -152,12 +179,12 @@
   const queryTable = async () => {
     setLoading(true);
     try {
-      const { data } = await getUserList({
+      const { items, totalCount } = await RoleService.getRoles({
         ...pagination,
         ...searchModel.value,
       });
-      tableData.value = data.items;
-      pagination.total = data.totalCount;
+      tableData.value = items as RoleDto[];
+      pagination.total = totalCount;
     } catch (err) {
       // you can report use errorHandler or other
     } finally {
@@ -190,8 +217,8 @@
   const formRef = ref();
   const generateFormData = () => {
     return {
-      code: '',
-      name: '',
+      roleCode: '',
+      roleName: '',
     };
   };
   const formData = ref(generateFormData());
@@ -207,20 +234,59 @@
     formData.value = { ...record };
   };
   const onDel = async (record: any) => {
-    await delUser(record.id);
+    await RoleService.deleteRole({ id: record.id });
     queryTable();
   };
   const onOk = async () => {
     const errors: Record<string, ValidatedError> | undefined =
       await formRef.value.validate();
     if (!errors) {
-      await saveUser(formData.value);
+      await RoleService.createOrUpdateRole({ input: formData.value });
       queryTable();
       return true;
     }
     return false;
   };
-  const onEditAuth = (record: any) => {};
+
+  const authModelVisible = ref(false);
+  const checkedKeys = ref<string[]>([]);
+  const expandedKeys = ref<string[]>([]);
+  const treeData = ref<any[]>([]);
+  const roleId = ref<string>('');
+  const isStrictly = ref(false);
+  const onEditAuth = async (record: any) => {
+    authModelVisible.value = true;
+    const { permissionList } = await RoleService.getRoleDetails({
+      id: record.id,
+    });
+    roleId.value = record.id;
+
+    expandedKeys.value = permissionList?.map((item) => item.name) as [string];
+
+    checkedKeys.value = permissionList
+      ?.filter((item) => item.granted === true)
+      .map((item) => item.name) as [string];
+
+    treeData.value = convertToTree(
+      permissionList?.map((item) => ({
+        ...item,
+        title: item.displayName,
+        key: item.name,
+      })) as any[],
+      'parentName',
+      'name',
+      'children',
+    );
+  };
+  const onAuthOk = async () => {
+    await RoleService.updateRolePermission({
+      input: {
+        id: roleId.value as unknown as number,
+        permissions: checkedKeys.value.map((item) => ({ name: item })),
+      },
+    });
+    authModelVisible.value = false;
+  };
 </script>
 
 <style lang="less" scoped>

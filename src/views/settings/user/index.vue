@@ -143,6 +143,21 @@
         >
           <a-input v-model="formData.emailAddress" />
         </a-form-item>
+        <a-form-item field="assignedRoleIds" label="角色">
+          <a-select
+            v-model="formData.assignedRoleIds"
+            :allow-clear="true"
+            :multiple="true"
+            :allow-search="true"
+          >
+            <a-option
+              v-for="roles in allRoles"
+              :key="roles.id"
+              :value="roles.id"
+              >{{ roles.roleName }}</a-option
+            >
+          </a-select>
+        </a-form-item>
       </a-form>
     </a-modal>
   </div>
@@ -154,7 +169,7 @@
   import { Pagination } from '@/types/global';
   import useLoading from '@/hooks/loading';
   import { ValidatedError } from '@arco-design/web-vue/es/form/interface';
-  import { UserEditDto, UserListDto, UserService } from '@/services';
+  import { RoleDto, RoleService, UserListDto, UserService } from '@/services';
 
   const { loading, setLoading } = useLoading(false);
 
@@ -249,6 +264,13 @@
   // 初始化
   queryTable();
 
+  const allRoles = ref<RoleDto[]>([]);
+  const getAllRoles = async () => {
+    const list = await RoleService.getAllRoles();
+    allRoles.value = list;
+  };
+  getAllRoles();
+
   // crud
   const modelVisible = ref(false);
   const isEdit = ref(false);
@@ -263,9 +285,10 @@
       workNumber: '',
       emailAddress: '',
       active: true,
+      assignedRoleIds: [],
     };
   };
-  const formData = ref<UserEditDto>(generateFormData());
+  const formData = ref(generateFormData());
 
   const onAdd = () => {
     isEdit.value = false;
@@ -275,7 +298,10 @@
   const onEdit = (record: any) => {
     isEdit.value = true;
     modelVisible.value = true;
-    formData.value = { ...record };
+    formData.value = {
+      ...record,
+      assignedRoleIds: record.userRoles.map((n: RoleDto) => n.id),
+    };
   };
   const onUnlockUser = (record: any) => {
     UserService.unlockUser({ entityDto: { id: record.id } });
@@ -300,6 +326,7 @@
       await UserService.createOrUpdateUser({
         createOrUpdateUserInput: {
           user: formData.value,
+          assignedRoleIds: formData.value.assignedRoleIds,
         },
       });
       queryTable();
