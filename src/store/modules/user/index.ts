@@ -41,8 +41,12 @@ const useUserStore = defineStore('user', {
       try {
         const res = await userLogin(loginForm);
         setToken(res.data);
-      } catch (err) {
+      } catch (err: any) {
         clearToken();
+        if (err.code === 401) {
+          // 补充验证码的问题
+          await this.getAll();
+        }
         throw err;
       }
     },

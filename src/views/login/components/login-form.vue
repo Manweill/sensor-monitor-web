@@ -43,6 +43,35 @@
           </template>
         </a-input-password>
       </a-form-item>
+      <a-row :gutter="24">
+        <a-col :span="16">
+          <a-form-item
+            v-if="!!userInfo.imageBase64"
+            field="captcha"
+            :rules="[{ required: true, message: '验证码不能为空！' }]"
+            :validate-trigger="['change', 'blur']"
+            hide-label
+          >
+            <a-input
+              v-model="userInfo.captcha"
+              placeholder="验证码"
+              allow-clear
+            >
+              <template #prefix>
+                <icon-image />
+              </template>
+            </a-input>
+          </a-form-item>
+        </a-col>
+        <a-col :span="8">
+          <img
+            :src="userInfo.imageBase64"
+            style="cursor: pointer; height: 40px"
+            @click="getCaptcha"
+          />
+        </a-col>
+      </a-row>
+
       <a-space :size="16" direction="vertical">
         <div class="login-form-password-actions">
           <a-checkbox
@@ -62,7 +91,7 @@
 </template>
 
 <script lang="ts" setup>
-  import { ref, reactive } from 'vue';
+  import { ref, reactive, watch, onMounted } from 'vue';
   import { useRouter } from 'vue-router';
   import { Message } from '@arco-design/web-vue';
   import { ValidatedError } from '@arco-design/web-vue/es/form/interface';
@@ -71,6 +100,7 @@
   import { useUserStore } from '@/store';
   import useLoading from '@/hooks/loading';
   import type { LoginData } from '@/api/user';
+  import { CaptchaService } from '@/services';
 
   const router = useRouter();
   const { t } = useI18n();
@@ -92,10 +122,32 @@
       : {},
   );
 
+  onMounted(() => {
+    userStore.getAll();
+  });
+
   const userInfo = reactive({
     username: loginConfig.value.username,
     password: loginConfig.value.password,
+    key: '',
+    imageBase64: '',
+    captcha: '',
   });
+
+  const getCaptcha = async () => {
+    const { key, imageBase64 } = await CaptchaService.captcha();
+    userInfo.key = key as string;
+    userInfo.imageBase64 = imageBase64 as string;
+  };
+
+  watch(
+    () => userStore.loginInfo?.needCaptcha,
+    (value) => {
+      if (value) {
+        getCaptcha();
+      }
+    },
+  );
 
   const handleSubmit = async ({
     errors,
@@ -121,8 +173,8 @@
         const { userName, pwd } = values;
         // 实际生产环境需要进行加密存储。
         // The actual production environment requires encrypted storage.
-        loginConfig.value.userName = rememberPassword ? userName : '';
-        loginConfig.value.pwd = rememberPassword ? pwd : '';
+        loginConfig.value.username = rememberPassword ? userName : '';
+        loginConfig.value.password = rememberPassword ? pwd : '';
       } catch (err) {
         errorMessage.value = (err as Error).message;
       } finally {
