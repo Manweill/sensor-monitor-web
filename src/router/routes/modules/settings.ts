@@ -32,6 +32,16 @@ const DASHBOARD: AppRouteRecordRaw = {
         permissions: ['*'],
       },
     },
+    {
+      path: 'audit-log',
+      name: 'AuditLogs',
+      component: () => import('@/views/settings/audit-log/index.vue'),
+      meta: {
+        locale: '系统日志',
+        requiresAuth: true,
+        permissions: ['*'],
+      },
+    },
   ],
 };
 

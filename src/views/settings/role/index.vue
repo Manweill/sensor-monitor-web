@@ -130,7 +130,7 @@
   import { Pagination } from '@/types/global';
   import useLoading from '@/hooks/loading';
   import { ValidatedError } from '@arco-design/web-vue/es/form/interface';
-  import { RoleDto, RoleService } from '@/services';
+  import { RoleDto, RolePermissionDto, RoleService } from '@/services';
   import dayjs from 'dayjs';
   import { convertToTree } from '@/utils/convert';
 
@@ -256,19 +256,18 @@
   const isStrictly = ref(false);
   const onEditAuth = async (record: any) => {
     authModelVisible.value = true;
-    const { permissionList } = await RoleService.getRoleDetails({
+    const { permissionList } = (await RoleService.getRoleDetails({
       id: record.id,
-    });
+    })) as { permissionList: RolePermissionDto[] };
+
     roleId.value = record.id;
-
-    expandedKeys.value = permissionList?.map((item) => item.name) as [string];
-
+    expandedKeys.value = permissionList.map((item) => item.name) as [string];
     checkedKeys.value = permissionList
-      ?.filter((item) => item.granted === true)
+      .filter((item) => item.granted === true)
       .map((item) => item.name) as [string];
 
     treeData.value = convertToTree(
-      permissionList?.map((item) => ({
+      permissionList.map((item) => ({
         ...item,
         title: item.displayName,
         key: item.name,
