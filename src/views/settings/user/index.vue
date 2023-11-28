@@ -64,6 +64,15 @@
         :bordered="false"
         @page-change="onPageChange"
       >
+        <template #name="{ record }">
+          {{ record.name }}
+          <a-tag v-if="record.admin" size="small" color="green">
+            <template #icon>
+              <icon-check-circle-fill />
+            </template>
+            <span>管理账户</span>
+          </a-tag>
+        </template>
         <template #active="{ record }">
           <span v-if="!record.active" class="circle"></span>
           <span v-else class="circle pass"></span>
@@ -78,9 +87,9 @@
           <a-button type="text" size="small" @click="onEdit(record)">
             修改
           </a-button>
-          <!--          <a-button type="text" size="small" @click="onChangePassword(record)">-->
-          <!--            重置密码-->
-          <!--          </a-button>-->
+          <a-button type="text" size="small" @click="onChangePassword(record)">
+            重置密码
+          </a-button>
           <a-popconfirm content="确认解锁用户?" @ok="onUnlockUser(record)">
             <a-button type="text" size="small"> 解锁用户 </a-button>
           </a-popconfirm>
@@ -160,12 +169,28 @@
         </a-form-item>
       </a-form>
     </a-modal>
+    <a-modal
+      v-model:visible="changePasswordVisible"
+      title="修改密码"
+      @before-ok="onChangePasswordOk"
+    >
+      <a-form ref="changePasswordFormRef" :model="changePasswordFormData">
+        <a-form-item
+          field="newPwd"
+          label="密码"
+          :rules="[{ required: true, message: '密码不能为空' }]"
+          :validate-trigger="['change', 'blur']"
+        >
+          <a-input v-model="changePasswordFormData.newPwd" />
+        </a-form-item>
+      </a-form>
+    </a-modal>
   </div>
 </template>
 
 <script lang="ts" setup>
-  import { computed, ref, reactive } from 'vue';
-  import { Message, TableColumnData } from '@arco-design/web-vue';
+  import { computed, reactive, ref } from 'vue';
+  import { FormInstance, Message, TableColumnData } from '@arco-design/web-vue';
   import { Pagination } from '@/types/global';
   import useLoading from '@/hooks/loading';
   import { ValidatedError } from '@arco-design/web-vue/es/form/interface';
@@ -196,6 +221,7 @@
     {
       title: '姓名',
       dataIndex: 'name',
+      slotName: 'name',
     },
     {
       title: '用户名',
@@ -229,10 +255,6 @@
   const queryTable = async () => {
     setLoading(true);
     try {
-      // const { data } = await getUserList({
-      //   ...pagination,
-      //   ...searchModel.value,
-      // });
       const { items, totalCount } = await UserService.getUsers({
         ...pagination,
         ...searchModel.value,
@@ -290,11 +312,13 @@
   };
   const formData = ref(generateFormData());
 
+  // 新增
   const onAdd = () => {
     isEdit.value = false;
     modelVisible.value = true;
     formData.value = generateFormData();
   };
+  // 修改
   const onEdit = (record: any) => {
     isEdit.value = true;
     modelVisible.value = true;
@@ -303,22 +327,12 @@
       assignedRoleIds: record.userRoles.map((n: RoleDto) => n.id),
     };
   };
-  const onUnlockUser = (record: any) => {
-    UserService.unlockUser({ entityDto: { id: record.id } });
-    Message.success('解锁成功');
-  };
-  // todo 修改密码
-  const onChangePassword = (record: any) => {
-    UserService.listChangePwd({
-      input: { userId: record.id, newPwd: '123456' },
-    });
-    Message.success('修改密码成功');
-  };
-
+  // 删除
   const onDel = async (record: any) => {
     await UserService.deleteUser({ entityDto: { id: record.id } });
     queryTable();
   };
+  // 保存
   const onOk = async () => {
     const errors: Record<string, ValidatedError> | undefined =
       await formRef.value.validate();
@@ -333,6 +347,35 @@
       return true;
     }
     return false;
+  };
+
+  // 解锁
+  const onUnlockUser = (record: any) => {
+    UserService.unlockUser({ entityDto: { id: record.id } });
+    Message.success('解锁成功');
+  };
+
+  const changePasswordVisible = ref(false);
+  const changePasswordFormRef = ref<FormInstance>();
+  const changePasswordFormData = ref({
+    userId: '',
+    newPwd: '',
+  });
+
+  // 重置密码
+  const onChangePassword = (record: any) => {
+    changePasswordFormRef.value?.resetFields();
+    changePasswordFormRef.value?.clearValidate();
+    changePasswordFormData.value.userId = record.id;
+
+    changePasswordVisible.value = true;
+  };
+  const onChangePasswordOk = async () => {
+    await UserService.listChangePwd({
+      input: { ...changePasswordFormData.value } as any,
+    });
+    Message.success('修改密码成功');
+    changePasswordVisible.value = false;
   };
 </script>
 

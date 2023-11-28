@@ -64,6 +64,15 @@
         :bordered="false"
         @page-change="onPageChange"
       >
+        <template #roleName="{ record }">
+          {{ record.roleName }}
+          <a-tag v-if="record.default" size="small" color="green">
+            <template #icon>
+              <icon-check-circle-fill />
+            </template>
+            <span>默认</span>
+          </a-tag>
+        </template>
         <template #createTime="{ record }">
           {{ dayjs(record.createTime).format('YYYY-MM-DD HH:mm:ss') }}
         </template>
@@ -97,6 +106,9 @@
           :validate-trigger="['change', 'blur']"
         >
           <a-input v-model="formData.roleName" />
+        </a-form-item>
+        <a-form-item field="default" label="默认角色">
+          <a-switch v-model="formData.default" />
         </a-form-item>
       </a-form>
     </a-modal>
@@ -163,6 +175,7 @@
     {
       title: '名称',
       dataIndex: 'roleName',
+      slotName: 'roleName',
     },
     {
       title: '创建时间',
@@ -219,6 +232,7 @@
     return {
       roleCode: '',
       roleName: '',
+      default: false,
     };
   };
   const formData = ref(generateFormData());
