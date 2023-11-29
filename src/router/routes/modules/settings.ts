@@ -19,7 +19,27 @@ const DASHBOARD: AppRouteRecordRaw = {
       meta: {
         locale: '用户管理',
         requiresAuth: true,
-        roles: ['*'],
+        permissions: ['Pages.Sys.Menu'],
+      },
+    },
+    {
+      path: 'roles',
+      name: 'Roles',
+      component: () => import('@/views/settings/role/index.vue'),
+      meta: {
+        locale: '角色管理',
+        requiresAuth: true,
+        permissions: ['*'],
+      },
+    },
+    {
+      path: 'audit-log',
+      name: 'AuditLogs',
+      component: () => import('@/views/settings/audit-log/index.vue'),
+      meta: {
+        locale: '系统日志',
+        requiresAuth: true,
+        permissions: ['*'],
       },
     },
   ],

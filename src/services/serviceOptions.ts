@@ -32,7 +32,7 @@ export const serviceOptions: ServiceOptions = {};
 export function axios(
   configs: IRequestConfig,
   resolve: (p: any) => void,
-  reject: (p: any) => void
+  reject: (p: any) => void,
 ): Promise<any> {
   if (serviceOptions.axios) {
     return serviceOptions.axios
@@ -52,7 +52,7 @@ export function getConfigs(
   method: string,
   contentType: string,
   url: string,
-  options: any
+  options: any,
 ): IRequestConfig {
   const configs: IRequestConfig = {
     loading: serviceOptions.loading,

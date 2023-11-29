@@ -19,7 +19,7 @@ const timeout = (time) => {
 const outputDir = `./src/services`;
 // exec(`npx rimraf ${outputDir}`)
 codegen({
-  remoteUrl: 'http://121.37.5.233:53301/api/v2/api-docs',
+  remoteUrl: 'http://192.168.53.146:63301/api/auth/v2/api-docs',
   methodNameMode: 'operationId',
   modelMode: 'interface',
   strictNullChecks: false,

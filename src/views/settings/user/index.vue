@@ -64,10 +64,35 @@
         :bordered="false"
         @page-change="onPageChange"
       >
+        <template #name="{ record }">
+          {{ record.name }}
+          <a-tag v-if="record.admin" size="small" color="green">
+            <template #icon>
+              <icon-check-circle-fill />
+            </template>
+            <span>管理账户</span>
+          </a-tag>
+        </template>
+        <template #active="{ record }">
+          <span v-if="!record.active" class="circle"></span>
+          <span v-else class="circle pass"></span>
+          {{ record.active ? '已激活' : '未激活' }}
+        </template>
+        <template #lock="{ record }">
+          <span v-if="record.lock" class="circle"></span>
+          <span v-else class="circle pass"></span>
+          {{ record.lock ? '已锁定' : '未锁定' }}
+        </template>
         <template #operations="{ record }">
           <a-button type="text" size="small" @click="onEdit(record)">
             修改
           </a-button>
+          <a-button type="text" size="small" @click="onChangePassword(record)">
+            重置密码
+          </a-button>
+          <a-popconfirm content="确认解锁用户?" @ok="onUnlockUser(record)">
+            <a-button type="text" size="small"> 解锁用户 </a-button>
+          </a-popconfirm>
           <a-popconfirm content="确认删除?" @ok="onDel(record)">
             <a-button type="text" status="danger" size="small"> 删除 </a-button>
           </a-popconfirm>
@@ -84,9 +109,6 @@
         >
           <a-input v-model="formData.name" />
         </a-form-item>
-        <a-form-item field="userNo" label="工号">
-          <a-input v-model="formData.userNo" />
-        </a-form-item>
         <a-form-item
           field="userName"
           label="用户名"
@@ -98,15 +120,18 @@
         </a-form-item>
         <a-form-item
           v-if="!isEdit"
-          field="pwd"
+          field="password"
           label="密码"
           :rules="[{ required: true, message: '密码不能为空' }]"
           :validate-trigger="['change', 'blur']"
         >
-          <a-input v-model="formData.pwd" />
+          <a-input v-model="formData.password" />
+        </a-form-item>
+        <a-form-item field="active" label="是否激活">
+          <a-switch v-model="formData.active" />
         </a-form-item>
         <a-form-item
-          field="phone"
+          field="phoneNo"
           label="手机号"
           :rules="[
             {
@@ -117,15 +142,46 @@
           ]"
           :validate-trigger="['change', 'blur']"
         >
-          <a-input v-model="formData.phone" />
+          <a-input v-model="formData.phoneNo" />
         </a-form-item>
         <a-form-item
-          field="email"
+          field="emailAddress"
           label="email"
           :rules="[{ type: 'email', message: '请输入正确的email' }]"
           :validate-trigger="['change', 'blur']"
         >
-          <a-input v-model="formData.email" />
+          <a-input v-model="formData.emailAddress" />
+        </a-form-item>
+        <a-form-item field="assignedRoleIds" label="角色">
+          <a-select
+            v-model="formData.assignedRoleIds"
+            :allow-clear="true"
+            :multiple="true"
+            :allow-search="true"
+          >
+            <a-option
+              v-for="roles in allRoles"
+              :key="roles.id"
+              :value="roles.id"
+              >{{ roles.roleName }}</a-option
+            >
+          </a-select>
+        </a-form-item>
+      </a-form>
+    </a-modal>
+    <a-modal
+      v-model:visible="changePasswordVisible"
+      title="修改密码"
+      @before-ok="onChangePasswordOk"
+    >
+      <a-form ref="changePasswordFormRef" :model="changePasswordFormData">
+        <a-form-item
+          field="newPwd"
+          label="密码"
+          :rules="[{ required: true, message: '密码不能为空' }]"
+          :validate-trigger="['change', 'blur']"
+        >
+          <a-input v-model="changePasswordFormData.newPwd" />
         </a-form-item>
       </a-form>
     </a-modal>
@@ -133,12 +189,12 @@
 </template>
 
 <script lang="ts" setup>
-  import { computed, ref, reactive } from 'vue';
-  import { TableColumnData } from '@arco-design/web-vue';
+  import { computed, reactive, ref } from 'vue';
+  import { FormInstance, Message, TableColumnData } from '@arco-design/web-vue';
   import { Pagination } from '@/types/global';
   import useLoading from '@/hooks/loading';
-  import { delUser, getUserList, saveUser } from '@/api/user';
   import { ValidatedError } from '@arco-design/web-vue/es/form/interface';
+  import { RoleDto, RoleService, UserListDto, UserService } from '@/services';
 
   const { loading, setLoading } = useLoading(false);
 
@@ -160,15 +216,12 @@
   const searchModel = ref(generateSearchModel());
 
   // 表格
-  const tableData = ref([]);
+  const tableData = ref<UserListDto[]>([]);
   const columns = computed<TableColumnData[]>(() => [
     {
       title: '姓名',
       dataIndex: 'name',
-    },
-    {
-      title: '工号',
-      dataIndex: 'userNo',
+      slotName: 'name',
     },
     {
       title: '用户名',
@@ -176,11 +229,21 @@
     },
     {
       title: '手机号',
-      dataIndex: 'phone',
+      dataIndex: 'phoneNo',
     },
     {
       title: 'email',
-      dataIndex: 'email',
+      dataIndex: 'emailAddress',
+    },
+    {
+      title: '是否激活',
+      dataIndex: 'active',
+      slotName: 'active',
+    },
+    {
+      title: '是否锁定',
+      dataIndex: 'lock',
+      slotName: 'lock',
     },
     {
       title: '操作',
@@ -192,12 +255,12 @@
   const queryTable = async () => {
     setLoading(true);
     try {
-      const { data } = await getUserList({
+      const { items, totalCount } = await UserService.getUsers({
         ...pagination,
         ...searchModel.value,
       });
-      tableData.value = data.items;
-      pagination.total = data.totalCount;
+      tableData.value = items as UserListDto[];
+      pagination.total = totalCount;
     } catch (err) {
       // you can report use errorHandler or other
     } finally {
@@ -223,6 +286,13 @@
   // 初始化
   queryTable();
 
+  const allRoles = ref<RoleDto[]>([]);
+  const getAllRoles = async () => {
+    const list = await RoleService.getAllRoles();
+    allRoles.value = list;
+  };
+  getAllRoles();
+
   // crud
   const modelVisible = ref(false);
   const isEdit = ref(false);
@@ -231,38 +301,81 @@
   const generateFormData = () => {
     return {
       name: '',
-      userNo: '',
       userName: '',
-      pwd: '',
-      phone: '',
-      email: '',
+      password: '',
+      phoneNo: '',
+      workNumber: '',
+      emailAddress: '',
+      active: true,
+      assignedRoleIds: [],
     };
   };
   const formData = ref(generateFormData());
 
+  // 新增
   const onAdd = () => {
     isEdit.value = false;
     modelVisible.value = true;
     formData.value = generateFormData();
   };
+  // 修改
   const onEdit = (record: any) => {
     isEdit.value = true;
     modelVisible.value = true;
-    formData.value = { ...record };
+    formData.value = {
+      ...record,
+      assignedRoleIds: record.userRoles.map((n: RoleDto) => n.id),
+    };
   };
+  // 删除
   const onDel = async (record: any) => {
-    await delUser(record.id);
+    await UserService.deleteUser({ entityDto: { id: record.id } });
     queryTable();
   };
+  // 保存
   const onOk = async () => {
     const errors: Record<string, ValidatedError> | undefined =
       await formRef.value.validate();
     if (!errors) {
-      await saveUser(formData.value);
+      await UserService.createOrUpdateUser({
+        createOrUpdateUserInput: {
+          user: formData.value,
+          assignedRoleIds: formData.value.assignedRoleIds,
+        },
+      });
       queryTable();
       return true;
     }
     return false;
+  };
+
+  // 解锁
+  const onUnlockUser = (record: any) => {
+    UserService.unlockUser({ entityDto: { id: record.id } });
+    Message.success('解锁成功');
+  };
+
+  const changePasswordVisible = ref(false);
+  const changePasswordFormRef = ref<FormInstance>();
+  const changePasswordFormData = ref({
+    userId: '',
+    newPwd: '',
+  });
+
+  // 重置密码
+  const onChangePassword = (record: any) => {
+    changePasswordFormRef.value?.resetFields();
+    changePasswordFormRef.value?.clearValidate();
+    changePasswordFormData.value.userId = record.id;
+
+    changePasswordVisible.value = true;
+  };
+  const onChangePasswordOk = async () => {
+    await UserService.listChangePwd({
+      input: { ...changePasswordFormData.value } as any,
+    });
+    Message.success('修改密码成功');
+    changePasswordVisible.value = false;
   };
 </script>
 

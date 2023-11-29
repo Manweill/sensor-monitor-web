@@ -10,11 +10,11 @@ export default function setupUserLoginInfoGuard(router: Router) {
     const userStore = useUserStore();
     if (isLogin()) {
       // 用户权限信息
-      if (userStore.id) {
+      if (userStore.currentUser?.id) {
         next();
       } else {
         try {
-          await userStore.info();
+          await userStore.getAll();
           next();
         } catch (error) {
           await userStore.logout();
