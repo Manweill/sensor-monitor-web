@@ -109,12 +109,31 @@
         </template>
       </a-table>
     </a-card>
+    <a-modal
+      v-model:visible="viewModalVisible"
+      :hide-cancel="true"
+      width="auto"
+      title="日志详情"
+    >
+      <a-descriptions
+        v-for="form in formFiled"
+        :key="form.title"
+        :column="1"
+        :title="form.title"
+        :data="form.data"
+      >
+        <template #label="{ label }">{{ $t(label) }} :</template>
+        <template #value="{ value }">
+          <span>{{ formData[value] || '--' }}</span>
+        </template>
+      </a-descriptions></a-modal
+    >
   </div>
 </template>
 
 <script lang="ts" setup>
   import { computed, ref, reactive } from 'vue';
-  import { Message, TableColumnData } from '@arco-design/web-vue';
+  import { TableColumnData } from '@arco-design/web-vue';
   import { Pagination } from '@/types/global';
   import useLoading from '@/hooks/loading';
   import { AuditLogListDto, AuditLogService } from '@/services';
@@ -239,8 +258,80 @@
 
   // 初始化
   queryTable();
-  const onView = (record: AuditLogListDto) => {
-    console.log(record);
+
+  const viewModalVisible = ref(false);
+  const formData = ref<any>({});
+  const formFiled = ref([
+    {
+      title: '用户信息',
+      data: [
+        {
+          label: '用户名',
+          value: 'userName',
+        },
+        {
+          label: 'IP地址',
+          value: 'clientIpAddress',
+        },
+
+        {
+          label: '客户端',
+          value: 'clientName',
+        },
+        {
+          label: '浏览器',
+          value: 'browserInfo',
+        },
+      ],
+    },
+    {
+      title: '操作信息',
+      data: [
+        {
+          label: '服务',
+          value: 'serviceName',
+        },
+        {
+          label: '操作',
+          value: 'methodName',
+        },
+        {
+          label: '时间',
+          value: 'executionTime',
+        },
+        {
+          label: '持续时间',
+          value: 'executionDuration',
+        },
+        {
+          label: '参数',
+          value: 'parameters',
+        },
+        {
+          label: '组织机构ID',
+          value: 'orgId',
+        },
+      ],
+    },
+    {
+      title: '状态结果',
+      data: [
+        {
+          label: '错误状态',
+          value: 'exception',
+        },
+        {
+          label: '响应结果',
+          value: 'result',
+        },
+      ],
+    },
+  ]);
+
+  const onView = async (record: AuditLogListDto) => {
+    viewModalVisible.value = true;
+    const data = await AuditLogService.detail({ id: record.id as number });
+    formData.value = data;
   };
 </script>
 
