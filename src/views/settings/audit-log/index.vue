@@ -136,7 +136,7 @@
   import { TableColumnData } from '@arco-design/web-vue';
   import { Pagination } from '@/types/global';
   import useLoading from '@/hooks/loading';
-  import { AuditLogListDto, AuditLogService } from '@/services';
+  import { AuditLogListDto, AuditLogService } from '@/services/auth';
   import dayjs from 'dayjs';
 
   const { loading, setLoading } = useLoading(false);

@@ -194,7 +194,12 @@
   import { Pagination } from '@/types/global';
   import useLoading from '@/hooks/loading';
   import { ValidatedError } from '@arco-design/web-vue/es/form/interface';
-  import { RoleDto, RoleService, UserListDto, UserService } from '@/services';
+  import {
+    RoleDto,
+    RoleService,
+    UserListDto,
+    UserService,
+  } from '@/services/auth';
 
   const { loading, setLoading } = useLoading(false);
 
