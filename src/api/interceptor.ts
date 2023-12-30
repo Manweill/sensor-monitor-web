@@ -102,7 +102,7 @@ axios.interceptors.response.use(
           break;
         case 401:
           responseError = '未授权，请登录';
-          await userStore.logout();
+          userStore.logoutCallBack();
           window.location.reload();
           break;
         case 403:
