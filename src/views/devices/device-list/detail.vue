@@ -10,7 +10,7 @@
         <a-space>
           <a-image
             width="150px"
-            :src="deviceTypeImage[formData.deviceType as string]"
+            :src="deviceTypeImage[formData.deviceProfileName as string]"
           />
           <a-descriptions
             :label-style="{
@@ -28,9 +28,7 @@
               <a-skeleton v-if="loading" :animation="true">
                 <a-skeleton-line :widths="['200px']" :rows="1" />
               </a-skeleton>
-              <span v-else>{{
-                formData[value as keyof DeviceDetailDto] || '--'
-              }}</span>
+              <span v-else>{{ value || '--' }}</span>
             </template>
           </a-descriptions>
         </a-space>
@@ -51,9 +49,9 @@
               </template>
             </a-table>
           </a-tab-pane>
-          <a-tab-pane key="2" title="遥测数据" style="padding: 20px">
-            <KvTable :device-id="id" :filed-list="deviceFieldList" />
-          </a-tab-pane>
+          <!--          <a-tab-pane key="2" title="遥测数据" style="padding: 20px">-->
+          <!--            <KvTable :device-id="id" :filed-list="deviceFieldList" />-->
+          <!--          </a-tab-pane>-->
           <a-tab-pane key="3" title="告警配置" style="padding: 20px">
             <a-table
               row-key="id"
@@ -82,25 +80,25 @@
               </template>
             </a-table>
           </a-tab-pane>
-          <a-tab-pane key="5" title="设备配置">
-            <a-form
-              class="form"
-              :label-col-props="{ span: 8 }"
-              :wrapper-col-props="{ span: 16 }"
-            >
-              <a-form-item field="email" label="心跳时间（秒）">
-                <a-input-number :model-value="30" />
-              </a-form-item>
-              <a-form-item field="email" label="离线提醒">
-                <a-switch :model-value="true" />
-              </a-form-item>
-              <a-form-item>
-                <a-space>
-                  <a-button type="primary"> 更新 </a-button>
-                </a-space>
-              </a-form-item>
-            </a-form>
-          </a-tab-pane>
+          <!--          <a-tab-pane key="5" title="设备配置">-->
+          <!--            <a-form-->
+          <!--              class="form"-->
+          <!--              :label-col-props="{ span: 8 }"-->
+          <!--              :wrapper-col-props="{ span: 16 }"-->
+          <!--            >-->
+          <!--              <a-form-item field="email" label="心跳时间（秒）">-->
+          <!--                <a-input-number :model-value="30" />-->
+          <!--              </a-form-item>-->
+          <!--              <a-form-item field="email" label="离线提醒">-->
+          <!--                <a-switch :model-value="true" />-->
+          <!--              </a-form-item>-->
+          <!--              <a-form-item>-->
+          <!--                <a-space>-->
+          <!--                  <a-button type="primary"> 更新 </a-button>-->
+          <!--                </a-space>-->
+          <!--              </a-form-item>-->
+          <!--            </a-form>-->
+          <!--          </a-tab-pane>-->
         </a-tabs>
       </a-card>
     </a-space>
@@ -109,7 +107,11 @@
 
 <script setup lang="ts">
   import { useRoute, useRouter } from 'vue-router';
-  import { DeviceDetailDto, DeviceFieldDto, DeviceService } from '@/services';
+  import {
+    DeviceDetailDto,
+    DeviceFieldDto,
+    DeviceService,
+  } from '@/services/sensor-core';
   import { computed, onMounted, ref } from 'vue';
   import useLoading from '@/hooks/loading';
   import eppImage from '@/assets/images/Environmental_Parameters_Profile.png';
@@ -117,7 +119,12 @@
   import thpImage from '@/assets/images/Temperature_Humidity_Profile.png';
 
   import dayjs from 'dayjs';
-  import KvTable from './components/kv-table.vue';
+  // import KvTable from './components/kv-table.vue';
+  const deviceTypeImage: Record<string, any> = {
+    Environmental_Parameters_Profile: eppImage,
+    Human_Infrared_Sensor_Profile: hispImage,
+    Temperature_Humidity_Profile: thpImage,
+  };
 
   const { loading, setLoading } = useLoading(true);
   const router = useRouter();
@@ -126,39 +133,55 @@
 
   const formData = ref<DeviceDetailDto>({});
 
+  const formFiled = computed(() => {
+    return [
+      {
+        label: '设备名称',
+        value: formData.value.name,
+      },
+      {
+        label: '设备描述',
+        value: formData.value.description,
+      },
+
+      {
+        label: '设备类型',
+        value: formData.value.deviceProfileName,
+      },
+      {
+        label: 'EUI',
+        value: formData.value.devEui,
+      },
+      {
+        label: '设备状态',
+        value: formData.value.isDisabled ? '禁用' : '启用',
+      },
+      {
+        label: '帧计数器验证',
+        value: formData.value.skipFcntCheck ? '启用' : '禁用',
+      },
+      {
+        label: '创建时间',
+        value: formData.value.chirpStackDeviceInfo?.createdAt
+          ? dayjs(formData.value.chirpStackDeviceInfo?.createdAt).format(
+              'YYYY-MM-DD HH:mm:ss',
+            )
+          : '--',
+      },
+      {
+        label: '最后上报时间',
+        value: formData.value.chirpStackDeviceInfo?.lastSeenAt
+          ? dayjs(formData.value.chirpStackDeviceInfo?.lastSeenAt).format(
+              'YYYY-MM-DD HH:mm:ss',
+            )
+          : '--',
+      },
+    ];
+  });
+
   const deviceFieldList = computed<DeviceFieldDto[]>(() => {
     return formData.value.deviceFieldList || [];
   });
-
-  const deviceTypeImage: Record<string, any> = {
-    Environmental_Parameters_Profile: eppImage,
-    Human_Infrared_Sensor_Profile: hispImage,
-    Temperature_Humidity_Profile: thpImage,
-  };
-
-  const formFiled = ref([
-    {
-      label: '设备名称',
-      value: 'deviceName',
-    },
-    {
-      label: '设备描述',
-      value: 'description',
-    },
-
-    {
-      label: '设备类型编码',
-      value: 'deviceType',
-    },
-    {
-      label: '设备类型',
-      value: 'deviceTypeDisplayName',
-    },
-    {
-      label: 'EUI',
-      value: 'devEui',
-    },
-  ]);
 
   const filedListColumns = [
     {
@@ -168,10 +191,6 @@
     {
       title: '描述',
       dataIndex: 'description',
-    },
-    {
-      title: '类型',
-      dataIndex: 'fieldType',
     },
     {
       title: '最新值',
@@ -226,9 +245,12 @@
     if (id) {
       setLoading(true);
       try {
-        formData.value = await DeviceService.getDetailById({
+        const result = await DeviceService.getDetailById({
           id: id as unknown as number,
         });
+        formData.value = {
+          ...result,
+        };
       } finally {
         setLoading(false);
       }

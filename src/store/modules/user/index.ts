@@ -6,8 +6,7 @@ import {
 } from '@/api/user';
 import { setToken, clearToken } from '@/utils/auth';
 import { removeRouteListener } from '@/utils/route-listener';
-import { ConfigurationDto, ConfigurationService } from '@/services';
-import useAppStore from '../app';
+import { ConfigurationDto, ConfigurationService } from '@/services/auth';
 
 const useUserStore = defineStore('user', {
   state: (): ConfigurationDto => ({

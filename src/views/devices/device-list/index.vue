@@ -43,18 +43,18 @@
         </a-col>
       </a-row>
       <a-divider style="margin-top: 0" />
-      <!--      <a-row style="margin-bottom: 16px">-->
-      <!--        <a-col :span="12">-->
-      <!--          <a-space>-->
-      <!--            <a-button type="primary" @click="onAdd">-->
-      <!--              <template #icon>-->
-      <!--                <icon-plus />-->
-      <!--              </template>-->
-      <!--              新增-->
-      <!--            </a-button>-->
-      <!--          </a-space>-->
-      <!--        </a-col>-->
-      <!--      </a-row>-->
+      <a-row style="margin-bottom: 16px">
+        <a-col :span="12">
+          <a-space>
+            <a-button type="primary" @click="onAdd">
+              <template #icon>
+                <icon-plus />
+              </template>
+              新增
+            </a-button>
+          </a-space>
+        </a-col>
+      </a-row>
       <a-table
         row-key="id"
         :loading="loading"
@@ -73,22 +73,90 @@
           <a-button type="text" size="small" @click="onView(record)">
             查看
           </a-button>
+          <a-button type="text" size="small" @click="onEdit(record)">
+            修改
+          </a-button>
           <a-popconfirm content="确认删除?" @ok="onDel(record)">
             <a-button type="text" status="danger" size="small"> 删除 </a-button>
           </a-popconfirm>
         </template>
       </a-table>
     </a-card>
+    <a-modal v-model:visible="modelVisible" title="设备管理" @before-ok="onOk">
+      <a-form ref="formRef" :model="formData" auto-label-width>
+        <a-form-item
+          field="name"
+          label="设备名称"
+          :rules="[{ required: true, message: '设备名称不能为空' }]"
+          :validate-trigger="['change', 'blur']"
+        >
+          <a-input v-model="formData.name" />
+        </a-form-item>
+        <a-form-item
+          field="description"
+          label="设备描述"
+          :rules="[{ required: true, message: '设备描述不能为空' }]"
+          :validate-trigger="['change', 'blur']"
+        >
+          <a-input v-model="formData.description" />
+        </a-form-item>
+
+        <a-form-item
+          field="devEui"
+          label="Device EUI"
+          length="16"
+          :rules="[
+            { required: true, message: 'Device EUI 不能为空' },
+            { length: 16, message: 'Device EUI 长度不正确' },
+            { match: /^[0-9a-fA-F]+$/, message: 'Device EUI 格式不正确' },
+          ]"
+          :validate-trigger="['change', 'blur']"
+          :disabled="!!formData.id"
+        >
+          <a-input v-model="formData.devEui" :max-length="16" show-word-limit>
+            <template #append> MSB </template>
+          </a-input>
+        </a-form-item>
+
+        <a-form-item
+          field="deviceProfileId"
+          label="设备配置文件"
+          :rules="[{ required: true, message: '设备配置文件不能为空' }]"
+        >
+          <a-select v-model="formData.deviceProfileId" :allow-clear="true">
+            <a-option
+              v-for="item in deviceProfileList"
+              :key="item.id"
+              :value="item.id"
+              >{{ item.name }}</a-option
+            >
+          </a-select>
+        </a-form-item>
+
+        <a-form-item field="enabled" label="禁用设备">
+          <a-switch v-model="formData.isDisabled" />
+        </a-form-item>
+        <a-form-item field="skipFcntCheck" label="禁用帧计数器验证">
+          <a-switch v-model="formData.skipFcntCheck" />
+        </a-form-item>
+      </a-form>
+    </a-modal>
   </div>
 </template>
 
 <script lang="ts" setup>
-  import { computed, ref, reactive } from 'vue';
+  import { computed, reactive, ref } from 'vue';
   import { TableColumnData } from '@arco-design/web-vue';
   import { Pagination } from '@/types/global';
   import useLoading from '@/hooks/loading';
-  import { DeviceService, ListDeviceOutputDto } from '@/services';
+  import {
+    ChirpStackDeviceProfileService,
+    DeviceDto,
+    DeviceProfileDto,
+    DeviceService,
+  } from '@/services/sensor-core';
   import { useRouter } from 'vue-router';
+  import { ValidatedError } from '@arco-design/web-vue/es/form/interface';
 
   const router = useRouter();
 
@@ -112,19 +180,19 @@
   const searchModel = ref(generateSearchModel());
 
   // 表格
-  const tableData = ref<ListDeviceOutputDto[]>([]);
+  const tableData = ref<DeviceDto[]>([]);
   const columns = computed<TableColumnData[]>(() => [
     {
       title: '设备名称',
-      dataIndex: 'deviceName',
-    },
-    {
-      title: '设备类型',
-      dataIndex: 'deviceTypeDisplayName',
+      dataIndex: 'name',
     },
     {
       title: '设备描述',
       dataIndex: 'description',
+    },
+    {
+      title: '设备类型',
+      dataIndex: 'profileName',
     },
     {
       title: 'EUI',
@@ -145,12 +213,12 @@
   const queryTable = async () => {
     setLoading(true);
     try {
-      const list = await DeviceService.listAll({
+      const { items, totalCount } = await DeviceService.listAll({
         ...pagination,
         ...searchModel.value,
       });
-      tableData.value = list;
-      // pagination.total = data.totalCount;
+      tableData.value = items as DeviceDto[];
+      pagination.total = totalCount;
     } catch (err) {
       // you can report use errorHandler or other
     } finally {
@@ -173,29 +241,63 @@
     searchModel.value = generateSearchModel();
   };
 
+  const deviceProfileList = ref<DeviceProfileDto[]>([]);
+  const getDeviceProfileList = async () => {
+    try {
+      deviceProfileList.value =
+        await ChirpStackDeviceProfileService.getDeviceProfileList();
+    } catch (err) {
+      // you can report use errorHandler or other
+    }
+  };
+
   // 初始化
   queryTable();
+  getDeviceProfileList();
 
-  // crud
-  // const modelVisible = ref(false);
-  // const isEdit = ref(false);
-  //
-  // const formRef = ref();
-  // const generateFormData = () => {
-  //   return {
-  //     name: '',
-  //     userNo: '',
-  //     userName: '',
-  //     pwd: '',
-  //     phone: '',
-  //     email: '',
-  //   };
-  // };
-  // const onEdit = (record: any) => {
-  //   isEdit.value = true;
-  //   modelVisible.value = true;
-  //   formData.value = { ...record };
-  // };
+  const modelVisible = ref(false);
+  const formRef = ref();
+  const generateFormData = (): DeviceDto => {
+    return {
+      name: '',
+      description: '',
+      deviceProfileId: '',
+      devEui: '',
+      deviceProfileName: '',
+      isDisabled: false,
+      id: undefined,
+      skipFcntCheck: false,
+    };
+  };
+  const formData = ref(generateFormData());
+
+  const onAdd = async () => {
+    // router.push({ name: 'DeviceDetail' });
+    modelVisible.value = true;
+    formData.value = generateFormData();
+  };
+
+  const onEdit = async (record: any) => {
+    modelVisible.value = true;
+    formData.value = { ...record };
+  };
+  const onOk = async () => {
+    const errors: Record<string, ValidatedError> | undefined =
+      await formRef.value.validate();
+    if (!errors) {
+      formData.value.deviceProfileName =
+        deviceProfileList.value.find(
+          (n) => n.id === formData.value.deviceProfileId,
+        )?.name || '';
+      await DeviceService.saveDevice({
+        inputDto: { ...formData.value },
+      });
+      queryTable();
+      return true;
+    }
+    return false;
+  };
+
   const onDel = async (record: any) => {
     await DeviceService.deleteById({ id: record.id });
     queryTable();

@@ -100,7 +100,7 @@
   import { useUserStore } from '@/store';
   import useLoading from '@/hooks/loading';
   import type { LoginData } from '@/api/user';
-  import { CaptchaService } from '@/services';
+  import { CaptchaService } from '@/services/auth';
 
   const router = useRouter();
   const { t } = useI18n();
