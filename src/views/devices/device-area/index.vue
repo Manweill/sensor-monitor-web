@@ -54,16 +54,33 @@
         </a-col>
       </a-row>
       <a-divider style="margin-top: 0" />
-      <a-row>
+      <a-row :gutter="8">
         <!--       搜索表单       -->
-        <a-col flex="275px">
-          <a-tree
-            :data="treeArea"
-            :default-expanded-keys="['0-0-0']"
-            :default-selected-keys="['0-0-0', '0-0-1']"
-          />
+        <a-col :flex="3" class="card-area-tree">
+          <a-card title="区域管理" :bordered="false">
+            <template #extra
+              ><a-link @click="onAdd()">添加根节点</a-link></template
+            >
+            <a-tree :data="areaTreeData" :show-line="true">
+              <template #title="nodeData">
+                <div class="tree-title">{{ nodeData.title }}</div>
+              </template>
+              <template #extra="nodeData">
+                <a-row style="justify-content: flex-end; flex: 1">
+                  <IconPlus class="tree-action" @click="onAdd(nodeData)" />
+                  <IconEdit class="tree-action" @click="onEdit(nodeData)" />
+                  <a-popconfirm
+                    content="确认删除?删除区域后，关联的设备会回到设备列表"
+                    @ok="onDel(nodeData)"
+                  >
+                    <IconDelete class="tree-action icon-del" />
+                  </a-popconfirm>
+                </a-row>
+              </template>
+            </a-tree>
+          </a-card>
         </a-col>
-        <a-col flex="1" style="text-align: right">
+        <a-col flex="9" style="text-align: right">
           <a-table
             row-key="id"
             :loading="loading"
@@ -92,38 +109,88 @@
         </a-col>
       </a-row>
     </a-card>
+    <a-modal
+      v-model:visible="deviceAreaFormData.visible"
+      :title="deviceAreaFormData?.id ? '编辑区域' : '添加区域'"
+      @before-ok="onOk"
+    >
+      <a-form ref="deviceAreaFormDataRef" :model="deviceAreaFormData">
+        <a-form-item
+          field="areaName"
+          label="区域名称"
+          :rules="[{ required: true, message: '姓名不能为空' }]"
+          :validate-trigger="['change', 'blur']"
+        >
+          <a-input v-model="deviceAreaFormData.areaName" />
+        </a-form-item>
+
+        <a-form-item field="assignedRoleIds" label="父节点">
+          <a-select
+            v-model="deviceAreaFormData.parentId"
+            :allow-clear="true"
+            :allow-search="true"
+          >
+            <a-option
+              v-for="roles in areaData"
+              :key="roles.id"
+              :value="roles.id"
+              >{{ roles.areaName }}</a-option
+            >
+          </a-select>
+        </a-form-item>
+        <a-form-item
+          field="sortIndex"
+          label="排序号"
+          :rules="[{ required: true, message: '排序号不能为空' }]"
+          :validate-trigger="['change', 'blur']"
+        >
+          <a-input v-model="deviceAreaFormData.sortIndex" />
+        </a-form-item>
+      </a-form>
+    </a-modal>
   </div>
 </template>
 
 <script lang="ts" setup>
-  import { computed, ref, reactive } from 'vue';
-  import { TableColumnData } from '@arco-design/web-vue';
-  import { Pagination } from '@/types/global';
   import useLoading from '@/hooks/loading';
+  import {
+    DeviceAreaDto,
+    DeviceAreaInputDto,
+    DeviceAreaService,
+    DeviceService,
+    UpdateDeviceAreaInputDto,
+  } from '@/services/sensor-core';
+  import { Pagination } from '@/types/global';
+  import { TableColumnData, ValidatedError } from '@arco-design/web-vue';
+  import { computed, reactive, ref } from 'vue';
   import { useRouter } from 'vue-router';
-  import { DeviceAreaService, DeviceAreaDto } from '@/services/sensor-core';
 
-  type IDeviceTree = DeviceAreaDto & {
+  /** 区域树列表 */
+  type IDeviceTree = {
     children: IDeviceTree[];
     title: string;
     key: string | number;
+    raw: DeviceAreaDto;
   };
 
   /** 列表转树 */
   function listToTree(
     list: DeviceAreaDto[],
-    parentId?: number | undefined,
-  ): IDeviceTree[] {
-    // const tree: IDeviceTree = [];
-    return list
-      .filter((item) => item.parentId === parentId)
-      .map((item) => ({
+    parentId: string | number = '0',
+  ): IDeviceTree[] | undefined {
+    const childNodes = list.filter((item) => item.parentId === parentId);
+
+    if (childNodes.length === 0) return undefined;
+
+    return childNodes.map((item) => {
+      return {
         key: item.id,
-        title: item.areaName,
+        title: item.areaName ?? item.id,
         id: item.id,
-        ...item,
+        raw: item,
         children: listToTree(list, item.id as number),
-      })) as IDeviceTree[];
+      };
+    }) as IDeviceTree[];
   }
 
   const router = useRouter();
@@ -145,20 +212,45 @@
       deviceName: '',
     };
   };
+
   const searchModel = ref(generateSearchModel());
-
-  const treeArea = ref<IDeviceTree[]>([]);
-
   // 表格
   const tableData = ref<DeviceAreaDto[]>([]);
+
+  // 区域树变量
+
+  const genAreaFormData = () => {
+    return {
+      visible: false,
+      sortIndex: undefined,
+      areaName: undefined,
+      parentId: undefined,
+      id: undefined,
+    };
+  };
+
+  const areaData = ref<DeviceAreaDto[]>([]);
+  // const areaTreeData = computed(() => listToTree(areaData.value, '0'));
+  const areaTreeData = ref<IDeviceTree[]>([]);
+  // 表单控制
+  const deviceAreaFormDataRef = ref();
+  // 表单数据
+  const deviceAreaFormData = ref<
+    UpdateDeviceAreaInputDto & {
+      visible: boolean;
+      sortIndex?: string;
+      parentId?: number;
+    }
+  >(genAreaFormData());
+
   const columns = computed<TableColumnData[]>(() => [
     {
       title: '设备名称',
-      dataIndex: 'deviceName',
+      dataIndex: 'name',
     },
     {
       title: '设备类型',
-      dataIndex: 'deviceTypeDisplayName',
+      dataIndex: 'profileName',
     },
     {
       title: '设备描述',
@@ -183,13 +275,24 @@
   const queryTable = async () => {
     setLoading(true);
     try {
-      const list = await DeviceAreaService.getAllDeviceArea({
+      const areaResult = await DeviceAreaService.getAllDeviceArea({
         // ...pagination,
         // ...searchModel.value,
       });
-      tableData.value = list.items as DeviceAreaDto[];
-      treeArea.value = listToTree(list.items as DeviceAreaDto[]);
-      // pagination.total = data.totalCount;
+      areaData.value = areaResult.items as DeviceAreaDto[];
+      areaTreeData.value = listToTree(
+        areaResult.items as DeviceAreaDto[],
+        '0',
+      )!;
+
+      const deviceResult = await DeviceService.listAll({
+        ...pagination,
+        ...searchModel.value,
+      });
+
+      tableData.value = deviceResult.items as DeviceAreaDto[];
+
+      pagination.total = deviceResult.totalCount;
     } catch (err) {
       // you can report use errorHandler or other
     } finally {
@@ -215,29 +318,44 @@
   // 初始化
   queryTable();
 
-  // crud
-  // const modelVisible = ref(false);
-  // const isEdit = ref(false);
-  //
-  // const formRef = ref();
-  // const generateFormData = () => {
-  //   return {
-  //     name: '',
-  //     userNo: '',
-  //     userName: '',
-  //     pwd: '',
-  //     phone: '',
-  //     email: '',
-  //   };
-  // };
-  // const onEdit = (record: any) => {
-  //   isEdit.value = true;
-  //   modelVisible.value = true;
-  //   formData.value = { ...record };
-  // };
-  const onDel = async (record: any) => {
+  // 新增
+  const onAdd = (currentNode?: IDeviceTree) => {
+    deviceAreaFormData.value = genAreaFormData();
+    deviceAreaFormData.value.parentId = currentNode?.raw.id;
+    deviceAreaFormData.value.visible = true;
+  };
+  // 修改
+  const onEdit = (currentNode: IDeviceTree) => {
+    deviceAreaFormData.value = {
+      ...currentNode.raw,
+      sortIndex: currentNode.raw.sortIndex as any,
+      visible: true,
+    };
+  };
+  // 删除
+  const onDel = async (record: { id: number }) => {
     await DeviceAreaService.deleteDeviceArea({ input: { id: record.id } });
     queryTable();
+  };
+  // 保存
+  const onOk = async () => {
+    const errors: Record<string, ValidatedError> | undefined =
+      await deviceAreaFormDataRef.value.validate();
+    if (!errors) {
+      if (deviceAreaFormData.value.id) {
+        await DeviceAreaService.updateDeviceArea({
+          input: deviceAreaFormData.value as UpdateDeviceAreaInputDto,
+        });
+      } else {
+        await DeviceAreaService.createDeviceArea({
+          input: deviceAreaFormData.value as DeviceAreaInputDto,
+        });
+      }
+
+      queryTable();
+      return true;
+    }
+    return false;
   };
 
   const onView = (record: any) => {
@@ -248,5 +366,31 @@
 <style lang="less" scoped>
   .container {
     padding: 20px;
+  }
+
+  .tree-title {
+    // text-overflow: ellipsis;
+    // // max-width: 150px;
+    // overflow: hidden;
+    // white-space: nowrap;
+    // min-width: 150px;
+    // max-width: 70%;
+  }
+
+  .tree-action {
+    font-size: 12px;
+    color: #3370ff;
+    margin: 0 6px;
+  }
+
+  .icon-del {
+    color: rgba(var(--danger-6));
+  }
+
+  .card-area-tree :deep(.arco-card-header) {
+    border: none;
+    background-color: var(--color-neutral-2);
+    padding: 2px 16px;
+    height: 40px;
   }
 </style>
