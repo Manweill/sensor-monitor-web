@@ -701,7 +701,7 @@ export class DeviceService {
         nodeId: params['nodeId'],
       };
 
-      let data = null;
+      /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
       console.warn(
         '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
@@ -746,7 +746,7 @@ export class DeviceService {
   static deleteLogicDeviceById(
     params: {
       /** id */
-      id: string;
+      id: number;
     } = {} as any,
     options: IRequestOptions = {},
   ): Promise<any> {
@@ -832,7 +832,11 @@ export class DeviceService {
         startTime: params['startTime'],
       };
 
-      /** 适配ios13，get请求不允许带body */
+      /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
+
+      console.warn(
+        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
+      );
 
       axios(configs, resolve, reject);
     });
@@ -869,7 +873,41 @@ export class DeviceService {
         startTime: params['startTime'],
       };
 
-      /** 适配ios13，get请求不允许带body */
+      /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
+
+      console.warn(
+        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
+      );
+
+      axios(configs, resolve, reject);
+    });
+  }
+  /**
+   * 根据设备的devEUI获取到设备的OTAAKeys信息
+   */
+  static getOtaaKeysByDevEui(
+    params: {
+      /** devEui */
+      devEui: string;
+    } = {} as any,
+    options: IRequestOptions = {},
+  ): Promise<GetOtaaKeyInfoDto> {
+    return new Promise((resolve, reject) => {
+      let url = basePath + '/device/getOTAAKeysByDevEui/{devEui}';
+      url = url.replace('{devEui}', params['devEui'] + '');
+
+      const configs: IRequestConfig = getConfigs(
+        'get',
+        'application/json',
+        url,
+        options,
+      );
+
+      /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
+
+      console.warn(
+        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
+      );
 
       axios(configs, resolve, reject);
     });
@@ -1009,12 +1047,12 @@ export class DeviceAreaService {
     });
   }
   /**
-   * 根据选择的设备IDS,批量解绑
+   * 根据选择的区域IDS,批量解绑
    */
   static batchUnBind(
     params: {
-      /** deviceIds */
-      deviceIds: any | null[];
+      /** areaIds */
+      areaIds: any | null[];
     } = {} as any,
     options: IRequestOptions = {},
   ): Promise<any> {
@@ -1028,7 +1066,7 @@ export class DeviceAreaService {
         options,
       );
 
-      let data = params['deviceIds'];
+      let data = params['areaIds'];
 
       configs.data = data;
 
@@ -1110,7 +1148,7 @@ export class DeviceAreaService {
         options,
       );
 
-      let data = null;
+      /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
       console.warn(
         '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
@@ -1150,7 +1188,7 @@ export class DeviceAreaService {
   static getDeviceListByArea(
     params: {
       /** 区域ID */
-      areaId?: string;
+      areaId?: number;
       /** 设备名 */
       deviceName?: string;
       /** 是否包含所有子区域 */
@@ -1282,17 +1320,34 @@ export class DeviceAreaService {
 
 export class DeviceMetricDataService {
   /**
-   * 获取到设备遥测的历史数据
+   * 根据设备物联ID相关条件，获取到设备遥测的历史数据
    */
-  static getDeviceMetricListData(
+  static getDeviceMetricListDataByDeviceEui(
     params: {
-      /**  */
+      /** 设备的物联ID */
       devEui?: string;
+      /** 设备物联属性key */
+      deviceFieldName?: string;
+      /** 结束时间 */
+      endTime?: string;
+      /** 页码 */
+      pageNumber?: number;
+      /** 每页显示的记录数 */
+      pageSize?: number;
+      /** 排序字段名 */
+      sorting?: string;
+      /** 排序的方式 */
+      sortingDirection?: string;
+      /** 开始时间 */
+      startTime?: string;
+      /** 是否不分页，默认分页 */
+      unPage?: boolean;
     } = {} as any,
     options: IRequestOptions = {},
-  ): Promise<DeviceMetricListDataDto[]> {
+  ): Promise<PagedResultDto<DeviceMetricListDataDto>> {
     return new Promise((resolve, reject) => {
-      let url = basePath + '/deviceMetricData/getDeviceMetricListData';
+      let url =
+        basePath + '/deviceMetricData/getDeviceMetricListDataByDeviceEui';
 
       const configs: IRequestConfig = getConfigs(
         'get',
@@ -1300,9 +1355,80 @@ export class DeviceMetricDataService {
         url,
         options,
       );
-      configs.params = { devEui: params['devEui'] };
+      configs.params = {
+        devEui: params['devEui'],
+        deviceFieldName: params['deviceFieldName'],
+        endTime: params['endTime'],
+        pageNumber: params['pageNumber'],
+        pageSize: params['pageSize'],
+        sorting: params['sorting'],
+        sortingDirection: params['sortingDirection'],
+        startTime: params['startTime'],
+        unPage: params['unPage'],
+      };
 
-      /** 适配ios13，get请求不允许带body */
+      /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
+
+      console.warn(
+        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
+      );
+
+      axios(configs, resolve, reject);
+    });
+  }
+  /**
+   * 根据设备ID相关条件，获取到设备遥测的历史数据
+   */
+  static getDeviceMetricListDataByDeviceId(
+    params: {
+      /** 设备的属性名称 */
+      deviceFieldName?: string;
+      /** 设备ID */
+      deviceId?: number;
+      /** 结束时间 */
+      endTime?: string;
+      /** 页码 */
+      pageNumber?: number;
+      /** 每页显示的记录数 */
+      pageSize?: number;
+      /** 排序字段名 */
+      sorting?: string;
+      /** 排序的方式 */
+      sortingDirection?: string;
+      /** 开始时间 */
+      startTime?: string;
+      /** 是否不分页，默认分页 */
+      unPage?: boolean;
+    } = {} as any,
+    options: IRequestOptions = {},
+  ): Promise<PagedResultDto<DeviceMetricListDataDto>> {
+    return new Promise((resolve, reject) => {
+      let url =
+        basePath + '/deviceMetricData/getDeviceMetricListDataByDeviceId';
+
+      const configs: IRequestConfig = getConfigs(
+        'get',
+        'application/json',
+        url,
+        options,
+      );
+      configs.params = {
+        deviceFieldName: params['deviceFieldName'],
+        deviceId: params['deviceId'],
+        endTime: params['endTime'],
+        pageNumber: params['pageNumber'],
+        pageSize: params['pageSize'],
+        sorting: params['sorting'],
+        sortingDirection: params['sortingDirection'],
+        startTime: params['startTime'],
+        unPage: params['unPage'],
+      };
+
+      /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
+
+      console.warn(
+        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
+      );
 
       axios(configs, resolve, reject);
     });
@@ -1611,11 +1737,14 @@ export interface DeviceKeysInfoDto {
 }
 
 export interface DeviceLatestMetricDataDto {
+  /** 设备属性的描述 */
+  description?: string;
+
   /** 设备的物联ID */
   devEui?: string;
 
   /** 设备遥测属性名称 */
-  key?: string;
+  deviceFieldName?: string;
 
   /** 设备遥测值上报的最新时间 */
   time?: Date;
@@ -1757,7 +1886,25 @@ export interface DeviceListDto {
   online?: boolean;
 }
 
-export interface DeviceMetricListDataDto {}
+export interface DeviceMetricListDataDto {
+  /** 设备属性的描述 */
+  description?: string;
+
+  /** 设备物联ID */
+  devEui?: string;
+
+  /** 设备物联属性key */
+  deviceFieldName?: string;
+
+  /** id */
+  id?: string;
+
+  /** 数据上报时间 */
+  upTime?: Date;
+
+  /** 浮点格式属性值 */
+  value?: number;
+}
 
 export interface DeviceMetricPropertyDataDto {
   /**  */
