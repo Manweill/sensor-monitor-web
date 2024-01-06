@@ -156,8 +156,8 @@ devDependencies:
     specifier: ^6.0.3
     version: 6.0.3(stylelint@15.10.3)
   swagger-axios-codegen:
-    specifier: ^0.16.4
-    version: 0.16.4
+    specifier: ^0.16.5
+    version: 0.16.5
   typescript:
     specifier: ^5.2.2
     version: 5.2.2
@@ -6629,8 +6629,8 @@ packages:
       picocolors: 1.0.0
     dev: true
 
-  /swagger-axios-codegen@0.16.4:
-    resolution: {integrity: sha512-4PfkcETHHk6gFu9cIilzm+FwnsaXwoT73irApe1jWHUcpzlZucQELt79XJMlZC2Ulb48Uocv9iNRUXrKeL4GTQ==}
+  /swagger-axios-codegen@0.16.5:
+    resolution: {integrity: sha512-6NisHTKDMAXSBiErrC+JDLYd07bnotUULo3TQdBYQ6OscysKEH1G08tpt1iYkeUJ4XPLqWsfBReo+G+C7feDWg==}
     dependencies:
       axios: 1.6.3
       camelcase: 5.3.1
