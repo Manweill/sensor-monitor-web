@@ -13,7 +13,7 @@
         </a-switch>
       </template>
       <a-row>
-        <!--       搜索表单       -->
+        <!--   搜索表单  -->
         <a-col :flex="1">
           <a-form
             :model="searchModel"
@@ -58,10 +58,17 @@
         <!--       搜索表单       -->
         <a-col :flex="3" class="card-area-tree">
           <a-card title="区域管理" :bordered="false">
-            <template #extra
-              ><a-link @click="onAdd()">添加根节点</a-link></template
+            <template #extra>
+              <a-link v-if="selectedArea.length > 0" @click="clearSelected()"
+                >清除选择</a-link
+              ><a-link @click="onAdd()">添加</a-link></template
             >
-            <a-tree :data="areaTreeData" :show-line="true">
+            <a-tree
+              v-model:selected-keys="selectedArea"
+              :data="areaTreeData"
+              :show-line="true"
+              @select="queryData"
+            >
               <template #title="nodeData">
                 <div class="tree-title">{{ nodeData.title }}</div>
               </template>
@@ -82,12 +89,14 @@
         </a-col>
         <a-col flex="9" style="text-align: right">
           <a-table
+            v-model:selectedKeys="selectedDevices"
             row-key="id"
             :loading="loading"
             :pagination="pagination"
             :columns="columns"
             :data="tableData"
             :bordered="false"
+            :row-selection="rowSelection"
             @page-change="onPageChange"
           >
             <template #online="{ record }">
@@ -99,16 +108,36 @@
               <a-button type="text" size="small" @click="onView(record)">
                 查看
               </a-button>
-              <a-popconfirm content="确认删除?" @ok="onDel(record)">
+              <!-- <a-popconfirm content="确认删除?" @ok="onUnbindArea(record)">
                 <a-button type="text" status="danger" size="small">
-                  删除
+                  解绑
                 </a-button>
-              </a-popconfirm>
+              </a-popconfirm> -->
+            </template>
+            <template #pagination-left>
+              <a-col :flex="1">
+                <a-row style="padding: 0 10px">
+                  <a-link @click="toggleSelectDevice()">{{
+                    rowSelection ? '取消选择' : '选择'
+                  }}</a-link>
+                  <a-link
+                    v-if="selectedDevices.length > 0"
+                    @click="showDeviceAreaSelectModal"
+                    >移动设备
+                  </a-link>
+                  <a-link
+                    v-if="selectedDevices.length > 0"
+                    @click="onUnbindArea()"
+                    >解绑区域</a-link
+                  >
+                </a-row>
+              </a-col>
             </template>
           </a-table>
         </a-col>
       </a-row>
     </a-card>
+    <!-- 编辑、添加区域 -->
     <a-modal
       v-model:visible="deviceAreaFormData.visible"
       :title="deviceAreaFormData?.id ? '编辑区域' : '添加区域'"
@@ -148,6 +177,21 @@
         </a-form-item>
       </a-form>
     </a-modal>
+    <!-- 选择区域 -->
+    <a-modal
+      v-model:visible="deviceAreaSelectModelVisible"
+      title="选择区域"
+      @before-ok="onBindArea()"
+    >
+      <a-tree-select
+        v-model="bindDeviceAreaSelected"
+        :allow-search="true"
+        :allow-clear="true"
+        :data="areaTreeData"
+        placeholder="Please select ..."
+        style="width: 300px"
+      ></a-tree-select>
+    </a-modal>
   </div>
 </template>
 
@@ -157,11 +201,17 @@
     DeviceAreaDto,
     DeviceAreaInputDto,
     DeviceAreaService,
+    DeviceListDto,
     DeviceService,
     UpdateDeviceAreaInputDto,
   } from '@/services/sensor-core';
   import { Pagination } from '@/types/global';
-  import { TableColumnData, ValidatedError } from '@arco-design/web-vue';
+  import {
+    Message,
+    TableColumnData,
+    TableRowSelection,
+    ValidatedError,
+  } from '@arco-design/web-vue';
   import { computed, reactive, ref } from 'vue';
   import { useRouter } from 'vue-router';
 
@@ -188,7 +238,7 @@
         title: item.areaName ?? item.id,
         id: item.id,
         raw: item,
-        children: listToTree(list, item.id as number),
+        children: listToTree(list, item.id as string),
       };
     }) as IDeviceTree[];
   }
@@ -197,10 +247,14 @@
 
   const { loading, setLoading } = useLoading(false);
 
+  // 当前页面的操作模式
+  const operateMode = ref<'none' | 'bindDevice'>('none');
+
   // 分页
   const basePagination: Pagination = {
     pageNumber: 1,
-    pageSize: 20,
+    pageSize: 3,
+    showTotal: true,
   };
   const pagination = reactive({
     ...basePagination,
@@ -216,32 +270,16 @@
   const searchModel = ref(generateSearchModel());
   // 表格
   const tableData = ref<DeviceAreaDto[]>([]);
-
-  // 区域树变量
-
-  const genAreaFormData = () => {
-    return {
-      visible: false,
-      sortIndex: undefined,
-      areaName: undefined,
-      parentId: undefined,
-      id: undefined,
-    };
-  };
-
-  const areaData = ref<DeviceAreaDto[]>([]);
-  // const areaTreeData = computed(() => listToTree(areaData.value, '0'));
-  const areaTreeData = ref<IDeviceTree[]>([]);
-  // 表单控制
-  const deviceAreaFormDataRef = ref();
-  // 表单数据
-  const deviceAreaFormData = ref<
-    UpdateDeviceAreaInputDto & {
-      visible: boolean;
-      sortIndex?: string;
-      parentId?: number;
-    }
-  >(genAreaFormData());
+  const selectedDevices = ref([]);
+  const rowSelection = computed<TableRowSelection | undefined>(() =>
+    operateMode.value === 'bindDevice'
+      ? {
+          type: 'checkbox',
+          showCheckedAll: true,
+          onlyCurrent: false,
+        }
+      : undefined,
+  );
 
   const columns = computed<TableColumnData[]>(() => [
     {
@@ -271,24 +309,66 @@
     },
   ]);
 
+  // 区域树变量
+
+  const genAreaFormData = () => {
+    return {
+      visible: false,
+      sortIndex: undefined,
+      areaName: undefined,
+      parentId: undefined,
+      id: undefined,
+    };
+  };
+
+  // 区域
+  const areaData = ref<DeviceAreaDto[]>([]);
+  // const areaTreeData = computed(() => listToTree(areaData.value, '0'));
+  const areaTreeData = ref<IDeviceTree[]>([]);
+
+  const selectedArea = ref([]);
+
+  // 表单控制
+  const deviceAreaFormDataRef = ref();
+  // 表单数据
+  const deviceAreaFormData = ref<
+    UpdateDeviceAreaInputDto & {
+      visible: boolean;
+      sortIndex?: string;
+      parentId?: string;
+    }
+  >(genAreaFormData());
+
+  const deviceAreaSelectModelVisible = ref(false);
+  const bindDeviceAreaSelected = ref<string | undefined>();
+
   // 查询表格数据
-  const queryTable = async () => {
+  const queryData = async () => {
     setLoading(true);
     try {
-      const areaResult = await DeviceAreaService.getAllDeviceArea({
-        // ...pagination,
-        // ...searchModel.value,
-      });
+      const areaResult = await DeviceAreaService.getAllDeviceArea();
       areaData.value = areaResult.items as DeviceAreaDto[];
       areaTreeData.value = listToTree(
         areaResult.items as DeviceAreaDto[],
         '0',
       )!;
 
-      const deviceResult = await DeviceService.listAll({
-        ...pagination,
-        ...searchModel.value,
-      });
+      let deviceResult;
+      if (selectedArea.value.length > 0) {
+        deviceResult = await DeviceAreaService.getDeviceListByArea({
+          ...pagination,
+          ...searchModel.value,
+          areaId: selectedArea.value.length
+            ? (selectedArea.value.join() as string)
+            : undefined,
+        });
+      } else {
+        deviceResult = await DeviceService.listAll({
+          ...pagination,
+          ...searchModel.value,
+          // pageNumber: pagination.pageNumber,
+        });
+      }
 
       tableData.value = deviceResult.items as DeviceAreaDto[];
 
@@ -303,21 +383,78 @@
   // 分页
   const onPageChange = (pageNumber: number) => {
     pagination.pageNumber = pageNumber;
-    queryTable();
+    queryData();
   };
 
   // 搜索表单按钮事件
   const search = () => {
     pagination.pageNumber = 1;
-    queryTable();
+    queryData();
   };
   const reset = () => {
     searchModel.value = generateSearchModel();
   };
 
-  // 初始化
-  queryTable();
+  const clearSelected = () => {
+    selectedArea.value = [];
+    queryData();
+  };
 
+  const toggleSelectDevice = () => {
+    selectedDevices.value = [];
+    operateMode.value =
+      operateMode.value === 'bindDevice' ? 'none' : 'bindDevice';
+  };
+
+  const showDeviceAreaSelectModal = () => {
+    deviceAreaSelectModelVisible.value = true;
+    bindDeviceAreaSelected.value = undefined;
+  };
+
+  // 绑定设备区域
+  const onBindArea = async (record?: DeviceListDto) => {
+    if (record) {
+      await DeviceAreaService.batchBind({
+        input: {
+          areaId: bindDeviceAreaSelected.value,
+          deviceIdList: [record.id as unknown as number],
+        },
+      });
+    } else {
+      await DeviceAreaService.batchBind({
+        input: {
+          areaId: bindDeviceAreaSelected.value,
+          deviceIdList: selectedDevices.value,
+        },
+      });
+      toggleSelectDevice();
+    }
+
+    queryData();
+    Message.success('操作成功！');
+  };
+  // 解绑设备区域
+  const onUnbindArea = async (record?: DeviceListDto) => {
+    if (record) {
+      await DeviceAreaService.batchUnbindByAreaAndDevice({
+        input: {
+          areaId: selectedArea.value.join(),
+          deviceIdList: [record.id as unknown as number],
+        },
+      });
+    } else if (selectedArea.value.length > 0) {
+      // 要验证没有区域 id 能否解绑
+      await DeviceAreaService.batchUnbindByAreaAndDevice({
+        input: {
+          areaId: selectedArea.value.join(),
+          deviceIdList: selectedDevices.value,
+        },
+      });
+      toggleSelectDevice();
+    }
+    queryData();
+    Message.success('操作成功！');
+  };
   // 新增
   const onAdd = (currentNode?: IDeviceTree) => {
     deviceAreaFormData.value = genAreaFormData();
@@ -333,9 +470,9 @@
     };
   };
   // 删除
-  const onDel = async (record: { id: number }) => {
-    await DeviceAreaService.deleteDeviceArea({ input: { id: record.id } });
-    queryTable();
+  const onDel = async (record: { id: string }) => {
+    await DeviceAreaService.deleteDeviceArea({ areaId: record.id });
+    queryData();
   };
   // 保存
   const onOk = async () => {
@@ -352,7 +489,7 @@
         });
       }
 
-      queryTable();
+      queryData();
       return true;
     }
     return false;
@@ -361,6 +498,9 @@
   const onView = (record: any) => {
     router.push({ name: 'DeviceDetail', query: { id: record.id } });
   };
+
+  // 初始化
+  queryData();
 </script>
 
 <style lang="less" scoped>
