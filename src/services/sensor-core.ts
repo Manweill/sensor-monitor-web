@@ -38,90 +38,6 @@ export class PagedResultDto<T = any> implements IPagedResult<T> {
 // customer definition
 // empty
 
-export class BindDeviceAreaService {
-  /**
-   * 在某个区域下批量绑定设备
-   */
-  static batchBind(
-    params: {
-      /** input */
-      input: BatchBindDeviceAreaInputDto;
-    } = {} as any,
-    options: IRequestOptions = {},
-  ): Promise<any> {
-    return new Promise((resolve, reject) => {
-      let url = basePath + '/bindDeviceArea/batchBind';
-
-      const configs: IRequestConfig = getConfigs(
-        'post',
-        'application/json',
-        url,
-        options,
-      );
-
-      let data = params['input'];
-
-      configs.data = data;
-
-      axios(configs, resolve, reject);
-    });
-  }
-  /**
-   * 根据选择的区域IDS,批量解绑
-   */
-  static batchUnBind(
-    params: {
-      /** areaIds */
-      areaIds: any | null[];
-    } = {} as any,
-    options: IRequestOptions = {},
-  ): Promise<any> {
-    return new Promise((resolve, reject) => {
-      let url = basePath + '/bindDeviceArea/batchUnbind';
-
-      const configs: IRequestConfig = getConfigs(
-        'post',
-        'application/json',
-        url,
-        options,
-      );
-
-      let data = params['areaIds'];
-
-      configs.data = data;
-
-      axios(configs, resolve, reject);
-    });
-  }
-  /**
-   * 根据选择的区域下的某些设备,对其进行批量解绑
-   */
-  static batchUnbindByAreaAndDevice(
-    params: {
-      /** input */
-      input: BatchUnbindByAreaAndDeviceInputDto;
-    } = {} as any,
-    options: IRequestOptions = {},
-  ): Promise<any> {
-    return new Promise((resolve, reject) => {
-      let url = basePath + '/bindDeviceArea/batchUnbindByAreaAndDevice';
-
-      const configs: IRequestConfig = getConfigs(
-        'post',
-        'application/json',
-        url,
-        options,
-      );
-
-      let data = params['input'];
-
-      configs.data = data;
-
-      axios(configs, resolve, reject);
-    });
-  }
-}
-
 export class ChirpStackDeviceService {
   /**
    * 刷新设备的DownLinkQueue
@@ -1131,12 +1047,12 @@ export class DeviceAreaService {
     });
   }
   /**
-   * 根据选择的区域IDS,批量解绑
+   * 根据选择的设备IDS,批量解绑
    */
   static batchUnBind(
     params: {
-      /** areaIds */
-      areaIds: any | null[];
+      /** deviceIds */
+      deviceIds: any | null[];
     } = {} as any,
     options: IRequestOptions = {},
   ): Promise<any> {
@@ -1150,7 +1066,7 @@ export class DeviceAreaService {
         options,
       );
 
-      let data = params['areaIds'];
+      let data = params['deviceIds'];
 
       configs.data = data;
 
@@ -1331,6 +1247,33 @@ export class DeviceAreaService {
   ): Promise<DeviceAreaDto> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/deviceArea/moveDeviceArea';
+
+      const configs: IRequestConfig = getConfigs(
+        'post',
+        'application/json',
+        url,
+        options,
+      );
+
+      let data = params['input'];
+
+      configs.data = data;
+
+      axios(configs, resolve, reject);
+    });
+  }
+  /**
+   * 在某个区域下，更新某个设备的排序
+   */
+  static updateAreasDeviceSort(
+    params: {
+      /** input */
+      input: UpdateAreasDeviceSortInputDto;
+    } = {} as any,
+    options: IRequestOptions = {},
+  ): Promise<any> {
+    return new Promise((resolve, reject) => {
+      let url = basePath + '/deviceArea/updateAreasDeviceSort';
 
       const configs: IRequestConfig = getConfigs(
         'post',
@@ -1677,6 +1620,9 @@ export interface DeviceAreaDto {
   /** 父设备区域id */
   parentId?: string;
 
+  /**  */
+  room?: boolean;
+
   /** 序号 */
   sortIndex?: number;
 }
@@ -1687,6 +1633,9 @@ export interface DeviceAreaInputDto {
 
   /** 父级区域id */
   parentId?: string;
+
+  /**  */
+  room?: boolean;
 
   /** 顺序 */
   sortIndex?: number;
@@ -1923,6 +1872,9 @@ export interface DeviceListDto {
 
   /** id */
   id?: string;
+
+  /** 设备排序标识 */
+  index?: number;
 
   /** 设备最新的遥测数据 */
   latestMetricDataList?: DeviceLatestMetricDataDto[];
@@ -2284,6 +2236,14 @@ export interface SelectListOutputDto {
   value?: number;
 }
 
+export interface UpdateAreasDeviceSortInputDto {
+  /** 设备ID */
+  deviceId?: string;
+
+  /** 排序值 */
+  index?: number;
+}
+
 export interface UpdateChirpStackDeviceInfoItemInputDto {
   /** 设备所属应用ID,后端传值 */
   applicationId?: string;
@@ -2324,6 +2284,9 @@ export interface UpdateDeviceAreaInputDto {
 
   /** 父设备区域id */
   parentId?: string;
+
+  /**  */
+  room?: boolean;
 
   /** 顺序 */
   sortIndex?: number;

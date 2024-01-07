@@ -66,18 +66,28 @@
             <a-tree
               v-model:selected-keys="selectedArea"
               :data="areaTreeData"
-              :show-line="true"
+              :show-line="false"
               @select="queryData"
             >
               <template #title="nodeData">
                 <div class="tree-title">{{ nodeData.title }}</div>
               </template>
+              <!-- <template #switcher-icon="nodeData, { isLeaf }">
+                <IconDown v-if="!isLeaf" />
+                <IconHome v-else-if="isLeaf && nodeData.room" />
+                <IconDriveFile v-else />
+              </template> -->
               <template #extra="nodeData">
                 <a-row style="justify-content: flex-end; flex: 1">
-                  <IconPlus class="tree-action" @click="onAdd(nodeData)" />
+                  <IconPlus
+                    v-if="!nodeData.raw.room"
+                    class="tree-action"
+                    @click="onAdd(nodeData)"
+                  />
                   <IconEdit class="tree-action" @click="onEdit(nodeData)" />
                   <a-popconfirm
                     content="确认删除?删除区域后，关联的设备会回到设备列表"
+                    type="warning"
                     @ok="onDel(nodeData)"
                   >
                     <IconDelete class="tree-action icon-del" />
@@ -97,7 +107,9 @@
             :data="tableData"
             :bordered="false"
             :row-selection="rowSelection"
+            :draggable="draggable"
             @page-change="onPageChange"
+            @change="onTableChange"
           >
             <template #online="{ record }">
               <span v-if="!record.online" class="circle"></span>
@@ -117,9 +129,21 @@
             <template #pagination-left>
               <a-col :flex="1">
                 <a-row style="padding: 0 10px">
-                  <a-link @click="toggleSelectDevice()">{{
-                    rowSelection ? '取消选择' : '选择'
-                  }}</a-link>
+                  <a-link
+                    v-if="operateMode !== 'none'"
+                    @click="onTableCommand()"
+                  >
+                    取消
+                  </a-link>
+                  <template v-else>
+                    <a-link @click="onTableCommand('bindDevice')">选择</a-link>
+                    <a-link
+                      v-if="selectedArea.length > 0"
+                      @click="onTableCommand('sortDevice')"
+                      >排序</a-link
+                    >
+                  </template>
+
                   <a-link
                     v-if="selectedDevices.length > 0"
                     @click="showDeviceAreaSelectModal"
@@ -154,18 +178,13 @@
         </a-form-item>
 
         <a-form-item field="assignedRoleIds" label="父节点">
-          <a-select
+          <a-tree-select
             v-model="deviceAreaFormData.parentId"
-            :allow-clear="true"
             :allow-search="true"
-          >
-            <a-option
-              v-for="roles in areaData"
-              :key="roles.id"
-              :value="roles.id"
-              >{{ roles.areaName }}</a-option
-            >
-          </a-select>
+            :allow-clear="true"
+            :data="areaTreeDataWithoutRoom"
+            placeholder="请选择 ..."
+          ></a-tree-select>
         </a-form-item>
         <a-form-item
           field="sortIndex"
@@ -174,6 +193,15 @@
           :validate-trigger="['change', 'blur']"
         >
           <a-input v-model="deviceAreaFormData.sortIndex" />
+        </a-form-item>
+        <a-form-item
+          field="room"
+          label="是否房间"
+          :disabled="!!deviceAreaFormData?.id"
+          :rules="[{ required: true, message: '排序号不能为空' }]"
+          :validate-trigger="['change', 'blur']"
+        >
+          <a-switch v-model="deviceAreaFormData.room" />
         </a-form-item>
       </a-form>
     </a-modal>
@@ -187,8 +215,8 @@
         v-model="bindDeviceAreaSelected"
         :allow-search="true"
         :allow-clear="true"
-        :data="areaTreeData"
-        placeholder="Please select ..."
+        :data="areaTreeRoomData"
+        placeholder="请选择 ..."
         style="width: 300px"
       ></a-tree-select>
     </a-modal>
@@ -209,10 +237,13 @@
   import {
     Message,
     TableColumnData,
+    TableDraggable,
     TableRowSelection,
     ValidatedError,
   } from '@arco-design/web-vue';
-  import { computed, reactive, ref } from 'vue';
+  import { IconDriveFile, IconHome } from '@arco-design/web-vue/es/icon';
+  import _ from 'lodash';
+  import { h, computed, reactive, ref } from 'vue';
   import { useRouter } from 'vue-router';
 
   /** 区域树列表 */
@@ -227,18 +258,26 @@
   function listToTree(
     list: DeviceAreaDto[],
     parentId: string | number = '0',
+    roomMode: boolean | undefined = undefined,
   ): IDeviceTree[] | undefined {
     const childNodes = list.filter((item) => item.parentId === parentId);
 
     if (childNodes.length === 0) return undefined;
 
     return childNodes.map((item) => {
+      let disabled: boolean | undefined = false;
+      if (!_.isNil(roomMode)) {
+        disabled = roomMode ? !item.room : item.room;
+      }
+
       return {
         key: item.id,
         title: item.areaName ?? item.id,
         id: item.id,
         raw: item,
-        children: listToTree(list, item.id as string),
+        disabled,
+        icon: () => (item.room ? h(IconHome) : h(IconDriveFile)),
+        children: listToTree(list, item.id as string, roomMode),
       };
     }) as IDeviceTree[];
   }
@@ -247,8 +286,9 @@
 
   const { loading, setLoading } = useLoading(false);
 
+  type IOperateMode = 'none' | 'bindDevice' | 'sortDevice';
   // 当前页面的操作模式
-  const operateMode = ref<'none' | 'bindDevice'>('none');
+  const operateMode = ref<IOperateMode>('none');
 
   // 分页
   const basePagination: Pagination = {
@@ -278,6 +318,12 @@
           showCheckedAll: true,
           onlyCurrent: false,
         }
+      : undefined,
+  );
+
+  const draggable = computed<TableDraggable | undefined>(() =>
+    operateMode.value === 'sortDevice'
+      ? { type: 'handle', width: 40 }
       : undefined,
   );
 
@@ -318,13 +364,19 @@
       areaName: undefined,
       parentId: undefined,
       id: undefined,
+      room: false,
     };
   };
 
   // 区域
   const areaData = ref<DeviceAreaDto[]>([]);
-  // const areaTreeData = computed(() => listToTree(areaData.value, '0'));
-  const areaTreeData = ref<IDeviceTree[]>([]);
+  const areaTreeData = computed(() => listToTree(areaData.value, '0'));
+  const areaTreeRoomData = computed(() =>
+    listToTree(areaData.value, '0', true),
+  );
+  const areaTreeDataWithoutRoom = computed(() =>
+    listToTree(areaData.value, '0', false),
+  );
 
   const selectedArea = ref([]);
 
@@ -348,10 +400,10 @@
     try {
       const areaResult = await DeviceAreaService.getAllDeviceArea();
       areaData.value = areaResult.items as DeviceAreaDto[];
-      areaTreeData.value = listToTree(
-        areaResult.items as DeviceAreaDto[],
-        '0',
-      )!;
+      // areaTreeData.value = listToTree(
+      //   areaResult.items as DeviceAreaDto[],
+      //   '0',
+      // )!;
 
       let deviceResult;
       if (selectedArea.value.length > 0) {
@@ -386,6 +438,20 @@
     queryData();
   };
 
+  // 表格变化
+  const onTableChange = (_data: any) => {
+    _data.forEach((d: DeviceListDto, index: number) => {
+      DeviceAreaService.updateAreasDeviceSort({
+        input: {
+          index:
+            pagination.pageNumber * (pagination.pageSize ?? 10) + (index + 1),
+          deviceId: d.id,
+        },
+      });
+    });
+    tableData.value = _data;
+  };
+
   // 搜索表单按钮事件
   const search = () => {
     pagination.pageNumber = 1;
@@ -400,10 +466,21 @@
     queryData();
   };
 
-  const toggleSelectDevice = () => {
+  const onTableCommand = (cmd: IOperateMode = 'none') => {
+    // switch (cmd) {
+    //   case 'sortDevice':
+    //     break;
+    //   case 'bindDevice':
+    //     operateMode.value = 'none';
+    //     break;
+    //   default:
+    //     selectedDevices.value = [];
+    //     operateMode.value = 'none';
+    //     break;
+    // }
+
     selectedDevices.value = [];
-    operateMode.value =
-      operateMode.value === 'bindDevice' ? 'none' : 'bindDevice';
+    operateMode.value = cmd;
   };
 
   const showDeviceAreaSelectModal = () => {
@@ -427,7 +504,7 @@
           deviceIdList: selectedDevices.value,
         },
       });
-      toggleSelectDevice();
+      onTableCommand();
     }
 
     queryData();
@@ -436,21 +513,14 @@
   // 解绑设备区域
   const onUnbindArea = async (record?: DeviceListDto) => {
     if (record) {
-      await DeviceAreaService.batchUnbindByAreaAndDevice({
-        input: {
-          areaId: selectedArea.value.join(),
-          deviceIdList: [record.id as unknown as number],
-        },
+      await DeviceAreaService.batchUnBind({
+        deviceIds: [record.id],
       });
     } else if (selectedArea.value.length > 0) {
-      // 要验证没有区域 id 能否解绑
-      await DeviceAreaService.batchUnbindByAreaAndDevice({
-        input: {
-          areaId: selectedArea.value.join(),
-          deviceIdList: selectedDevices.value,
-        },
+      await DeviceAreaService.batchUnBind({
+        deviceIds: selectedDevices.value,
       });
-      toggleSelectDevice();
+      onTableCommand();
     }
     queryData();
     Message.success('操作成功！');
