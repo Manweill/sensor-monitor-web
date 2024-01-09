@@ -49,7 +49,10 @@
     >
       <template #title> Title </template>
       <div>
-        <device-area-tree :append-device="true"></device-area-tree>
+        <device-area-tree
+          :append-device="true"
+          @on-select-change="(data) => console.log(data)"
+        ></device-area-tree>
       </div>
     </a-drawer>
   </div>

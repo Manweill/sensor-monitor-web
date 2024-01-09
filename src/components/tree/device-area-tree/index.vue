@@ -33,10 +33,6 @@
   import _ from 'lodash';
   import { computed, h, ref } from 'vue';
 
-  const props = defineProps({
-    appendDevice: Boolean,
-  });
-
   /** 区域树列表 */
   type IDeviceTree = {
     children: IDeviceTree[];
@@ -96,6 +92,12 @@
     }) as IDeviceTree[];
   };
 
+  const props = defineProps<{
+    appendDevice?: boolean;
+  }>();
+
+  const emit = defineEmits(['onSelectChange']);
+
   const { loading, setLoading } = useLoading(false);
 
   // 表格
@@ -110,7 +112,17 @@
   const selectedArea = ref([]);
 
   // 当节点选中
-  const onSelect = () => {};
+  const onSelect = (
+    newSelectedKeys: string[],
+    data: {
+      selected?: boolean;
+      selectedNodes: IDeviceTree[];
+      node?: IDeviceTree;
+      e?: Event;
+    },
+  ) => {
+    emit('onSelectChange', { newSelectedKeys, data });
+  };
 
   // 查询表格数据
   const init = async () => {
