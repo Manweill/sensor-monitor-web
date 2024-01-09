@@ -1,9 +1,11 @@
 <template>
   <div>
     <a-tree
+      v-if="areaTreeData?.length > 0"
       v-model:selected-keys="selectedArea"
       :data="areaTreeData"
       :show-line="false"
+      :default-expand-all="true"
       @select="onSelect"
     >
       <template #title="nodeData">
@@ -129,12 +131,12 @@
     setLoading(true);
     try {
       const areaResult = await DeviceAreaService.getAllDeviceArea();
-      areaData.value = areaResult.items as DeviceAreaDto[];
       if (props.appendDevice) {
         const deviceResult = await DeviceAreaService.getDeviceListByArea();
 
         tableData.value = deviceResult.items as DeviceAreaDto[];
       }
+      areaData.value = areaResult.items as DeviceAreaDto[];
     } catch (err) {
       // you can report use errorHandler or other
     } finally {
