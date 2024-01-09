@@ -63,14 +63,21 @@
       @cancel="handleCancel"
       @open="onOpen"
     >
-      <template #title> Title </template>
-      <div>
-        <device-area-tree
-          ref="deviceAreaTreeRef"
-          :return-room-on-select="true"
-          @on-select-change="handleSelect"
-        ></device-area-tree>
-      </div>
+      <template #title> 实时监控 </template>
+      <a-space direction="vertical" size="large">
+        <div>
+          <device-area-tree
+            ref="deviceAreaTreeRef"
+            :return-room-on-select="true"
+            @on-select-change="handleSelect"
+          ></device-area-tree>
+        </div>
+        <a-radio-group v-model:model-value="selectedProfile">
+          <a-radio v-for="p in deviceProfileList" :key="p.id" :value="p.id">{{
+            p.name
+          }}</a-radio>
+        </a-radio-group>
+      </a-space>
     </a-drawer>
   </a-spin>
 </template>
@@ -82,21 +89,35 @@
   import DeviceAreaTree, {
     IDeviceTree,
   } from '@/components/tree/device-area-tree/index.vue';
-  import { DeviceAreaService, DeviceListDto } from '@/services/sensor-core';
+  import {
+    ChirpStackDeviceProfileService,
+    DeviceAreaService,
+    DeviceListDto,
+    DeviceProfileDto,
+  } from '@/services/sensor-core';
 
   const { loading, setLoading } = useLoading();
 
   const deviceAreaTreeRef = ref();
 
+  const deviceProfileList = ref<DeviceProfileDto[]>([]);
+  const selectedProfile = ref<string>();
   const allDevices = ref<DeviceListDto[]>([]);
   const selectedArea = ref();
   const selectedRooms = ref<Array<{ areaName: string; id: string }>>([]);
 
   const monitorRooms = computed(() => {
+    console.log('selectedProfile.value', selectedProfile.value);
+
     return selectedRooms.value.map((item) => {
       return {
         ...item,
-        device: allDevices.value.find((d) => d.areaId === item.id),
+        device: allDevices.value.find(
+          (d) =>
+            d.areaId === item.id &&
+            (!selectedProfile.value ||
+              selectedProfile.value === d.deviceProfileId),
+        ),
       };
     });
   });
@@ -145,6 +166,7 @@
     visible.value = false;
     selectedArea.value = {};
 
+    selectedProfile.value = undefined;
     queryDevice();
   };
 
@@ -157,6 +179,8 @@
       areaName: string;
       id: string;
     }>;
+    deviceProfileList.value =
+      await ChirpStackDeviceProfileService.getDeviceProfileList();
     await queryDevice();
   });
 </script>
