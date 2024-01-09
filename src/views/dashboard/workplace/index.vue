@@ -6,19 +6,14 @@
         <DataPanel />
         <!-- <ContentChart /> -->
       </div>
-      <a-grid :cols="24" :col-gap="16" :row-gap="16" style="margin-top: 16px">
-        <a-grid-item
-          :span="{ xs: 24, sm: 24, md: 24, lg: 24, xl: 24, xxl: 24 }"
-        >
-          <!-- <PopularContent /> -->
-          <CategoriesPercent />
-        </a-grid-item>
+      <a-col :flex="1" style="margin-top: 16px">
+        <CategoriesPercent />
         <!-- <a-grid-item
           :span="{ xs: 24, sm: 24, md: 24, lg: 12, xl: 12, xxl: 12 }"
         >
           <CategoriesPercent />
         </a-grid-item> -->
-      </a-grid>
+      </a-col>
     </div>
     <div class="right-side">
       <a-grid :cols="24" :row-gap="16">
@@ -70,6 +65,8 @@
   .left-side {
     flex: 1;
     overflow: auto;
+    display: flex;
+    flex-direction: column;
   }
 
   .right-side {

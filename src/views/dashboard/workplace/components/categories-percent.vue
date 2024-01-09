@@ -1,5 +1,5 @@
 <template>
-  <a-spin :loading="loading" style="width: 100%">
+  <a-spin :loading="loading" style="width: 100%; height: 100%">
     <a-card
       class="general-card"
       :header-style="{ paddingBottom: '0', textAlign: 'center' }"
@@ -16,15 +16,6 @@
           :key="room.id"
           :span="{ xs: 12, sm: 12, md: 12, lg: 8, xl: 8, xxl: 8 }"
         >
-          <!-- <a-card :title="idx + '#房'">
-            <template #extra>
-              <a-link>查看</a-link>
-            </template>
-            ByteDance's core product, Toutiao ("Headlines"), is a content
-            platform in China and around the world. Toutiao started out as a
-            news recommendation engine and gradually evolved into a platform
-            delivering content in various formats.
-          </a-card> -->
           <a-card>
             <div style="display: flex; justify-content: space-between">
               <a-link>{{ room.areaName }}</a-link>
@@ -93,7 +84,7 @@
   } from '@/components/tree/device-area-tree/index.vue';
   import { DeviceAreaService, DeviceListDto } from '@/services/sensor-core';
 
-  const { loading } = useLoading();
+  const { loading, setLoading } = useLoading();
 
   const deviceAreaTreeRef = ref();
 
@@ -117,6 +108,7 @@
   };
 
   const queryDevice = async (areaId?: string) => {
+    setLoading(true);
     // 查询设备数据
     const deviceResult = await DeviceAreaService.getDeviceListByArea({
       unPage: true,
@@ -124,6 +116,7 @@
     });
 
     allDevices.value = deviceResult.items as DeviceListDto[];
+    setLoading(false);
   };
 
   const handleSelect = async ({
@@ -156,7 +149,7 @@
   };
 
   onMounted(async () => {
-    await queryDevice();
+    setLoading(true);
     const areaResult = await DeviceAreaService.getAllDeviceArea();
     selectedRooms.value = areaResult.items?.filter(
       (item) => item.room,
@@ -164,7 +157,12 @@
       areaName: string;
       id: string;
     }>;
+    await queryDevice();
   });
 </script>
 
-<style scoped lang="less"></style>
+<style scoped lang="less">
+  .general-card {
+    height: 100%;
+  }
+</style>
