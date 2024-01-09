@@ -1268,7 +1268,7 @@ export class DeviceAreaService {
   static updateAreasDeviceSort(
     params: {
       /** input */
-      input: UpdateAreasDeviceSortInputDto;
+      input: UpdateAreasDeviceSortDto[];
     } = {} as any,
     options: IRequestOptions = {},
   ): Promise<any> {
@@ -1319,6 +1319,59 @@ export class DeviceAreaService {
 }
 
 export class DeviceMetricDataService {
+  /**
+   * 获取到设备的历史遥测数据
+   */
+  static getDeviceMetricData(
+    params: {
+      /** 设备ID */
+      deviceId?: string;
+      /** 结束时间 */
+      endTime?: Date;
+      /** 页码 */
+      pageNumber?: number;
+      /** 每页显示的记录数 */
+      pageSize?: number;
+      /** 排序字段名 */
+      sorting?: string;
+      /** 排序的方式 */
+      sortingDirection?: string;
+      /** 开始时间 */
+      startTime?: Date;
+      /** 是否不分页，默认分页 */
+      unPage?: boolean;
+    } = {} as any,
+    options: IRequestOptions = {},
+  ): Promise<DeviceMetricAggregationDataDetailDto> {
+    return new Promise((resolve, reject) => {
+      let url = basePath + '/deviceMetricData/get-device-metric-data';
+
+      const configs: IRequestConfig = getConfigs(
+        'get',
+        'application/json',
+        url,
+        options,
+      );
+      configs.params = {
+        deviceId: params['deviceId'],
+        endTime: params['endTime'],
+        pageNumber: params['pageNumber'],
+        pageSize: params['pageSize'],
+        sorting: params['sorting'],
+        sortingDirection: params['sortingDirection'],
+        startTime: params['startTime'],
+        unPage: params['unPage'],
+      };
+
+      /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
+
+      console.warn(
+        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
+      );
+
+      axios(configs, resolve, reject);
+    });
+  }
   /**
    * 根据设备物联ID相关条件，获取到设备遥测的历史数据
    */
@@ -1858,6 +1911,9 @@ export interface DeviceLinkMetricsRxPacketsPerFreqDto {
 }
 
 export interface DeviceListDto {
+  /** 设备所属的区域ID */
+  areaId?: string;
+
   /** 设备描述 */
   description?: string;
 
@@ -1884,6 +1940,22 @@ export interface DeviceListDto {
 
   /** 设备是否在线，true表示在线 */
   online?: boolean;
+}
+
+export interface DeviceMetricAggregationDataDetailDto {
+  /** 设备属性的历史遥测的聚合数据,key是对应的设备属性名 */
+  metrics?: object;
+
+  /** 设备各个属性的历史遥测数据的总数量 */
+  totalCount?: number;
+}
+
+export interface DeviceMetricDataSetDto {
+  /** 设备属性对应的遥测数据集 */
+  data?: number[];
+
+  /** 设备属性名 */
+  label?: string;
 }
 
 export interface DeviceMetricListDataDto {
@@ -1934,6 +2006,17 @@ export interface DeviceMetricResponseDto {
 
   /** 遥测的相关额外信息 */
   states?: object;
+}
+
+export interface DeviceMetricsAggregationDataDto {
+  /** 设备属性的历史遥测数据值 */
+  datasets?: DeviceMetricDataSetDto[];
+
+  /** 设备属性名的中文描述 */
+  name?: string;
+
+  /** 设备属性的历史遥测数据的上报时间 */
+  timestamps?: LocalDateTime[];
 }
 
 export interface DeviceOtaaKeyInfoDto {
@@ -2236,7 +2319,7 @@ export interface SelectListOutputDto {
   value?: number;
 }
 
-export interface UpdateAreasDeviceSortInputDto {
+export interface UpdateAreasDeviceSortDto {
   /** 设备ID */
   deviceId?: string;
 

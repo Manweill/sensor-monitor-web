@@ -400,27 +400,13 @@
     try {
       const areaResult = await DeviceAreaService.getAllDeviceArea();
       areaData.value = areaResult.items as DeviceAreaDto[];
-      // areaTreeData.value = listToTree(
-      //   areaResult.items as DeviceAreaDto[],
-      //   '0',
-      // )!;
-
-      let deviceResult;
-      if (selectedArea.value.length > 0) {
-        deviceResult = await DeviceAreaService.getDeviceListByArea({
-          ...pagination,
-          ...searchModel.value,
-          areaId: selectedArea.value.length
-            ? (selectedArea.value.join() as string)
-            : undefined,
-        });
-      } else {
-        deviceResult = await DeviceService.listAll({
-          ...pagination,
-          ...searchModel.value,
-          // pageNumber: pagination.pageNumber,
-        });
-      }
+      const deviceResult = await DeviceAreaService.getDeviceListByArea({
+        ...pagination,
+        ...searchModel.value,
+        areaId: selectedArea.value.length
+          ? (selectedArea.value.join() as string)
+          : undefined,
+      });
 
       tableData.value = deviceResult.items as DeviceAreaDto[];
 
@@ -437,19 +423,18 @@
     pagination.pageNumber = pageNumber;
     queryData();
   };
-
   // 表格变化
   const onTableChange = (_data: any) => {
-    _data.forEach((d: DeviceListDto, index: number) => {
+    if (operateMode.value === 'sortDevice') {
       DeviceAreaService.updateAreasDeviceSort({
-        input: {
+        input: _data.map((d: DeviceListDto, index: number) => ({
           index:
             pagination.pageNumber * (pagination.pageSize ?? 10) + (index + 1),
           deviceId: d.id,
-        },
+        })),
       });
-    });
-    tableData.value = _data;
+      tableData.value = _data;
+    }
   };
 
   // 搜索表单按钮事件
