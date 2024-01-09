@@ -310,6 +310,7 @@
   const searchModel = ref(generateSearchModel());
   // 表格
   const tableData = ref<DeviceAreaDto[]>([]);
+
   const selectedDevices = ref([]);
   const rowSelection = computed<TableRowSelection | undefined>(() =>
     operateMode.value === 'bindDevice'
@@ -398,8 +399,6 @@
   const queryData = async () => {
     setLoading(true);
     try {
-      const areaResult = await DeviceAreaService.getAllDeviceArea();
-      areaData.value = areaResult.items as DeviceAreaDto[];
       const deviceResult = await DeviceAreaService.getDeviceListByArea({
         ...pagination,
         ...searchModel.value,
@@ -416,6 +415,11 @@
     } finally {
       setLoading(false);
     }
+  };
+
+  const queryTree = async () => {
+    const areaResult = await DeviceAreaService.getAllDeviceArea();
+    areaData.value = areaResult.items as DeviceAreaDto[];
   };
 
   // 分页
@@ -515,6 +519,7 @@
     deviceAreaFormData.value = genAreaFormData();
     deviceAreaFormData.value.parentId = currentNode?.raw.id;
     deviceAreaFormData.value.visible = true;
+    queryTree();
   };
   // 修改
   const onEdit = (currentNode: IDeviceTree) => {
@@ -523,10 +528,12 @@
       sortIndex: currentNode.raw.sortIndex as any,
       visible: true,
     };
+    queryTree();
   };
   // 删除
   const onDel = async (record: { id: string }) => {
     await DeviceAreaService.deleteDeviceArea({ areaId: record.id });
+    queryTree();
     queryData();
   };
   // 保存
@@ -544,7 +551,8 @@
         });
       }
 
-      queryData();
+      // queryData();
+      queryTree();
       return true;
     }
     return false;
@@ -555,6 +563,7 @@
   };
 
   // 初始化
+  queryTree();
   queryData();
 </script>
 

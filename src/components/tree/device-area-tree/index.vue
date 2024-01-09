@@ -1,7 +1,7 @@
 <template>
   <div>
     <a-tree
-      v-if="areaTreeData?.length > 0"
+      v-if="areaTreeData && areaTreeData.length > 0"
       v-model:selected-keys="selectedArea"
       :data="areaTreeData"
       :show-line="false"
@@ -36,7 +36,7 @@
   import { computed, h, ref } from 'vue';
 
   /** 区域树列表 */
-  type IDeviceTree = {
+  export type IDeviceTree = {
     children: IDeviceTree[];
     title: string;
     key: string | number;
@@ -94,8 +94,11 @@
     }) as IDeviceTree[];
   };
 
+  const selectedArea = ref([]);
+
   const props = defineProps<{
     appendDevice?: boolean;
+    returnRoomOnSelect?: boolean;
   }>();
 
   const emit = defineEmits(['onSelectChange']);
@@ -111,11 +114,9 @@
     listToTree(areaData.value, '0', tableData.value),
   );
 
-  const selectedArea = ref([]);
-
   // 当节点选中
   const onSelect = (
-    newSelectedKeys: string[],
+    selectKeys: string[],
     data: {
       selected?: boolean;
       selectedNodes: IDeviceTree[];
@@ -123,7 +124,27 @@
       e?: Event;
     },
   ) => {
-    emit('onSelectChange', { newSelectedKeys, data });
+    if (props.returnRoomOnSelect) {
+      console.log(
+        'data.node?.children',
+        data.node?.children
+          .flatMap((item) => (item.children ? [item, item.children] : item))
+          .flat(),
+      );
+
+      emit('onSelectChange', {
+        data: data.node,
+        rooms: data.node?.children
+          ? data.node?.children
+              .flatMap((item) => (item.children ? [item, item.children] : item))
+              .flat()
+              .filter((item) => (item.raw as DeviceAreaDto)?.room)
+              .map((item) => ({ id: item.key, areaName: item.title }))
+          : [],
+      });
+    } else {
+      emit('onSelectChange', { selectKeys, data: data.node });
+    }
   };
 
   // 查询表格数据
@@ -145,6 +166,8 @@
   };
 
   init();
+
+  defineExpose({ selectedArea });
 </script>
 
 <style scoped></style>

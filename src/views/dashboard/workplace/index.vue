@@ -39,28 +39,10 @@
         <!--        </a-grid-item>-->
       </a-grid>
     </div>
-    <a-button type="primary" @click="handleClick">Open Drawer</a-button>
-    <a-drawer
-      :width="340"
-      :visible="visible"
-      unmount-on-close
-      @ok="handleOk"
-      @cancel="handleCancel"
-    >
-      <template #title> Title </template>
-      <div>
-        <device-area-tree
-          :append-device="true"
-          @on-select-change="(data) => console.log(data)"
-        ></device-area-tree>
-      </div>
-    </a-drawer>
   </div>
 </template>
 
 <script lang="ts" setup>
-  import { ref } from 'vue';
-  import DeviceAreaTree from '@/components/tree/device-area-tree/index.vue';
   import Banner from './components/banner.vue';
   import DataPanel from './components/data-panel.vue';
   import ContentChart from './components/content-chart.vue';
@@ -69,18 +51,6 @@
   import RecentlyVisited from './components/recently-visited.vue';
   import QuickOperation from './components/quick-operation.vue';
   import Carousel from './components/carousel.vue';
-
-  const visible = ref<boolean>(false);
-  const handleClick = () => {
-    visible.value = true;
-  };
-  const handleCancel = () => {
-    visible.value = false;
-  };
-
-  const handleOk = () => {
-    visible.value = false;
-  };
 </script>
 
 <script lang="ts">
