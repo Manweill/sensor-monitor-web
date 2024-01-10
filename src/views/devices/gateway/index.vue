@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <a-card class="general-card" title="设备列表">
+    <a-card class="general-card" title="网关管理">
       <a-row>
         <!--       搜索表单       -->
         <a-col :flex="1">
@@ -12,10 +12,10 @@
           >
             <a-row :gutter="16">
               <a-col :span="8">
-                <a-form-item field="name" label="设备名">
+                <a-form-item field="name" label="名称">
                   <a-input
-                    v-model="searchModel.deviceName"
-                    placeholder="请输入设备名"
+                    v-model="searchModel.search"
+                    placeholder="请输入名称"
                   />
                 </a-form-item>
               </a-col>
@@ -64,15 +64,19 @@
         :bordered="false"
         @page-change="onPageChange"
       >
-        <template #isDisabled="{ record }">
-          <span v-if="record.isDisabled" class="circle"></span>
+        <template #lastSeenAt="{ record }">
+          {{
+            record.lastSeenAt
+              ? dayjs(record.lastSeenAt).format('YYYY-MM-DD HH:mm:ss')
+              : '--'
+          }}
+        </template>
+        <template #state="{ record }">
+          <span v-if="record.state !== '在线'" class="circle"></span>
           <span v-else class="circle pass"></span>
-          {{ record.isDisabled ? '禁用' : '启用' }}
+          {{ record.state }}
         </template>
         <template #operations="{ record }">
-          <a-button type="text" size="small" @click="onView(record)">
-            查看
-          </a-button>
           <a-button type="text" size="small" @click="onEdit(record)">
             修改
           </a-button>
@@ -82,62 +86,43 @@
         </template>
       </a-table>
     </a-card>
-    <a-modal v-model:visible="modelVisible" title="设备管理" @before-ok="onOk">
+    <a-modal v-model:visible="modelVisible" title="网关管理" @before-ok="onOk">
       <a-form ref="formRef" :model="formData" auto-label-width>
         <a-form-item
           field="name"
-          label="设备名称"
-          :rules="[{ required: true, message: '设备名称不能为空' }]"
+          label="名称"
+          :rules="[{ required: true, message: '名称不能为空' }]"
           :validate-trigger="['change', 'blur']"
         >
           <a-input v-model="formData.name" />
         </a-form-item>
-        <a-form-item
-          field="description"
-          label="设备描述"
-          :rules="[{ required: true, message: '设备描述不能为空' }]"
-          :validate-trigger="['change', 'blur']"
-        >
+        <a-form-item field="description" label="设备描述">
           <a-input v-model="formData.description" />
         </a-form-item>
 
         <a-form-item
-          field="devEui"
-          label="Device EUI"
+          field="gatewayId"
+          label="网关EUI"
           length="16"
           :rules="[
-            { required: true, message: 'Device EUI 不能为空' },
-            { length: 16, message: 'Device EUI 长度不正确' },
-            { match: /^[0-9a-fA-F]+$/, message: 'Device EUI 格式不正确' },
+            { required: true, message: '网关 EUI 不能为空' },
+            { length: 16, message: '网关 EUI 长度不正确' },
+            { match: /^[0-9a-fA-F]+$/, message: '网关 EUI 格式不正确' },
           ]"
           :validate-trigger="['change', 'blur']"
-          :disabled="!!formData.id"
+          :disabled="isEdit"
         >
-          <a-input v-model="formData.devEui" :max-length="16" show-word-limit>
+          <a-input
+            v-model="formData.gatewayId"
+            :max-length="16"
+            show-word-limit
+          >
             <template #append> MSB </template>
           </a-input>
         </a-form-item>
 
-        <a-form-item
-          field="deviceProfileId"
-          label="设备配置文件"
-          :rules="[{ required: true, message: '设备配置文件不能为空' }]"
-        >
-          <a-select v-model="formData.deviceProfileId" :allow-clear="true">
-            <a-option
-              v-for="item in deviceProfileList"
-              :key="item.id"
-              :value="item.id"
-              >{{ item.name }}</a-option
-            >
-          </a-select>
-        </a-form-item>
-
-        <a-form-item field="enabled" label="禁用设备">
-          <a-switch v-model="formData.isDisabled" />
-        </a-form-item>
-        <a-form-item field="skipFcntCheck" label="禁用帧计数器验证">
-          <a-switch v-model="formData.skipFcntCheck" />
+        <a-form-item field="statsInterval" label="统计间隔（秒）">
+          <a-input-number v-model="formData.statsInterval" />
         </a-form-item>
       </a-form>
     </a-modal>
@@ -149,16 +134,13 @@
   import { TableColumnData } from '@arco-design/web-vue';
   import { Pagination } from '@/types/global';
   import useLoading from '@/hooks/loading';
-  import {
-    ChirpStackDeviceProfileService,
-    DeviceDto,
-    DeviceProfileDto,
-    DeviceService,
-  } from '@/services/sensor-core';
-  import { useRouter } from 'vue-router';
   import { ValidatedError } from '@arco-design/web-vue/es/form/interface';
-
-  const router = useRouter();
+  import dayjs from 'dayjs';
+  import {
+    CreateGatewaysDataDto,
+    DeviceGatewayService,
+    GatewayDataItemDto,
+  } from '@/services/sensor-core';
 
   const { loading, setLoading } = useLoading(false);
 
@@ -174,39 +156,41 @@
   // 搜索
   const generateSearchModel = () => {
     return {
-      deviceName: '',
+      search: '',
     };
   };
   const searchModel = ref(generateSearchModel());
 
   // 表格
-  const tableData = ref<DeviceDto[]>([]);
+  const tableData = ref<GatewayDataItemDto[]>([]);
   const columns = computed<TableColumnData[]>(() => [
     {
-      title: '设备名称',
-      dataIndex: 'name',
+      title: '状态',
+      dataIndex: 'state',
+      slotName: 'state',
     },
     {
-      title: '设备描述',
+      title: '名称',
+      dataIndex: 'name',
+      slotName: 'name',
+    },
+    {
+      title: '描述',
       dataIndex: 'description',
     },
+
     {
-      title: '设备类型',
-      dataIndex: 'profileName',
-    },
-    {
-      title: 'EUI',
-      dataIndex: 'devEui',
+      title: '网关ID',
+      dataIndex: 'gatewayId',
     },
     // {
-    //   title: '状态',
-    //   dataIndex: 'online',
-    //   slotName: 'online',
+    //   title: '统计间隔（秒）',
+    //   dataIndex: 'statsInterval',
     // },
     {
-      title: '状态',
-      dataIndex: 'isDisabled',
-      slotName: 'isDisabled',
+      title: '最近上线时间',
+      dataIndex: 'lastSeenAt',
+      slotName: 'lastSeenAt',
     },
     {
       title: '操作',
@@ -218,12 +202,15 @@
   const queryTable = async () => {
     setLoading(true);
     try {
-      const { items, totalCount } = await DeviceService.listAll({
-        ...pagination,
-        ...searchModel.value,
-      });
-      tableData.value = items as DeviceDto[];
-      pagination.total = totalCount;
+      const { result, totalCount } = await DeviceGatewayService.getGatewaysList(
+        {
+          offset: pagination.pageNumber - 1,
+          limit: pagination.pageSize,
+          ...searchModel.value,
+        },
+      );
+      tableData.value = result as GatewayDataItemDto[];
+      pagination.total = totalCount as unknown as number;
     } catch (err) {
       // you can report use errorHandler or other
     } finally {
@@ -246,70 +233,71 @@
     searchModel.value = generateSearchModel();
   };
 
-  const deviceProfileList = ref<DeviceProfileDto[]>([]);
-  const getDeviceProfileList = async () => {
-    try {
-      deviceProfileList.value =
-        await ChirpStackDeviceProfileService.getDeviceProfileList();
-    } catch (err) {
-      // you can report use errorHandler or other
-    }
-  };
-
   // 初始化
   queryTable();
-  getDeviceProfileList();
 
+  // crud
   const modelVisible = ref(false);
+  const isEdit = ref(false);
+
   const formRef = ref();
-  const generateFormData = (): DeviceDto => {
+  const generateFormData = () => {
     return {
       name: '',
       description: '',
-      deviceProfileId: '',
-      devEui: '',
-      deviceProfileName: '',
-      isDisabled: false,
-      id: undefined,
-      skipFcntCheck: false,
+      gatewayId: '',
+      createdAt: '',
+      statsInterval: 30,
     };
   };
   const formData = ref(generateFormData());
 
-  const onAdd = async () => {
-    // router.push({ name: 'DeviceDetail' });
+  // 新增
+  const onAdd = () => {
+    isEdit.value = false;
     modelVisible.value = true;
     formData.value = generateFormData();
   };
-
+  // 修改
   const onEdit = async (record: any) => {
+    isEdit.value = true;
     modelVisible.value = true;
-    formData.value = { ...record };
+    const { gateway } = await DeviceGatewayService.getGateways({
+      gatewayId: record.gatewayId,
+    });
+    formData.value = {
+      ...(gateway as unknown as any),
+      statsInterval: Number(gateway?.statsInterval || 0),
+    };
   };
+  // 删除
+  const onDel = async (record: any) => {
+    await DeviceGatewayService.removeGateways({ gatewayId: record.gatewayId });
+    queryTable();
+  };
+  // 保存
   const onOk = async () => {
     const errors: Record<string, ValidatedError> | undefined =
       await formRef.value.validate();
     if (!errors) {
-      formData.value.deviceProfileName =
-        deviceProfileList.value.find(
-          (n) => n.id === formData.value.deviceProfileId,
-        )?.name || '';
-      await DeviceService.saveDevice({
-        inputDto: { ...formData.value },
-      });
+      if (isEdit.value) {
+        await DeviceGatewayService.updateGateways({
+          gatewayId: formData.value.gatewayId,
+          input: {
+            gateway: formData.value as unknown as CreateGatewaysDataDto,
+          },
+        });
+      } else {
+        await DeviceGatewayService.createGateways({
+          input: {
+            gateway: formData.value as unknown as CreateGatewaysDataDto,
+          },
+        });
+      }
       queryTable();
       return true;
     }
     return false;
-  };
-
-  const onDel = async (record: any) => {
-    await DeviceService.deleteById({ id: record.id });
-    queryTable();
-  };
-
-  const onView = (record: any) => {
-    router.push({ name: 'DeviceDetail', query: { id: record.id } });
   };
 </script>
 

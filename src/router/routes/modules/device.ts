@@ -13,6 +13,16 @@ const DASHBOARD: AppRouteRecordRaw = {
   },
   children: [
     {
+      path: 'gateway',
+      name: 'Gateway',
+      component: () => import('@/views/devices/gateway/index.vue'),
+      meta: {
+        locale: '网关管理',
+        requiresAuth: true,
+        permissions: ['*'],
+      },
+    },
+    {
       path: 'device-list',
       name: 'DeviceList',
       component: () => import('@/views/devices/device-list/index.vue'),
@@ -39,6 +49,16 @@ const DASHBOARD: AppRouteRecordRaw = {
       component: () => import('@/views/devices/device-area/index.vue'),
       meta: {
         locale: '设备区域',
+        requiresAuth: true,
+        permissions: ['*'],
+      },
+    },
+    {
+      path: 'device-history-data',
+      name: 'DeviceHistoryData',
+      component: () => import('@/views/devices/device-history-data/index.vue'),
+      meta: {
+        locale: '设备监测数据',
         requiresAuth: true,
         permissions: ['*'],
       },

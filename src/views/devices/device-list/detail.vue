@@ -35,7 +35,7 @@
       </a-card>
       <a-card class="general-card" title="设备详情">
         <a-tabs default-active-key="1" type="rounded">
-          <a-tab-pane key="1" title="设备属性" style="padding: 20px">
+          <a-tab-pane key="1" title="实时数据" style="padding: 20px">
             <a-table
               row-key="id"
               :loading="loading"
@@ -49,9 +49,9 @@
               </template>
             </a-table>
           </a-tab-pane>
-          <!--          <a-tab-pane key="2" title="遥测数据" style="padding: 20px">-->
-          <!--            <KvTable :device-id="id" :filed-list="deviceFieldList" />-->
-          <!--          </a-tab-pane>-->
+          <a-tab-pane key="2" title="数据明细" style="padding: 20px">
+            <KvTable :device-id="id" :filed-list="deviceFieldList" />
+          </a-tab-pane>
           <a-tab-pane key="3" title="告警配置" style="padding: 20px">
             <a-table
               row-key="id"
@@ -109,7 +109,7 @@
   import { useRoute, useRouter } from 'vue-router';
   import {
     DeviceDetailDto,
-    DeviceFieldDto,
+    DeviceLatestMetricDataDto,
     DeviceService,
   } from '@/services/sensor-core';
   import { computed, onMounted, ref } from 'vue';
@@ -119,7 +119,8 @@
   import thpImage from '@/assets/images/Temperature_Humidity_Profile.png';
 
   import dayjs from 'dayjs';
-  // import KvTable from './components/kv-table.vue';
+  import KvTable from './components/kv-table.vue';
+
   const deviceTypeImage: Record<string, any> = {
     Environmental_Parameters_Profile: eppImage,
     Human_Infrared_Sensor_Profile: hispImage,
@@ -137,20 +138,20 @@
     return [
       {
         label: '设备名称',
-        value: formData.value.name,
+        value: formData.value.name || '--',
       },
       {
         label: '设备描述',
-        value: formData.value.description,
+        value: formData.value.description || '--',
       },
 
       {
         label: '设备类型',
-        value: formData.value.deviceProfileName,
+        value: formData.value.deviceProfileName || '--',
       },
       {
         label: 'EUI',
-        value: formData.value.devEui,
+        value: formData.value.devEui || '--',
       },
       {
         label: '设备状态',
@@ -179,14 +180,14 @@
     ];
   });
 
-  const deviceFieldList = computed<DeviceFieldDto[]>(() => {
-    return formData.value.deviceFieldList || [];
+  const deviceFieldList = computed<DeviceLatestMetricDataDto[]>(() => {
+    return formData.value.latestMetricDataList || [];
   });
 
   const filedListColumns = [
     {
-      title: '属性名称',
-      dataIndex: 'fieldName',
+      title: '属性标识',
+      dataIndex: 'deviceFieldName',
     },
     {
       title: '描述',

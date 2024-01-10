@@ -30,10 +30,10 @@
   import {
     IconDriveFile,
     IconHome,
-    IconTag,
+    IconCommon,
   } from '@arco-design/web-vue/es/icon';
   import _ from 'lodash';
-  import { computed, h, ref } from 'vue';
+  import { computed, h, ref, toRaw } from 'vue';
 
   /** 区域树列表 */
   export type IDeviceTree = {
@@ -74,7 +74,7 @@
       // }
       const icon = () => {
         if (item.isDevice) {
-          return h(IconTag);
+          return h(IconCommon);
         }
         if (item.room) {
           return h(IconHome);
@@ -89,6 +89,7 @@
         raw: item,
         // disabled,
         icon,
+        // selectable: item.isDevice === true,
         children: listToTree(list, item.id as string, devices),
       };
     }) as IDeviceTree[];
@@ -96,10 +97,16 @@
 
   const selectedArea = ref([]);
 
-  const props = defineProps<{
-    appendDevice?: boolean;
-    returnRoomOnSelect?: boolean;
-  }>();
+  const props = defineProps({
+    appendDevice: {
+      type: Boolean,
+      default: false,
+    },
+    returnRoomOnSelect: {
+      type: Boolean,
+      default: false,
+    },
+  });
 
   const emit = defineEmits(['onSelectChange']);
 
@@ -125,13 +132,6 @@
     },
   ) => {
     if (props.returnRoomOnSelect) {
-      console.log(
-        'data.node?.children',
-        data.node?.children
-          .flatMap((item) => (item.children ? [item, item.children] : item))
-          .flat(),
-      );
-
       emit('onSelectChange', {
         data: data.node,
         rooms: data.node?.children
@@ -143,7 +143,7 @@
           : [],
       });
     } else {
-      emit('onSelectChange', { selectKeys, data: data.node });
+      emit('onSelectChange', { selectKeys, data: toRaw(data.node) });
     }
   };
 
