@@ -7,7 +7,7 @@
       <template #title> 实时监控 </template>
       <template #extra>
         <a-button :width="120" type="text" @click="handleClick">{{
-          selectedArea?.title ?? '点击选择'
+          selectedArea?.title ?? '筛选'
         }}</a-button>
       </template>
       <a-grid :cols="24" :col-gap="16" :row-gap="16" style="margin-top: 16px">
@@ -64,20 +64,28 @@
       @open="onOpen"
     >
       <template #title> 实时监控 </template>
-      <a-space direction="vertical" size="large">
-        <div>
+      <div style="display: flex; flex-direction: column; height: 100%">
+        <div style="flex: 1"
+          ><a-alert>选择房间或区域</a-alert>
           <device-area-tree
             ref="deviceAreaTreeRef"
             :return-room-on-select="true"
             @on-select-change="handleSelect"
           ></device-area-tree>
         </div>
-        <a-radio-group v-model:model-value="selectedProfile">
-          <a-radio v-for="p in deviceProfileList" :key="p.id" :value="p.id">{{
-            p.name
-          }}</a-radio>
+        <a-radio-group v-model:model-value="selectedProfile"
+          ><a-alert style="margin-bottom: 10px">选择要关注的房间信息</a-alert>
+          <a-space direction="vertical" size="medium">
+            <a-radio
+              v-for="p in deviceProfileList"
+              :key="p.id"
+              :value="p.id"
+              style="width: 90%"
+              >{{ p.name }}</a-radio
+            >
+          </a-space>
         </a-radio-group>
-      </a-space>
+      </div>
     </a-drawer>
   </a-spin>
 </template>
@@ -107,8 +115,6 @@
   const selectedRooms = ref<Array<{ areaName: string; id: string }>>([]);
 
   const monitorRooms = computed(() => {
-    console.log('selectedProfile.value', selectedProfile.value);
-
     return selectedRooms.value.map((item) => {
       return {
         ...item,
@@ -181,6 +187,7 @@
     }>;
     deviceProfileList.value =
       await ChirpStackDeviceProfileService.getDeviceProfileList();
+    deviceProfileList.value.push({ name: '无', id: undefined });
     await queryDevice();
   });
 </script>
