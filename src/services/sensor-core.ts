@@ -553,11 +553,11 @@ export class DeviceGatewayService {
   static getGatewaysList(
     params: {
       /**  */
-      limit?: number;
+      limit?: string;
       /**  */
       multicastGroupId?: string;
       /**  */
-      offset?: number;
+      offset?: string;
       /** 该条件，当做网关的名称的搜索条件 */
       search?: string;
       /**  */
@@ -845,9 +845,9 @@ export class DeviceService {
   static deleteDevice(
     params: {
       /** 设备id */
-      deviceId?: number;
+      deviceId?: string;
       /** 区域节点 */
-      nodeId?: number;
+      nodeId?: string;
     } = {} as any,
     options: IRequestOptions = {},
   ): Promise<any> {
@@ -910,7 +910,7 @@ export class DeviceService {
   static deleteLogicDeviceById(
     params: {
       /** id */
-      id: number;
+      id: string;
     } = {} as any,
     options: IRequestOptions = {},
   ): Promise<any> {
@@ -1297,7 +1297,7 @@ export class DeviceAreaService {
   static deleteDeviceArea(
     params: {
       /** areaId */
-      areaId: number;
+      areaId: string;
     } = {} as any,
     options: IRequestOptions = {},
   ): Promise<any> {
@@ -1352,7 +1352,7 @@ export class DeviceAreaService {
   static getDeviceListByArea(
     params: {
       /** 区域ID */
-      areaId?: number;
+      areaId?: string;
       /** 设备名 */
       deviceName?: string;
       /** 是否包含所有子区域 */
@@ -1489,9 +1489,9 @@ export class DeviceMetricDataService {
   static getDeviceMetricData(
     params: {
       /** 设备ID */
-      deviceId?: number;
+      deviceId?: string;
       /** 结束时间 */
-      endTime?: string;
+      endTime?: Date;
       /** 页码 */
       pageNumber?: number;
       /** 每页显示的记录数 */
@@ -1501,7 +1501,7 @@ export class DeviceMetricDataService {
       /** 排序的方式 */
       sortingDirection?: string;
       /** 开始时间 */
-      startTime?: string;
+      startTime?: Date;
       /** 是否不分页，默认分页 */
       unPage?: boolean;
     } = {} as any,
@@ -1546,7 +1546,7 @@ export class DeviceMetricDataService {
       /** 设备物联属性key */
       deviceFieldName?: string;
       /** 结束时间 */
-      endTime?: string;
+      endTime?: Date;
       /** 页码 */
       pageNumber?: number;
       /** 每页显示的记录数 */
@@ -1556,7 +1556,7 @@ export class DeviceMetricDataService {
       /** 排序的方式 */
       sortingDirection?: string;
       /** 开始时间 */
-      startTime?: string;
+      startTime?: Date;
       /** 是否不分页，默认分页 */
       unPage?: boolean;
     } = {} as any,
@@ -1601,9 +1601,9 @@ export class DeviceMetricDataService {
       /** 设备的属性名称 */
       deviceFieldName?: string;
       /** 设备ID */
-      deviceId?: number;
+      deviceId?: string;
       /** 结束时间 */
-      endTime?: string;
+      endTime?: Date;
       /** 页码 */
       pageNumber?: number;
       /** 每页显示的记录数 */
@@ -1613,7 +1613,7 @@ export class DeviceMetricDataService {
       /** 排序的方式 */
       sortingDirection?: string;
       /** 开始时间 */
-      startTime?: string;
+      startTime?: Date;
       /** 是否不分页，默认分页 */
       unPage?: boolean;
     } = {} as any,
@@ -2512,7 +2512,7 @@ export interface GatewayDataItemDto {
   /**  */
   properties?: object;
 
-  /**  */
+  /** 网关的状态名称 */
   state?: string;
 
   /** 租户ID */

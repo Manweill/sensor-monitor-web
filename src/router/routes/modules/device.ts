@@ -53,6 +53,16 @@ const DASHBOARD: AppRouteRecordRaw = {
         permissions: ['*'],
       },
     },
+    {
+      path: 'device-history-data',
+      name: 'DeviceHistoryData',
+      component: () => import('@/views/devices/device-history-data/index.vue'),
+      meta: {
+        locale: '设备监测数据',
+        requiresAuth: true,
+        permissions: ['*'],
+      },
+    },
   ],
 };
 

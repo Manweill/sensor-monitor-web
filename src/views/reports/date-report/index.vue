@@ -407,9 +407,9 @@
               axisLine: {
                 show: true,
               },
-              axisLabel: {
-                formatter: '{value} °C',
-              },
+              // axisLabel: {
+              //   formatter: '{value} °C',
+              // },
             },
           ],
           series: [
