@@ -13,6 +13,16 @@ const DASHBOARD: AppRouteRecordRaw = {
   },
   children: [
     {
+      path: 'gateway',
+      name: 'Gateway',
+      component: () => import('@/views/devices/gateway/index.vue'),
+      meta: {
+        locale: '网关管理',
+        requiresAuth: true,
+        permissions: ['*'],
+      },
+    },
+    {
       path: 'device-list',
       name: 'DeviceList',
       component: () => import('@/views/devices/device-list/index.vue'),
