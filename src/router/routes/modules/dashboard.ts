@@ -22,6 +22,16 @@ const DASHBOARD: AppRouteRecordRaw = {
         permissions: ['*'],
       },
     },
+    {
+      path: 'floor-plan',
+      name: 'FloorPlan',
+      component: () => import('@/views/dashboard/floor-plan/index.vue'),
+      meta: {
+        locale: '平面图',
+        requiresAuth: true,
+        permissions: ['*'],
+      },
+    },
   ],
 };
 

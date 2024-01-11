@@ -64,9 +64,11 @@
               ><a-link @click="onAdd()">添加</a-link></template
             >
             <a-tree
+              v-if="areaTreeData && areaTreeData.length > 0"
               v-model:selected-keys="selectedArea"
               :data="areaTreeData"
               :show-line="false"
+              :default-expand-all="true"
               @select="queryData"
             >
               <template #title="nodeData">
@@ -230,7 +232,6 @@
     DeviceAreaInputDto,
     DeviceAreaService,
     DeviceListDto,
-    DeviceService,
     UpdateDeviceAreaInputDto,
   } from '@/services/sensor-core';
   import { Pagination } from '@/types/global';
@@ -293,7 +294,7 @@
   // 分页
   const basePagination: Pagination = {
     pageNumber: 1,
-    pageSize: 3,
+    pageSize: 10,
     showTotal: true,
   };
   const pagination = reactive({

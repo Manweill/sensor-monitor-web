@@ -73,7 +73,9 @@
             @on-select-change="handleSelect"
           ></device-area-tree>
         </div>
-        <a-radio-group v-model:model-value="selectedProfile"
+        <a-radio-group
+          v-model:model-value="selectedProfile"
+          @change="queryDevice()"
           ><a-alert style="margin-bottom: 10px">选择要关注的房间信息</a-alert>
           <a-space direction="vertical" size="medium">
             <a-radio

@@ -38,3 +38,5 @@ export interface GeneralChart {
   xAxis: string[];
   data: Array<{ name: string; value: number[] }>;
 }
+
+declare module 'fabric';
