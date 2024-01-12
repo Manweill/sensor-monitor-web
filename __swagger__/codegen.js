@@ -5,6 +5,7 @@ const axios = require('axios');
 const outputDir = `./src/services`;
 
 const host = `http://192.168.59.79:53301`;
+
 axios.get(`${host}/swagger-resources`).then(async ({ data }) => {
   // eslint-disable-next-line no-restricted-syntax
   for (const n of data) {
