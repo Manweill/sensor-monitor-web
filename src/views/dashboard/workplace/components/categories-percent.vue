@@ -16,20 +16,20 @@
           :key="room.id"
           :span="{ xs: 12, sm: 12, md: 12, lg: 8, xl: 8, xxl: 8 }"
         >
-          <a-card>
+          <a-card class="monitor-card">
             <div style="display: flex; justify-content: space-between">
               <a-link>{{ room.areaName }}</a-link>
               <span>{{ idx + 1 }}</span>
             </div>
             <template v-if="room.device && room.device.latestMetricDataList">
-              <a-col :flex="1" style="padding: 10px">
+              <a-col :flex="1" class="monitor-card value">
                 <a-row>
                   <a-col
                     v-for="metricData in room.device.latestMetricDataList"
                     :key="metricData.deviceFieldName"
                     :flex="1"
                   >
-                    <a-row style="text-align: center; font-size: 14px"
+                    <a-row style="text-align: center; font-size: 12px"
                       ><a-col :flex="1">{{ metricData.description }}</a-col>
                     </a-row>
                     <a-row>
@@ -38,7 +38,7 @@
                         style="font-size: 32px; text-align: center"
                       >
                         {{ metricData.value }}
-                        <span style="font-size: 14px; text-align: center">
+                        <span style="font-size: 12px; text-align: center">
                           {{
                             units[metricData.deviceFieldName as string]
                           }}</span
@@ -207,5 +207,12 @@
 <style scoped lang="less">
   .general-card {
     height: 100%;
+  }
+
+  .monitor-card {
+    background-color: var(--color-neutral-2);
+    .value {
+      padding: 25px;
+    }
   }
 </style>
