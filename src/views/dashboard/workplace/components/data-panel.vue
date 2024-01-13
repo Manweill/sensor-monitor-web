@@ -2,7 +2,7 @@
   <a-grid :cols="24" :row-gap="16" class="panel">
     <a-grid-item
       class="panel-col"
-      :span="{ xs: 6, sm: 6, md: 6, lg: 6, xl: 6, xxl: 3 }"
+      :span="{ xs: 6, sm: 6, md: 6, lg: 6, xl: 6, xxl: 6 }"
     >
       <a-space>
         <a-avatar :size="54" class="col-avatar">
@@ -13,7 +13,7 @@
         </a-avatar>
         <a-statistic
           title="设备数量"
-          :value="35"
+          :value="deviceDataStatistics.deviceCount"
           :value-from="0"
           animation
           show-group-separator
@@ -26,7 +26,7 @@
     </a-grid-item>
     <a-grid-item
       class="panel-col"
-      :span="{ xs: 6, sm: 6, md: 6, lg: 6, xl: 6, xxl: 3 }"
+      :span="{ xs: 6, sm: 6, md: 6, lg: 6, xl: 6, xxl: 6 }"
     >
       <a-space>
         <a-avatar :size="54" class="col-avatar">
@@ -36,8 +36,8 @@
           />
         </a-avatar>
         <a-statistic
-          title="上报数据量"
-          :value="10156"
+          title="官网数量"
+          :value="deviceDataStatistics.gatewayCount"
           :value-from="0"
           animation
           show-group-separator
@@ -50,7 +50,7 @@
     </a-grid-item>
     <a-grid-item
       class="panel-col"
-      :span="{ xs: 6, sm: 6, md: 6, lg: 6, xl: 6, xxl: 3 }"
+      :span="{ xs: 6, sm: 6, md: 6, lg: 6, xl: 6, xxl: 6 }"
     >
       <a-space>
         <a-avatar :size="54" class="col-avatar">
@@ -60,8 +60,8 @@
           />
         </a-avatar>
         <a-statistic
-          title="消息数量"
-          :value="74"
+          title="在线数量"
+          :value="deviceDataStatistics.onlineDeviceCount"
           :value-from="0"
           animation
           show-group-separator
@@ -74,7 +74,7 @@
     </a-grid-item>
     <a-grid-item
       class="panel-col"
-      :span="{ xs: 6, sm: 6, md: 6, lg: 6, xl: 6, xxl: 3 }"
+      :span="{ xs: 6, sm: 6, md: 6, lg: 6, xl: 6, xxl: 6 }"
       style="border-right: none"
     >
       <a-space>
@@ -84,8 +84,13 @@
             src="//p3-armor.byteimg.com/tos-cn-i-49unhts6dw/c8b36e26d2b9bb5dbf9b74dd6d7345af.svg~tplv-49unhts6dw-image.image"
           />
         </a-avatar>
-        <a-statistic title="今日数据量" :value="598" :value-from="0" animation>
-          <template #suffix> % <icon-caret-up class="up-icon" /> </template>
+        <a-statistic
+          title="今日数据量"
+          :value="deviceDataStatistics.reportDataCount"
+          :value-from="0"
+          animation
+        >
+          <template #suffix><icon-caret-up class="up-icon" /></template>
         </a-statistic>
       </a-space>
     </a-grid-item>
@@ -95,7 +100,22 @@
   </a-grid>
 </template>
 
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+  import {
+    DeviceDataStatisticsService,
+    HomePageBusinessDataDto,
+  } from '@/services/sensor-core';
+  import { ref } from 'vue';
+
+  const deviceDataStatistics = ref<HomePageBusinessDataDto>({});
+
+  const getData = async () => {
+    deviceDataStatistics.value =
+      await DeviceDataStatisticsService.getDeviceDataStatistics();
+  };
+
+  getData();
+</script>
 
 <style lang="less" scoped>
   .arco-grid.panel {

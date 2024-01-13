@@ -79,6 +79,11 @@
           <a-popconfirm content="确认删除?" @ok="onDel(record)">
             <a-button type="text" status="danger" size="small"> 删除 </a-button>
           </a-popconfirm>
+          <a-popconfirm content="确认删除?" @ok="onLogicDel(record)">
+            <a-button type="text" status="danger" size="small">
+              仅删除设备
+            </a-button>
+          </a-popconfirm>
         </template>
       </a-table>
     </a-card>
@@ -305,6 +310,11 @@
 
   const onDel = async (record: any) => {
     await DeviceService.deleteById({ id: record.id });
+    queryTable();
+  };
+
+  const onLogicDel = async (record: any) => {
+    await DeviceService.deleteLogicDeviceById({ id: record.id });
     queryTable();
   };
 
