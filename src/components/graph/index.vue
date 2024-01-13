@@ -78,8 +78,8 @@
     // };
     if (elemCanvas) {
       canvasSize = {
-        width: 1600,
-        height: 1060,
+        width: 1250,
+        height: 660,
       };
       elemCanvas.width = canvasSize.width;
       elemCanvas.height = props.height ? props.height : canvasSize.height;
@@ -94,89 +94,6 @@
   const rerenderTimer = 0;
   const requestFixed = false;
 
-  const points = [
-    {
-      nid: '1742374242076344322',
-      x: 152,
-      y: 32.33332824707031,
-    },
-    { nid: '1742374020046667777', x: 752, y: 523.3333282470703 },
-    { nid: '1742374165828091905', x: 1060, y: 955.3333282470703 },
-  ];
-  function createDevice({
-    nid,
-    no,
-    name,
-    x,
-    y,
-    imgUrl,
-    position,
-  }: {
-    nid: string;
-    no: number;
-    name?: string;
-    x?: number;
-    y?: number;
-    imgUrl: string;
-    position?: { x: number; y: number };
-  }) {
-    const height = 100;
-    const width = height * 1.2;
-    const text = new fabric.Textbox(`${no}\n${name}`, {
-      width,
-      fontSize: 10,
-      top: 35,
-      lockRotation: true, // 禁止旋转
-      lockScalingY: true, // 禁止Y轴伸缩
-      lockScalingFlip: true, // 禁止负值反转
-      splitByGrapheme: true, // 拆分中文，可以实现自动换行
-      objectCaching: false,
-      textAlign: 'center',
-    });
-
-    fabric.Image.fromURL(imgUrl, (oImg) => {
-      oImg.left = 25;
-      oImg.scale(0.1);
-      if (position) {
-        const g = new fabric.Group([oImg, text], {
-          nid,
-          top: position.y,
-          left: position.x,
-          hasControls: false,
-        });
-        canvasDesign.add(g);
-        canvasDesign.renderAll();
-      } else {
-        const g = new fabric.Group([oImg, text], {
-          nid,
-          top: x,
-          left: y,
-          hasControls: false,
-        });
-        canvasDesign.add(g);
-        canvasDesign.renderAll();
-        console.log('111111');
-      }
-    });
-  }
-
-  const onInit = async () => {
-    console.log('dada init');
-
-    const devices = await DeviceService.listAll({ unPage: true });
-
-    points.forEach((p, index) => {
-      const device = devices.items?.find((item) => item.id === p.nid);
-      console.log(p);
-
-      if (device) {
-        const img = `/src/assets/images/${device.deviceProfileName}.png`;
-
-        createDevice({ ...p, imgUrl: img, no: index, name: device.name });
-      }
-    });
-  };
-
   onMounted(() => {
     resizeCanvas();
     canvasDesign = new fabric.Canvas(props.canvasId, {
@@ -187,10 +104,11 @@
 
     fabric.Image.fromURL('/src/assets/svg/floor-plan.png', (img) => {
       img.set({ left: 0, top: 0 });
+      // img.scale(660 / 1060);
       canvasDesign.backgroundImage = img;
+      canvasDesign.setZoom(660 / 1060);
       canvasDesign.renderAll();
-      // emits('ready');
-      onInit();
+      emits('ready');
     });
 
     // canvasDesign.on('after:render', function () {
@@ -324,7 +242,6 @@
     canvasDesign.add(obj);
     // requestFixed = true;
     canvasDesign.renderAll();
-    console.log('12321312');
   }
 
   function getPositionChangedObjects() {

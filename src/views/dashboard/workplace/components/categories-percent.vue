@@ -106,6 +106,11 @@
     DeviceProfileDto,
   } from '@/services/sensor-core';
 
+  const profiles: Record<string, string> = {
+    Environmental_Parameters_Profile: '环境检测',
+    Temperature_Humidity_Profile: '温湿度',
+  };
+
   const { loading, setLoading } = useLoading();
 
   const deviceAreaTreeRef = ref();
@@ -144,7 +149,9 @@
       areaId,
     });
 
-    allDevices.value = deviceResult.items as DeviceListDto[];
+    allDevices.value = deviceResult.items?.filter(
+      (item) => !!profiles[item.deviceProfileName as string],
+    ) as DeviceListDto[];
     setLoading(false);
   };
 
@@ -187,8 +194,10 @@
       areaName: string;
       id: string;
     }>;
-    deviceProfileList.value =
-      await ChirpStackDeviceProfileService.getDeviceProfileList();
+    const result = await ChirpStackDeviceProfileService.getDeviceProfileList();
+    deviceProfileList.value = result.filter(
+      (item) => !!profiles[item.name as string],
+    );
     deviceProfileList.value.push({ name: '无', id: undefined });
     await queryDevice();
   });

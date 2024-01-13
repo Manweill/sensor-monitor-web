@@ -3,8 +3,8 @@
     <graph
       ref="floorPlanRef"
       canvas-id="floor-plan"
-      :height="1060"
-      :height-fix="1060"
+      :height="660"
+      :height-fix="660"
       @ready="onInit"
     ></graph>
   </div>
@@ -16,85 +16,168 @@
   import Graph from '@/components/graph/index.vue';
   import { DeviceService } from '@/services/sensor-core';
 
+  const units: Record<string, string> = {
+    humidity: '%',
+    temperature: '°C',
+    eCO2: ' Lv.',
+    PM25: 'μm',
+    CO2: 'ppm',
+  };
+  // w = 1600 h=1060
+  // w= 1250 h=660
   const floorPlanRef = ref();
 
   const points = [
     {
-      nid: '1742374242076344322',
       x: 152,
       y: 32.33332824707031,
     },
-    { nid: '1742374020046667777', x: 752, y: 523.3333282470703 },
-    { nid: '1742374165828091905', x: 1060, y: 955.3333282470703 },
+    { x: 752, y: 523.3333282470703 },
+    { x: 1060, y: 955.3333282470703 },
   ];
-  function createDevice({
-    nid,
-    no,
-    name,
-    x,
-    y,
-    imgUrl,
-    position,
-  }: {
+
+  function createDevice(args: {
     nid: string;
     no: number;
-    name?: string;
+    profile?: string;
+    telemetryValues: Array<{ name: string; value: number; unit: string }>;
     x?: number;
     y?: number;
-    imgUrl: string;
     position?: { x: number; y: number };
   }) {
     const height = 100;
     const width = height * 1.2;
-    const text = new fabric.Textbox(`${no}\n${name}`, {
-      width,
-      fontSize: 10,
-      top: 35,
-      lockRotation: true, // 禁止旋转
-      lockScalingY: true, // 禁止Y轴伸缩
-      lockScalingFlip: true, // 禁止负值反转
-      splitByGrapheme: true, // 拆分中文，可以实现自动换行
-      objectCaching: false,
-      textAlign: 'center',
-    });
+    const teleTexts: fabric.Textbox[] = [];
+    // switch (args.profile) {
+    //   case 'Temperature_Humidity_Profile':
+    // 基础偏移量，每次累计
+    let baseLeft = 0;
+    for (let i = 0; i < args.telemetryValues.length; i += 1) {
+      const v = args.telemetryValues[i];
+      const value = v.value.toFixed(1);
+      const valueLength = v.value.toFixed(1).length - 1;
+      const left = baseLeft + 95 + i * 16 * valueLength;
+      baseLeft += left;
+      // 名称
+      const textInfo = new fabric.Textbox(v.name, {
+        width,
+        fontSize: 20,
+        top: 35,
+        left,
+        lockRotation: true, // 禁止旋转
+        lockScalingY: true, // 禁止Y轴伸缩
+        lockScalingFlip: true, // 禁止负值反转
+        splitByGrapheme: true, // 拆分中文，可以实现自动换行
+        objectCaching: false,
+        stroke: '#5473e2',
+        fill: '#76a0f8',
+        textAlign: 'center',
+      });
+      // 遥测值
 
+      const textValue = new fabric.Textbox(value, {
+        width,
+        fontSize: 48,
+        top: 35 + 20,
+        left,
+        lockRotation: true, // 禁止旋转
+        lockScalingY: true, // 禁止Y轴伸缩
+        lockScalingFlip: true, // 禁止负值反转
+        splitByGrapheme: true, // 拆分中文，可以实现自动换行
+        objectCaching: false,
+        stroke: '#5473e2',
+        fill: '#76a0f8',
+        textAlign: 'center',
+      });
+      // 单位
+      const textUnit = new fabric.Textbox(v.unit, {
+        width,
+        fontSize: 20,
+        top: 35 + 25,
+        left: left + 18 * valueLength,
+        lockRotation: true, // 禁止旋转
+        lockScalingY: true, // 禁止Y轴伸缩
+        lockScalingFlip: true, // 禁止负值反转
+        splitByGrapheme: true, // 拆分中文，可以实现自动换行
+        objectCaching: false,
+        stroke: '#5473e2',
+        fill: '#76a0f8',
+        textAlign: 'center',
+      });
+      teleTexts.push(textInfo, textValue, textUnit);
+    }
+    //   break;
+    // default:
+    //   break;
+    // }
+
+    const imgUrl = `/src/assets/images/${args.profile}.png`;
     fabric.Image.fromURL(imgUrl, (oImg) => {
-      console.log(oImg);
-
-      oImg.left = 25;
-      oImg.scale(0.5);
-      if (position) {
-        const g = new fabric.Group([oImg, text], {
-          nid,
-          top: position.y,
-          left: position.x,
+      oImg.left = 20;
+      oImg.top = 35;
+      oImg.scale(0.1);
+      if (args.position) {
+        const g = new fabric.Group([oImg, ...teleTexts], {
+          nid: args.nid,
+          top: args.position.y,
+          left: args.position.x,
           hasControls: false,
-        });
+        } as any);
+        g.fill = '#eaf3fe';
+        g.backgroundColor = '#eaf3fe';
         floorPlanRef.value.add(g);
+        floorPlanRef.value.renderAll();
       } else {
-        const g = new fabric.Group([oImg, text], {
-          nid,
-          top: height * x,
-          left: width * y + 10,
+        const g = new fabric.Group([oImg, ...teleTexts], {
+          nid: args.nid,
+          top: args.x,
+          left: args.y,
           hasControls: false,
-        });
+        } as any);
+        g.fill = '#eaf3fe';
         floorPlanRef.value.add(g);
       }
     });
   }
 
   const onInit = async () => {
-    // console.log('dada init');
-    // const devices = await DeviceService.listAll({ unPage: true });
-    // points.forEach((p, index) => {
-    //   const device = devices.items?.find((item) => item.id === p.nid);
-    //   console.log(p);
-    //   if (device) {
-    //     const img = `/src/assets/images/${device.deviceProfileName}.png`;
-    //     createDevice({ ...p, imgUrl: img, no: index, name: device.name });
-    //   }
-    // });
-    // console.log(floorPlanRef.value.getPositionChangedObjects());
+    const devices = await DeviceService.listAll({ unPage: true });
+
+    devices.items
+      ?.filter((item) =>
+        [
+          'Temperature_Humidity_Profile',
+          'Environmental_Parameters_Profile',
+        ].includes(item.deviceProfileName as string),
+      )
+      .slice(0, 3)
+      .forEach((device, index) => {
+        const p = points[index];
+        console.log(
+          '1111',
+          device.latestMetricDataList?.map((item) => ({
+            name: item.description as string,
+            value: item.value as number,
+            unit: units[item.deviceFieldName as string] as string,
+          })) ?? [],
+        );
+
+        createDevice({
+          ...p,
+          nid: device.id,
+          name: device.name,
+          no: index,
+          profile: device.deviceProfileName,
+          telemetryValues:
+            device.latestMetricDataList
+              ?.map((item) => ({
+                name: item.description as string,
+                value: item.value as number,
+                unit: units[item.deviceFieldName as string] as string,
+              }))
+              .filter((item) => item.unit) ?? [],
+        });
+      });
   };
 
   // onMounted();
