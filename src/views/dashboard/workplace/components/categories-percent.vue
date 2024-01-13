@@ -83,7 +83,7 @@
               :key="p.id"
               :value="p.id"
               style="width: 90%"
-              >{{ p.name }}</a-radio
+              >{{ profiles[p.name] }}</a-radio
             >
           </a-space>
         </a-radio-group>
@@ -109,6 +109,7 @@
   const profiles: Record<string, string> = {
     Environmental_Parameters_Profile: '环境检测',
     Temperature_Humidity_Profile: '温湿度',
+    无: '无',
   };
 
   const { loading, setLoading } = useLoading();
