@@ -15,14 +15,8 @@
   import { fabric } from 'fabric';
   import Graph from '@/components/graph/index.vue';
   import { DeviceService } from '@/services/sensor-core';
+  import { units } from '@/utils/profile-utils';
 
-  const units: Record<string, string> = {
-    humidity: '%',
-    temperature: '°C',
-    eCO2: ' Lv.',
-    PM25: 'μm',
-    CO2: 'ppm',
-  };
   // w = 1600 h=1060
   // w= 1250 h=660
   const floorPlanRef = ref();
@@ -56,7 +50,7 @@
       const v = args.telemetryValues[i];
       const value = v.value.toFixed(1);
       const valueLength = v.value.toFixed(1).length - 1;
-      const left = baseLeft + 95 + i * 16 * valueLength;
+      const left = baseLeft + 95 + i * 18 * valueLength;
       baseLeft += left;
       // 名称
       const textInfo = new fabric.Textbox(v.name, {
@@ -94,7 +88,7 @@
         width,
         fontSize: 20,
         top: 35 + 25,
-        left: left + 18 * valueLength,
+        left: left + 10 + 18 * valueLength,
         lockRotation: true, // 禁止旋转
         lockScalingY: true, // 禁止Y轴伸缩
         lockScalingFlip: true, // 禁止负值反转

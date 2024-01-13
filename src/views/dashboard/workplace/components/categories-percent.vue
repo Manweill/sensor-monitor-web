@@ -22,32 +22,32 @@
               <span>{{ idx + 1 }}</span>
             </div>
             <template v-if="room.device && room.device.latestMetricDataList">
-              <a-list-item
-                v-for="(
-                  metricData, i
-                ) in room.device?.latestMetricDataList.slice(0, 2)"
-                :key="i"
-              >
-                <a-list-item-meta :title="metricData.deviceFieldName">
-                  <template #avatar>
-                    <a-avatar shape="square">
-                      <img alt="avatar" :src="thpImage" />
-                    </a-avatar>
-                  </template>
-                </a-list-item-meta>
-                <template #extra>
-                  <div
-                    style="
-                      display: flex;
-                      align-items: center;
-                      font-size: 28px;
-                      height: 100%;
-                    "
+              <a-col :flex="1" style="padding: 10px">
+                <a-row>
+                  <a-col
+                    v-for="metricData in room.device.latestMetricDataList"
+                    :key="metricData.deviceFieldName"
+                    :flex="1"
                   >
-                    {{ metricData.value }} °C
-                  </div>
-                </template>
-              </a-list-item>
+                    <a-row style="text-align: center; font-size: 14px"
+                      ><a-col :flex="1">{{ metricData.description }}</a-col>
+                    </a-row>
+                    <a-row>
+                      <a-col
+                        :flex="1"
+                        style="font-size: 32px; text-align: center"
+                      >
+                        {{ metricData.value }}
+                        <span style="font-size: 14px; text-align: center">
+                          {{
+                            units[metricData.deviceFieldName as string]
+                          }}</span
+                        >
+                      </a-col>
+                    </a-row>
+                  </a-col>
+                </a-row>
+              </a-col>
             </template>
             <div v-else> 暂无关联数据 </div>
           </a-card>
@@ -83,7 +83,7 @@
               :key="p.id"
               :value="p.id"
               style="width: 90%"
-              >{{ profiles[p.name] }}</a-radio
+              >{{ profiles[p.name as string] }}</a-radio
             >
           </a-space>
         </a-radio-group>
@@ -95,7 +95,6 @@
 <script lang="ts" setup>
   import { ref, onMounted, computed } from 'vue';
   import useLoading from '@/hooks/loading';
-  import thpImage from '@/assets/images/Temperature_Humidity_Profile.png';
   import DeviceAreaTree, {
     IDeviceTree,
   } from '@/components/tree/device-area-tree/index.vue';
@@ -105,12 +104,7 @@
     DeviceListDto,
     DeviceProfileDto,
   } from '@/services/sensor-core';
-
-  const profiles: Record<string, string> = {
-    Environmental_Parameters_Profile: '环境检测',
-    Temperature_Humidity_Profile: '温湿度',
-    无: '无',
-  };
+  import { profiles, units } from '@/utils/profile-utils';
 
   const { loading, setLoading } = useLoading();
 
@@ -124,14 +118,20 @@
 
   const monitorRooms = computed(() => {
     return selectedRooms.value.map((item) => {
-      return {
-        ...item,
-        device: allDevices.value.find(
+      const device = {
+        ...allDevices.value.find(
           (d) =>
             d.areaId === item.id &&
             (!selectedProfile.value ||
               selectedProfile.value === d.deviceProfileId),
         ),
+      };
+      device.latestMetricDataList = device.latestMetricDataList?.filter(
+        (l) => units[l.deviceFieldName as string],
+      );
+      return {
+        ...item,
+        device,
       };
     });
   });
