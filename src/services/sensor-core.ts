@@ -519,6 +519,34 @@ export class ChirpStackDeviceProfileService {
   }
 }
 
+export class DeviceDataStatisticsService {
+  /**
+   * 首页上设备相关统计数据的获取
+   */
+  static getDeviceDataStatistics(
+    options: IRequestOptions = {},
+  ): Promise<HomePageBusinessDataDto> {
+    return new Promise((resolve, reject) => {
+      let url = basePath + '/device-data-statistics/get-data-statistics';
+
+      const configs: IRequestConfig = getConfigs(
+        'get',
+        'application/json',
+        url,
+        options,
+      );
+
+      /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
+
+      console.warn(
+        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
+      );
+
+      axios(configs, resolve, reject);
+    });
+  }
+}
+
 export class DeviceGatewayService {
   /**
    * 创建网关
@@ -2564,6 +2592,20 @@ export interface GetOtaaKeyInfoDto {
 
   /**  */
   updatedAtTime?: Date;
+}
+
+export interface HomePageBusinessDataDto {
+  /** 设备数量 */
+  deviceCount?: number;
+
+  /** 网关数量 */
+  gatewayCount?: number;
+
+  /** 在线设备的数量 */
+  onlineDeviceCount?: number;
+
+  /** 今日上报的数据量 */
+  reportDataCount?: number;
 }
 
 export interface MoveDeviceAreaInputDto {

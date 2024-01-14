@@ -16,38 +16,38 @@
           :key="room.id"
           :span="{ xs: 12, sm: 12, md: 12, lg: 8, xl: 8, xxl: 8 }"
         >
-          <a-card>
+          <a-card class="monitor-card">
             <div style="display: flex; justify-content: space-between">
               <a-link>{{ room.areaName }}</a-link>
               <span>{{ idx + 1 }}</span>
             </div>
             <template v-if="room.device && room.device.latestMetricDataList">
-              <a-list-item
-                v-for="(
-                  metricData, i
-                ) in room.device?.latestMetricDataList.slice(0, 2)"
-                :key="i"
-              >
-                <a-list-item-meta :title="metricData.deviceFieldName">
-                  <template #avatar>
-                    <a-avatar shape="square">
-                      <img alt="avatar" :src="thpImage" />
-                    </a-avatar>
-                  </template>
-                </a-list-item-meta>
-                <template #extra>
-                  <div
-                    style="
-                      display: flex;
-                      align-items: center;
-                      font-size: 28px;
-                      height: 100%;
-                    "
+              <a-col :flex="1" class="monitor-card value">
+                <a-row>
+                  <a-col
+                    v-for="metricData in room.device.latestMetricDataList"
+                    :key="metricData.deviceFieldName"
+                    :flex="1"
                   >
-                    {{ metricData.value }} °C
-                  </div>
-                </template>
-              </a-list-item>
+                    <a-row style="text-align: center; font-size: 12px"
+                      ><a-col :flex="1">{{ metricData.description }}</a-col>
+                    </a-row>
+                    <a-row>
+                      <a-col
+                        :flex="1"
+                        style="font-size: 32px; text-align: center"
+                      >
+                        {{ metricData.value }}
+                        <span style="font-size: 12px; text-align: center">
+                          {{
+                            units[metricData.deviceFieldName as string]
+                          }}</span
+                        >
+                      </a-col>
+                    </a-row>
+                  </a-col>
+                </a-row>
+              </a-col>
             </template>
             <div v-else> 暂无关联数据 </div>
           </a-card>
@@ -73,7 +73,9 @@
             @on-select-change="handleSelect"
           ></device-area-tree>
         </div>
-        <a-radio-group v-model:model-value="selectedProfile"
+        <a-radio-group
+          v-model:model-value="selectedProfile"
+          @change="queryDevice()"
           ><a-alert style="margin-bottom: 10px">选择要关注的房间信息</a-alert>
           <a-space direction="vertical" size="medium">
             <a-radio
@@ -81,7 +83,7 @@
               :key="p.id"
               :value="p.id"
               style="width: 90%"
-              >{{ p.name }}</a-radio
+              >{{ profiles[p.name as string] }}</a-radio
             >
           </a-space>
         </a-radio-group>
@@ -93,7 +95,6 @@
 <script lang="ts" setup>
   import { ref, onMounted, computed } from 'vue';
   import useLoading from '@/hooks/loading';
-  import thpImage from '@/assets/images/Temperature_Humidity_Profile.png';
   import DeviceAreaTree, {
     IDeviceTree,
   } from '@/components/tree/device-area-tree/index.vue';
@@ -103,6 +104,7 @@
     DeviceListDto,
     DeviceProfileDto,
   } from '@/services/sensor-core';
+  import { profiles, units } from '@/utils/profile-utils';
 
   const { loading, setLoading } = useLoading();
 
@@ -116,14 +118,20 @@
 
   const monitorRooms = computed(() => {
     return selectedRooms.value.map((item) => {
-      return {
-        ...item,
-        device: allDevices.value.find(
+      const device = {
+        ...allDevices.value.find(
           (d) =>
             d.areaId === item.id &&
             (!selectedProfile.value ||
               selectedProfile.value === d.deviceProfileId),
         ),
+      };
+      device.latestMetricDataList = device.latestMetricDataList?.filter(
+        (l) => units[l.deviceFieldName as string],
+      );
+      return {
+        ...item,
+        device,
       };
     });
   });
@@ -142,7 +150,9 @@
       areaId,
     });
 
-    allDevices.value = deviceResult.items as DeviceListDto[];
+    allDevices.value = deviceResult.items?.filter(
+      (item) => !!profiles[item.deviceProfileName as string],
+    ) as DeviceListDto[];
     setLoading(false);
   };
 
@@ -185,8 +195,10 @@
       areaName: string;
       id: string;
     }>;
-    deviceProfileList.value =
-      await ChirpStackDeviceProfileService.getDeviceProfileList();
+    const result = await ChirpStackDeviceProfileService.getDeviceProfileList();
+    deviceProfileList.value = result.filter(
+      (item) => !!profiles[item.name as string],
+    );
     deviceProfileList.value.push({ name: '无', id: undefined });
     await queryDevice();
   });
@@ -195,5 +207,12 @@
 <style scoped lang="less">
   .general-card {
     height: 100%;
+  }
+
+  .monitor-card {
+    background-color: var(--color-neutral-2);
+    .value {
+      padding: 25px;
+    }
   }
 </style>

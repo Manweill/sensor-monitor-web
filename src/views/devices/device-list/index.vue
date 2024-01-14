@@ -64,10 +64,10 @@
         :bordered="false"
         @page-change="onPageChange"
       >
-        <template #isDisabled="{ record }">
-          <span v-if="record.isDisabled" class="circle"></span>
+        <template #online="{ record }">
+          <span v-if="!record.online" class="circle"></span>
           <span v-else class="circle pass"></span>
-          {{ record.isDisabled ? '禁用' : '启用' }}
+          {{ record.online ? '在线' : '离线' }}
         </template>
         <template #operations="{ record }">
           <a-button type="text" size="small" @click="onView(record)">
@@ -78,6 +78,11 @@
           </a-button>
           <a-popconfirm content="确认删除?" @ok="onDel(record)">
             <a-button type="text" status="danger" size="small"> 删除 </a-button>
+          </a-popconfirm>
+          <a-popconfirm content="确认删除?" @ok="onLogicDel(record)">
+            <a-button type="text" status="danger" size="small">
+              仅删除设备
+            </a-button>
           </a-popconfirm>
         </template>
       </a-table>
@@ -192,22 +197,22 @@
     },
     {
       title: '设备类型',
-      dataIndex: 'profileName',
+      dataIndex: 'deviceProfileName',
     },
     {
       title: 'EUI',
       dataIndex: 'devEui',
     },
-    // {
-    //   title: '状态',
-    //   dataIndex: 'online',
-    //   slotName: 'online',
-    // },
     {
       title: '状态',
-      dataIndex: 'isDisabled',
-      slotName: 'isDisabled',
+      dataIndex: 'online',
+      slotName: 'online',
     },
+    // {
+    //   title: '状态',
+    //   dataIndex: 'isDisabled',
+    //   slotName: 'isDisabled',
+    // },
     {
       title: '操作',
       slotName: 'operations',
@@ -305,6 +310,11 @@
 
   const onDel = async (record: any) => {
     await DeviceService.deleteById({ id: record.id });
+    queryTable();
+  };
+
+  const onLogicDel = async (record: any) => {
+    await DeviceService.deleteLogicDeviceById({ id: record.id });
     queryTable();
   };
 
