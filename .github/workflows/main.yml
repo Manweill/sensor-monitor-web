@@ -18,6 +18,7 @@ jobs:
         with:
           images: |
             adamchrist/sensor-monitor-web
+            registry.cn-heyuan.aliyuncs.com/ideatia/sensor-monitor-web
           tags: |
             type=ref,event=branch
             type=semver,pattern={{version}}
@@ -31,6 +32,12 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Login to Aliyun Registry
+        uses: docker/login-action@v3
+        with:
+          registry: registry.cn-heyuan.aliyuncs.com
+          username: ${{ secrets.ALIYUNCS_USER_NAME }}
+          password: ${{ secrets.ALIYUNCS_PASSWORD }}
       - name: Build and push
         uses: docker/build-push-action@v5
         with:
