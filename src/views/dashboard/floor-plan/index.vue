@@ -1,12 +1,23 @@
 <template>
   <div class="container">
-    <graph
-      ref="floorPlanRef"
-      canvas-id="floor-plan"
-      :height="660"
-      :height-fix="660"
-      @ready="onInit"
-    ></graph>
+    <div class="left-side">
+      <div class="panel">
+        <Banner />
+        <DataPanel />
+        <!-- <ContentChart /> -->
+      </div>
+      <a-col :flex="1" style="margin-top: 16px">
+        <a-card title="平面图监控">
+          <graph
+            ref="floorPlanRef"
+            canvas-id="floor-plan"
+            :height="660"
+            :height-fix="660"
+            @ready="onInit"
+          ></graph>
+        </a-card>
+      </a-col>
+    </div>
   </div>
 </template>
 
@@ -16,6 +27,12 @@
   import Graph from '@/components/graph/index.vue';
   import { DeviceService } from '@/services/sensor-core';
   import { units } from '@/utils/profile-utils';
+  import RecentlyVisited from '@/views/dashboard/workplace/components/recently-visited.vue';
+  import Carousel from '@/views/dashboard/workplace/components/carousel.vue';
+  import DataPanel from '@/views/dashboard/workplace/components/data-panel.vue';
+  import CategoriesPercent from '@/views/dashboard/workplace/components/categories-percent.vue';
+  import Banner from '@/views/dashboard/workplace/components/banner.vue';
+  import QuickOperation from '@/views/dashboard/workplace/components/quick-operation.vue';
 
   // w = 1600 h=1060
   // w= 1250 h=660
@@ -189,5 +206,70 @@
     padding: 16px 20px;
     padding-bottom: 0;
     display: flex;
+  }
+
+  .left-side {
+    flex: 1;
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .right-side {
+    width: 280px;
+    margin-left: 16px;
+  }
+
+  .panel {
+    background-color: var(--color-bg-2);
+    border-radius: 4px;
+    overflow: auto;
+  }
+  :deep(.panel-border) {
+    margin-bottom: 0;
+    border-bottom: 1px solid rgb(var(--gray-2));
+  }
+  .moduler-wrap {
+    border-radius: 4px;
+    background-color: var(--color-bg-2);
+    :deep(.text) {
+      font-size: 12px;
+      text-align: center;
+      color: rgb(var(--gray-8));
+    }
+
+    :deep(.wrapper) {
+      margin-bottom: 8px;
+      text-align: center;
+      cursor: pointer;
+
+      &:last-child {
+        .text {
+          margin-bottom: 0;
+        }
+      }
+      &:hover {
+        .icon {
+          color: rgb(var(--arcoblue-6));
+          background-color: #e8f3ff;
+        }
+        .text {
+          color: rgb(var(--arcoblue-6));
+        }
+      }
+    }
+
+    :deep(.icon) {
+      display: inline-block;
+      width: 32px;
+      height: 32px;
+      margin-bottom: 4px;
+      color: rgb(var(--dark-gray-1));
+      line-height: 32px;
+      font-size: 16px;
+      text-align: center;
+      background-color: rgb(var(--gray-1));
+      border-radius: 4px;
+    }
   }
 </style>

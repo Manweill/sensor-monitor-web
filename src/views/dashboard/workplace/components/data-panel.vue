@@ -36,7 +36,7 @@
           />
         </a-avatar>
         <a-statistic
-          title="官网数量"
+          title="网关数量"
           :value="deviceDataStatistics.gatewayCount"
           :value-from="0"
           animation
