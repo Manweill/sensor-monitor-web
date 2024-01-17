@@ -27,6 +27,7 @@
     DeviceAreaService,
     DeviceListDto,
   } from '@/services/sensor-core';
+  import { TreeNodeData } from '@arco-design/web-vue';
   import {
     IconDriveFile,
     IconHome,
@@ -123,12 +124,12 @@
 
   // 当节点选中
   const onSelect = (
-    selectKeys: string[],
+    selectedKeys: (string | number)[],
     data: {
-      selected?: boolean;
-      selectedNodes: IDeviceTree[];
-      node?: IDeviceTree;
-      e?: Event;
+      selected?: boolean | undefined;
+      selectedNodes: TreeNodeData[] | IDeviceTree[] | undefined;
+      node?: TreeNodeData | IDeviceTree | undefined;
+      e?: Event | undefined;
     },
   ) => {
     if (props.returnRoomOnSelect) {
@@ -138,12 +139,17 @@
           ? data.node?.children
               .flatMap((item) => (item.children ? [item, item.children] : item))
               .flat()
-              .filter((item) => (item.raw as DeviceAreaDto)?.room)
+              .filter(
+                (item) => ((item as IDeviceTree).raw as DeviceAreaDto)?.room,
+              )
               .map((item) => ({ id: item.key, areaName: item.title }))
           : [],
       });
     } else {
-      emit('onSelectChange', { selectKeys, data: toRaw(data.node) });
+      emit('onSelectChange', {
+        selectKeys: selectedKeys,
+        data: toRaw(data.node),
+      });
     }
   };
 

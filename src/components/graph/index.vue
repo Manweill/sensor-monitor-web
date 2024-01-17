@@ -16,8 +16,7 @@
 </template>
 
 <script setup lang="ts">
-  import { DeviceService } from '@/services/sensor-core';
-  import { fabric } from 'fabric';
+  import * as fabric from 'fabric';
   import { CanvasHTMLAttributes, onMounted, ref } from 'vue';
   //   import {
   //     initMinimap,
@@ -61,7 +60,7 @@
       x: 0,
       y: 0,
     },
-    target: null,
+    target: undefined,
   };
 
   function resizeCanvas() {
@@ -102,7 +101,7 @@
       containerClass: `canvas-container-${props.canvasId}`,
     });
 
-    fabric.Image.fromURL('/src/assets/svg/floor-plan.png', (img) => {
+    fabric.FabricImage.fromURL('/src/assets/svg/floor-plan.png').then((img) => {
       img.set({ left: 0, top: 0 });
       // img.scale(660 / 1060);
       canvasDesign.backgroundImage = img;

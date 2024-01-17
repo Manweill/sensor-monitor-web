@@ -22,17 +22,13 @@
 </template>
 
 <script lang="ts" setup>
-  import { onMounted, ref } from 'vue';
-  import { fabric } from 'fabric';
   import Graph from '@/components/graph/index.vue';
   import { DeviceService } from '@/services/sensor-core';
   import { units } from '@/utils/profile-utils';
-  import RecentlyVisited from '@/views/dashboard/workplace/components/recently-visited.vue';
-  import Carousel from '@/views/dashboard/workplace/components/carousel.vue';
-  import DataPanel from '@/views/dashboard/workplace/components/data-panel.vue';
-  import CategoriesPercent from '@/views/dashboard/workplace/components/categories-percent.vue';
   import Banner from '@/views/dashboard/workplace/components/banner.vue';
-  import QuickOperation from '@/views/dashboard/workplace/components/quick-operation.vue';
+  import DataPanel from '@/views/dashboard/workplace/components/data-panel.vue';
+  import * as fabric from 'fabric';
+  import { ref } from 'vue';
 
   // w = 1600 h=1060
   // w= 1250 h=660
@@ -48,7 +44,7 @@
   ];
 
   function createDevice(args: {
-    nid: string;
+    nid: string | undefined;
     no: number;
     profile?: string;
     telemetryValues: Array<{ name: string; value: number; unit: string }>;
@@ -123,7 +119,7 @@
     // }
 
     const imgUrl = `/src/assets/images/${args.profile}.png`;
-    fabric.Image.fromURL(imgUrl, (oImg) => {
+    fabric.FabricImage.fromURL(imgUrl).then((oImg) => {
       oImg.left = 20;
       oImg.top = 35;
       oImg.scale(0.1);
@@ -164,19 +160,10 @@
       .slice(0, 3)
       .forEach((device, index) => {
         const p = points[index];
-        console.log(
-          '1111',
-          device.latestMetricDataList?.map((item) => ({
-            name: item.description as string,
-            value: item.value as number,
-            unit: units[item.deviceFieldName as string] as string,
-          })) ?? [],
-        );
 
         createDevice({
           ...p,
           nid: device.id,
-          name: device.name,
           no: index,
           profile: device.deviceProfileName,
           telemetryValues:

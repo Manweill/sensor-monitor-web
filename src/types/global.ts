@@ -39,4 +39,4 @@ export interface GeneralChart {
   data: Array<{ name: string; value: number[] }>;
 }
 
-declare module 'fabric';
+// declare module 'fabric';
