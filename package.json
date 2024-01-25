@@ -4,6 +4,7 @@
   "version": "1.0.0",
   "private": true,
   "author": "ArcoDesign Team",
+  "packageManager": "pnpm@8.14.3",
   "license": "MIT",
   "scripts": {
     "dev": "vite --config ./config/vite.config.dev.ts --host 0.0.0.0",
