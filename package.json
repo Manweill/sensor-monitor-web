@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "private": true,
   "author": "ArcoDesign Team",
-  "packageManager": "pnpm@8.14.3",
+  "packageManager": "pnpm@8.15.0",
   "license": "MIT",
   "scripts": {
     "dev": "vite --config ./config/vite.config.dev.ts --host 0.0.0.0",
@@ -47,7 +47,8 @@
     "vue": "^3.3.4",
     "vue-echarts": "^6.6.1",
     "vue-i18n": "^9.5.0",
-    "vue-router": "^4.2.5"
+    "vue-router": "^4.2.5",
+    "vue3-dnd": "^2.0.4"
   },
   "devDependencies": {
     "@arco-plugins/vite-vue": "^1.4.5",

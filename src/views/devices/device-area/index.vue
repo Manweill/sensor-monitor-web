@@ -83,16 +83,21 @@
                 <a-row style="justify-content: flex-end; flex: 1">
                   <IconPlus
                     v-if="!nodeData.raw.room"
+                    :size="16"
                     class="tree-action"
                     @click="onAdd(nodeData)"
                   />
-                  <IconEdit class="tree-action" @click="onEdit(nodeData)" />
+                  <IconEdit
+                    :size="16"
+                    class="tree-action"
+                    @click="onEdit(nodeData)"
+                  />
                   <a-popconfirm
                     content="确认删除?删除区域后，关联的设备会回到设备列表"
                     type="warning"
                     @ok="onDel(nodeData)"
                   >
-                    <IconDelete class="tree-action icon-del" />
+                    <IconDelete :size="16" class="tree-action icon-del" />
                   </a-popconfirm>
                 </a-row>
               </template>

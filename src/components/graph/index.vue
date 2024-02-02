@@ -32,9 +32,15 @@
 
   const contextId = `${props.canvasId}contextMenu`;
 
-  const emits = defineEmits<{
-    dblclick?: [id: number, name: string];
-    ready: [];
+  const emit = defineEmits<{
+    (
+      event: 'dblclick',
+      args: {
+        target?: fabric.FabricObject;
+        pointer: { x: number; y: number };
+      },
+    ): void;
+    (event: 'ready'): void;
   }>();
 
   // 隐藏菜单
@@ -107,7 +113,7 @@
       canvasDesign.backgroundImage = img;
       canvasDesign.setZoom(660 / 1060);
       canvasDesign.renderAll();
-      emits('ready');
+      emit('ready');
     });
 
     // canvasDesign.on('after:render', function () {
@@ -172,15 +178,13 @@
     });
     canvasDesign.on('mouse:dblclick', (opt) => {
       if (opt.target) {
-        currentSelector.target = opt.target;
-        currentSelector.pointer = { x: opt.pointer.x, y: opt.pointer.y };
-        emits('dblclick', {
-          canvasEvent: {
-            target: opt.target,
-            pointer: currentSelector.pointer,
-          },
-        });
+        // currentSelector.target = opt.target;
+        // currentSelector.pointer = { x: opt.pointer.x, y: opt.pointer.y };
       }
+      emit('dblclick', {
+        target: opt.target,
+        pointer: currentSelector.pointer,
+      });
     });
 
     canvasDesign.on('mouse:down', (opt) => {

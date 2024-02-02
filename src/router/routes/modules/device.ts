@@ -63,6 +63,16 @@ const DASHBOARD: AppRouteRecordRaw = {
         permissions: ['*'],
       },
     },
+    {
+      path: 'floor-plan-edit',
+      name: 'FloorPlanEdit',
+      component: () => import('@/views/devices/floor-plan-edit/index.vue'),
+      meta: {
+        locale: '平面图编辑',
+        requiresAuth: true,
+        permissions: ['*'],
+      },
+    },
   ],
 };
 
