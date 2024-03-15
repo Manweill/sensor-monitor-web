@@ -50,21 +50,14 @@
             </a-table>
           </a-tab-pane>
           <a-tab-pane key="2" title="数据明细" style="padding: 20px">
-            <KvTable :device-id="id" :filed-list="deviceFieldList" />
+            <KvTable :device-id="id as string" :filed-list="deviceFieldList" />
           </a-tab-pane>
           <a-tab-pane key="3" title="告警配置" style="padding: 20px">
-            <a-table
-              row-key="id"
-              :loading="loading"
-              :columns="alarmConfigColumns"
-              :data="[]"
-              :bordered="false"
-              :pagination="false"
-            >
-              <template #upTime="{ record }">
-                {{ dayjs(record.upTime).format('YYYY-MM-DD HH:mm:ss') }}
-              </template>
-            </a-table>
+            <alert-table
+              v-if="formData.devEui"
+              :dev-eui="formData.devEui"
+              :profile-id="formData.deviceProfileId"
+            />
           </a-tab-pane>
           <a-tab-pane key="4" title="告警记录" style="padding: 20px">
             <a-table
@@ -119,6 +112,7 @@
   import thpImage from '@/assets/images/Temperature_Humidity_Profile.png';
 
   import dayjs from 'dayjs';
+  import AlertTable from '@/views/devices/device-profile/components/alert-table.vue';
   import KvTable from './components/kv-table.vue';
 
   const deviceTypeImage: Record<string, any> = {
@@ -247,7 +241,7 @@
       setLoading(true);
       try {
         const result = await DeviceService.getDetailById({
-          id: id as unknown as number,
+          id: id as string,
         });
         formData.value = {
           ...result,

@@ -69,6 +69,9 @@
           <span v-else class="circle pass"></span>
           {{ record.online ? '在线' : '离线' }}
         </template>
+        <template #powerAlert="{ record }">
+          {{ record.powerAlert ? '启用' : '禁用' }}
+        </template>
         <template #operations="{ record }">
           <a-button type="text" size="small" @click="onView(record)">
             查看
@@ -136,6 +139,10 @@
               >{{ item.name }}</a-option
             >
           </a-select>
+        </a-form-item>
+
+        <a-form-item field="powerAlert" label="低电量告警">
+          <a-switch v-model="formData.powerAlert" />
         </a-form-item>
 
         <a-form-item field="enabled" label="禁用设备">
@@ -208,11 +215,11 @@
       dataIndex: 'online',
       slotName: 'online',
     },
-    // {
-    //   title: '状态',
-    //   dataIndex: 'isDisabled',
-    //   slotName: 'isDisabled',
-    // },
+    {
+      title: '低电量告警',
+      dataIndex: 'powerAlert',
+      slotName: 'powerAlert',
+    },
     {
       title: '操作',
       slotName: 'operations',
@@ -277,6 +284,7 @@
       isDisabled: false,
       id: undefined,
       skipFcntCheck: false,
+      powerAlert: false,
     };
   };
   const formData = ref(generateFormData());
@@ -289,7 +297,10 @@
 
   const onEdit = async (record: any) => {
     modelVisible.value = true;
-    formData.value = { ...record };
+    const result = await DeviceService.getDetailById({
+      id: record.id,
+    });
+    formData.value = { ...result };
   };
   const onOk = async () => {
     const errors: Record<string, ValidatedError> | undefined =

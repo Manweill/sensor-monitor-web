@@ -151,6 +151,10 @@
       type: String,
       default: '',
     },
+    devEui: {
+      type: String,
+      default: '',
+    },
   });
 
   const AlertLevel = {
@@ -247,11 +251,11 @@
       alertType: EnumDeviceAlertRuleConfigDetailDtoAlertType.COMMON_DEVICE,
       comparisonOperator:
         EnumDeviceAlertRuleConfigDetailDtoComparisonOperator.LESS_THAN,
-      devEui: '',
+      devEui: props.devEui,
       isEnabled: true,
       key: '',
       profileId: props.profileId,
-      threshold: undefined,
+      threshold: 0,
       thresholdLowerLimit: 0,
       thresholdUpperLimit: 0,
     };
@@ -284,6 +288,7 @@
         await DeviceAlertRuleConfigService.getDeviceAlertRuleConfigList({
           unPage: true,
           profileId: props.profileId,
+          devEui: props.devEui,
         });
       tableData.value = items as DeviceAlertRuleConfigListDto[];
     } catch (err) {
