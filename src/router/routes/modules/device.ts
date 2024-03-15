@@ -23,6 +23,27 @@ const DASHBOARD: AppRouteRecordRaw = {
       },
     },
     {
+      path: 'device-profile',
+      name: 'DeviceProfile',
+      component: () => import('@/views/devices/device-profile/index.vue'),
+      meta: {
+        locale: '设备配置',
+        requiresAuth: true,
+        permissions: ['*'],
+      },
+    },
+    {
+      path: 'device-profile-detail',
+      name: 'DeviceProfileDetail',
+      component: () => import('@/views/devices/device-profile/detail.vue'),
+      meta: {
+        hideInMenu: true,
+        locale: '设备配置详情',
+        requiresAuth: true,
+        permissions: ['*'],
+      },
+    },
+    {
       path: 'device-list',
       name: 'DeviceList',
       component: () => import('@/views/devices/device-list/index.vue'),

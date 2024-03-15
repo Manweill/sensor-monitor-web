@@ -38,6 +38,188 @@ export class PagedResultDto<T = any> implements IPagedResult<T> {
 // customer definition
 // empty
 
+export class AlertMessageService {
+  /**
+   * 获取告警消息详情
+   */
+  static getAlertMessageDetail(
+    params: {
+      /** messageId */
+      messageId: string;
+    } = {} as any,
+    options: IRequestOptions = {},
+  ): Promise<AlertMessageDetailOutputDto> {
+    return new Promise((resolve, reject) => {
+      let url =
+        basePath + '/alert-message/get-alert-message-detail/{messageId}';
+      url = url.replace('{messageId}', params['messageId'] + '');
+
+      const configs: IRequestConfig = getConfigs(
+        'get',
+        'application/json',
+        url,
+        options,
+      );
+
+      /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
+
+      console.warn(
+        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
+      );
+
+      axios(configs, resolve, reject);
+    });
+  }
+  /**
+   * 获取到告警消息列表
+   */
+  static getAlertMessageList(
+    params: {
+      /** 设备的物联ID */
+      deviceEui?: string;
+      /** 截止时间 */
+      endTime?: Date;
+      /** 页码 */
+      pageNumber?: number;
+      /** 每页显示的记录数 */
+      pageSize?: number;
+      /** 告警是否被消除 */
+      resolved?: boolean;
+      /** 排序字段名 */
+      sorting?: string;
+      /** 排序的方式 */
+      sortingDirection?: string;
+      /** 起始时间 */
+      startTime?: Date;
+      /** 是否不分页，默认分页 */
+      unPage?: boolean;
+    } = {} as any,
+    options: IRequestOptions = {},
+  ): Promise<PagedResultDto<AlertMessageListDto>> {
+    return new Promise((resolve, reject) => {
+      let url = basePath + '/alert-message/get-alert-messages';
+
+      const configs: IRequestConfig = getConfigs(
+        'get',
+        'application/json',
+        url,
+        options,
+      );
+      configs.params = {
+        deviceEui: params['deviceEui'],
+        endTime: params['endTime'],
+        pageNumber: params['pageNumber'],
+        pageSize: params['pageSize'],
+        resolved: params['resolved'],
+        sorting: params['sorting'],
+        sortingDirection: params['sortingDirection'],
+        startTime: params['startTime'],
+        unPage: params['unPage'],
+      };
+
+      /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
+
+      console.warn(
+        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
+      );
+
+      axios(configs, resolve, reject);
+    });
+  }
+  /**
+   * 删除告警消息
+   */
+  static removeAlertMessages(
+    params: {
+      /** 告警消息的IDs */
+      alertMessageIds?: string[];
+      /** 告警设备的物联ID */
+      deviceEui?: string;
+    } = {} as any,
+    options: IRequestOptions = {},
+  ): Promise<any> {
+    return new Promise((resolve, reject) => {
+      let url = basePath + '/alert-message/remove-alert-messages';
+
+      const configs: IRequestConfig = getConfigs(
+        'delete',
+        'application/json',
+        url,
+        options,
+      );
+      configs.params = {
+        alertMessageIds: params['alertMessageIds'],
+        deviceEui: params['deviceEui'],
+      };
+
+      /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
+
+      console.warn(
+        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
+      );
+
+      axios(configs, resolve, reject);
+    });
+  }
+  /**
+   * 消除告警消息
+   */
+  static resolveAlertMessage(
+    params: {
+      /** messageId */
+      messageId?: string;
+    } = {} as any,
+    options: IRequestOptions = {},
+  ): Promise<any> {
+    return new Promise((resolve, reject) => {
+      let url = basePath + '/alert-message/resolve-alert-message';
+
+      const configs: IRequestConfig = getConfigs(
+        'delete',
+        'application/json',
+        url,
+        options,
+      );
+      configs.params = { messageId: params['messageId'] };
+
+      /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
+
+      console.warn(
+        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
+      );
+
+      axios(configs, resolve, reject);
+    });
+  }
+  /**
+   * 保存告警消息
+   */
+  static saveAlertMessage(
+    params: {
+      /** input */
+      input: SaveAlertMessageInputDto;
+    } = {} as any,
+    options: IRequestOptions = {},
+  ): Promise<string> {
+    return new Promise((resolve, reject) => {
+      let url = basePath + '/alert-message/save-alert-message';
+
+      const configs: IRequestConfig = getConfigs(
+        'post',
+        'application/json',
+        url,
+        options,
+      );
+
+      let data = params['input'];
+
+      configs.data = data;
+
+      axios(configs, resolve, reject);
+    });
+  }
+}
+
 export class ChirpStackDeviceService {
   /**
    * 刷新设备的DownLinkQueue
@@ -519,6 +701,153 @@ export class ChirpStackDeviceProfileService {
   }
 }
 
+export class DeviceAlertRuleConfigService {
+  /**
+   * 获取到告警规则的列表信息
+   */
+  static getDeviceAlertRuleConfigList(
+    params: {
+      /**  */
+      devEui?: string;
+      /** 页码 */
+      pageNumber?: number;
+      /** 每页显示的记录数 */
+      pageSize?: number;
+      /**  */
+      profileId?: string;
+      /** 排序字段名 */
+      sorting?: string;
+      /** 排序的方式 */
+      sortingDirection?: string;
+      /** 是否不分页，默认分页 */
+      unPage?: boolean;
+    } = {} as any,
+    options: IRequestOptions = {},
+  ): Promise<PagedResultDto<DeviceAlertRuleConfigListDto>> {
+    return new Promise((resolve, reject) => {
+      let url =
+        basePath +
+        '/device-alert-rule-config/get-device-alert-rule-config-list';
+
+      const configs: IRequestConfig = getConfigs(
+        'get',
+        'application/json',
+        url,
+        options,
+      );
+      configs.params = {
+        devEui: params['devEui'],
+        pageNumber: params['pageNumber'],
+        pageSize: params['pageSize'],
+        profileId: params['profileId'],
+        sorting: params['sorting'],
+        sortingDirection: params['sortingDirection'],
+        unPage: params['unPage'],
+      };
+
+      /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
+
+      console.warn(
+        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
+      );
+
+      axios(configs, resolve, reject);
+    });
+  }
+  /**
+   * 获取到告警规则的详情
+   */
+  static getDeviceAlertRuleConfig(
+    params: {
+      /** id */
+      id: string;
+    } = {} as any,
+    options: IRequestOptions = {},
+  ): Promise<DeviceAlertRuleConfigDetailDto> {
+    return new Promise((resolve, reject) => {
+      let url =
+        basePath +
+        '/device-alert-rule-config/get-device-alert-rule-config/{id}';
+      url = url.replace('{id}', params['id'] + '');
+
+      const configs: IRequestConfig = getConfigs(
+        'get',
+        'application/json',
+        url,
+        options,
+      );
+
+      /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
+
+      console.warn(
+        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
+      );
+
+      axios(configs, resolve, reject);
+    });
+  }
+  /**
+   * 删除告警规则
+   */
+  static removeDeviceAlertConfig(
+    params: {
+      /** id */
+      id: string;
+    } = {} as any,
+    options: IRequestOptions = {},
+  ): Promise<any> {
+    return new Promise((resolve, reject) => {
+      let url =
+        basePath +
+        '/device-alert-rule-config/remove-device-alert-rule-config/{id}';
+      url = url.replace('{id}', params['id'] + '');
+
+      const configs: IRequestConfig = getConfigs(
+        'delete',
+        'application/json',
+        url,
+        options,
+      );
+
+      /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
+
+      console.warn(
+        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
+      );
+
+      axios(configs, resolve, reject);
+    });
+  }
+  /**
+   * 保存告警规则
+   */
+  static saveDeviceAlertRuleConfig(
+    params: {
+      /** input */
+      input: SaveDeviceAlertRuleConfigInputDto;
+    } = {} as any,
+    options: IRequestOptions = {},
+  ): Promise<string> {
+    return new Promise((resolve, reject) => {
+      let url =
+        basePath + '/device-alert-rule-config/save-device-alert-rule-config';
+
+      const configs: IRequestConfig = getConfigs(
+        'post',
+        'application/json',
+        url,
+        options,
+      );
+
+      let data = params['input'];
+
+      configs.data = data;
+
+      axios(configs, resolve, reject);
+    });
+  }
+}
+
 export class DeviceDataStatisticsService {
   /**
    * 首页上设备相关统计数据的获取
@@ -701,6 +1030,170 @@ export class DeviceGatewayService {
         options,
       );
       configs.params = { gatewayId: params['gatewayId'] };
+
+      let data = params['input'];
+
+      configs.data = data;
+
+      axios(configs, resolve, reject);
+    });
+  }
+}
+
+export class DeviceTypeFieldService {
+  /**
+   * 获取到设备类型的列表信息
+   */
+  static getDeviceTypeList(
+    params: {
+      /** 页码 */
+      pageNumber?: number;
+      /** 每页显示的记录数 */
+      pageSize?: number;
+      /**  */
+      profileId?: string;
+      /** 排序字段名 */
+      sorting?: string;
+      /** 排序的方式 */
+      sortingDirection?: string;
+      /** 是否不分页，默认分页 */
+      unPage?: boolean;
+    } = {} as any,
+    options: IRequestOptions = {},
+  ): Promise<PagedResultDto<DeviceTypeFieldDto>> {
+    return new Promise((resolve, reject) => {
+      let url = basePath + '/device-type-field/get-device-type-field-list';
+
+      const configs: IRequestConfig = getConfigs(
+        'get',
+        'application/json',
+        url,
+        options,
+      );
+      configs.params = {
+        pageNumber: params['pageNumber'],
+        pageSize: params['pageSize'],
+        profileId: params['profileId'],
+        sorting: params['sorting'],
+        sortingDirection: params['sortingDirection'],
+        unPage: params['unPage'],
+      };
+
+      /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
+
+      console.warn(
+        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
+      );
+
+      axios(configs, resolve, reject);
+    });
+  }
+  /**
+   * 获取设备类型的详情
+   */
+  static getDeviceTypeDetail(
+    params: {
+      /** id */
+      id: string;
+    } = {} as any,
+    options: IRequestOptions = {},
+  ): Promise<DeviceTypeDetailDto> {
+    return new Promise((resolve, reject) => {
+      let url = basePath + '/device-type-field/get-device-type-field/{id}';
+      url = url.replace('{id}', params['id'] + '');
+
+      const configs: IRequestConfig = getConfigs(
+        'get',
+        'application/json',
+        url,
+        options,
+      );
+
+      /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
+
+      console.warn(
+        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
+      );
+
+      axios(configs, resolve, reject);
+    });
+  }
+  /**
+   * 删除设备类型的信息
+   */
+  static removeDeviceType(
+    params: {
+      /** id */
+      id: string;
+    } = {} as any,
+    options: IRequestOptions = {},
+  ): Promise<any> {
+    return new Promise((resolve, reject) => {
+      let url = basePath + '/device-type-field/remove-device-type-field/{id}';
+      url = url.replace('{id}', params['id'] + '');
+
+      const configs: IRequestConfig = getConfigs(
+        'delete',
+        'application/json',
+        url,
+        options,
+      );
+
+      /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
+
+      console.warn(
+        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
+      );
+
+      axios(configs, resolve, reject);
+    });
+  }
+  /**
+   * 保存设备类型信息
+   */
+  static saveDeviceType(
+    params: {
+      /** input */
+      input: DeviceTypeFieldDto;
+    } = {} as any,
+    options: IRequestOptions = {},
+  ): Promise<string> {
+    return new Promise((resolve, reject) => {
+      let url = basePath + '/device-type-field/save-device-type-field';
+
+      const configs: IRequestConfig = getConfigs(
+        'post',
+        'application/json',
+        url,
+        options,
+      );
+
+      let data = params['input'];
+
+      configs.data = data;
+
+      axios(configs, resolve, reject);
+    });
+  }
+  /**
+   * 批量保存设备类型信息
+   */
+  static saveDeviceTypes(
+    params: {
+      /** input */
+      input: DeviceTypeFieldDto[];
+    } = {} as any,
+    options: IRequestOptions = {},
+  ): Promise<any> {
+    return new Promise((resolve, reject) => {
+      let url = basePath + '/device-type-field/save-device-type-fields';
+
+      const configs: IRequestConfig = getConfigs(
+        'post',
+        'application/json',
+        url,
+        options,
+      );
 
       let data = params['input'];
 
@@ -1706,6 +2199,67 @@ export class StorehouseEnumService {
   }
 }
 
+export interface AlertMessageDetailOutputDto {
+  /** 告警等级： FAILURE故障、WARN警告、INFO消息、NORMAL正常 */
+  alertLevel?: EnumAlertMessageDetailOutputDtoAlertLevel;
+
+  /** 告警等级的名称 */
+  alertLevelStrName?: string;
+
+  /** 告警消息内容 */
+  alertMessage?: string;
+
+  /** 告警时间 */
+  alertTime?: Date;
+
+  /** 告警标题 */
+  alertTitle?: string;
+
+  /** 告警消息关联的设备物联ID */
+  deviceEUI?: string;
+
+  /** 唯一标识 */
+  id?: string;
+
+  /** 告警设备的名称 */
+  name?: string;
+
+  /** 告警是否被消除 */
+  resolved?: boolean;
+
+  /** 告警消除的时间 */
+  resolvedTime?: Date;
+}
+
+export interface AlertMessageListDto {
+  /** 告警等级： FAILURE故障、WARN警告、INFO消息、NORMAL正常 */
+  alertLevel?: EnumAlertMessageListDtoAlertLevel;
+
+  /** 告警等级的名称 */
+  alertLevelStrName?: string;
+
+  /** 告警消息内容 */
+  alertMessage?: string;
+
+  /** 告警时间 */
+  alertTime?: Date;
+
+  /** 告警标题 */
+  alertTitle?: string;
+
+  /** 告警消息关联的设备物联ID */
+  deviceEUI?: string;
+
+  /** 唯一标识 */
+  id?: string;
+
+  /** 告警是否被消除 */
+  resolved?: boolean;
+
+  /** 告警消除的时间 */
+  resolvedTime?: Date;
+}
+
 export interface BatchBindDeviceAreaInputDto {
   /** 设备区域ID */
   areaId?: string;
@@ -1883,6 +2437,118 @@ export interface CreateGatewaysInputDto {
   gateway?: CreateGatewaysDataDto;
 }
 
+export interface DeviceAlertRuleConfigDetailDto {
+  /** 告警等级：故障、警告、消息、正常 */
+  alertLevel?: EnumDeviceAlertRuleConfigDetailDtoAlertLevel;
+
+  /** 告警等级的名称 */
+  alertLevelStrName?: string;
+
+  /** 告警消息 */
+  alertMessage?: string;
+
+  /** InfluxDB 上的规则ID */
+  alertRuleId?: string;
+
+  /** 告警标题 */
+  alertTitle?: string;
+
+  /** 告警规则所属的类型 */
+  alertType?: EnumDeviceAlertRuleConfigDetailDtoAlertType;
+
+  /** 告警规则所属的类型的名称 */
+  alertTypeStrName?: string;
+
+  /** 属性值的比较操作符 */
+  comparisonOperator?: EnumDeviceAlertRuleConfigDetailDtoComparisonOperator;
+
+  /** 属性值的比较操作符的名称 */
+  comparisonOperatorStrName?: string;
+
+  /** 设备物联ID */
+  devEui?: string;
+
+  /** 设备的名称 */
+  deviceName?: string;
+
+  /** id */
+  id?: string;
+
+  /** 该告警规则是否启用 ， 默认不启用 */
+  isEnabled?: boolean;
+
+  /** 告警属性的键 */
+  key?: string;
+
+  /** 在chirpStack上面，对应的设备配置profile文件模板 ID */
+  profileId?: string;
+
+  /** 设备模版profile文件的名称 */
+  profileName?: string;
+
+  /** 告警阈值 */
+  threshold?: number;
+
+  /** 告警阈值的下限 */
+  thresholdLowerLimit?: number;
+
+  /** 告警阈值的上限 */
+  thresholdUpperLimit?: number;
+}
+
+export interface DeviceAlertRuleConfigListDto {
+  /** 告警等级：故障、警告、消息、正常 */
+  alertLevel?: EnumDeviceAlertRuleConfigListDtoAlertLevel;
+
+  /** 告警等级的名称 */
+  alertLevelStrName?: string;
+
+  /** 告警消息 */
+  alertMessage?: string;
+
+  /** InfluxDB 上的规则ID */
+  alertRuleId?: string;
+
+  /** 告警标题 */
+  alertTitle?: string;
+
+  /** 告警规则所属的类型 */
+  alertType?: EnumDeviceAlertRuleConfigListDtoAlertType;
+
+  /** 告警规则所属的类型的名称 */
+  alertTypeStrName?: string;
+
+  /** 属性值的比较操作符 */
+  comparisonOperator?: EnumDeviceAlertRuleConfigListDtoComparisonOperator;
+
+  /** 属性值的比较操作符的名称 */
+  comparisonOperatorStrName?: string;
+
+  /** 设备物联ID */
+  devEui?: string;
+
+  /** id */
+  id?: string;
+
+  /** 该告警规则是否启用 ， 默认不启用 */
+  isEnabled?: boolean;
+
+  /** 告警属性的键 */
+  key?: string;
+
+  /** 在chirpStack上面，对应的设备配置profile文件模板 ID */
+  profileId?: string;
+
+  /** 告警阈值 */
+  threshold?: number;
+
+  /** 告警阈值的下限 */
+  thresholdLowerLimit?: number;
+
+  /** 告警阈值的上限 */
+  thresholdUpperLimit?: number;
+}
+
 export interface DeviceAreaDto {
   /** 区域名称 */
   areaName?: string;
@@ -1951,6 +2617,9 @@ export interface DeviceDetailDto {
   /** 设备是否在线，true表示在线 , 默认是false */
   online?: boolean;
 
+  /** 设备是否开启电量告警 ，默认为false,表示不开启 */
+  powerAlert?: boolean;
+
   /** 禁用设备的帧计数器验证 是否开启 ，默认为false,表示不开启禁用 */
   skipFcntCheck?: boolean;
 }
@@ -1983,11 +2652,20 @@ export interface DeviceDto {
   /** 设备是否在线，true表示在线 , 默认是false */
   online?: boolean;
 
+  /** 设备是否开启电量告警 ，默认为false,表示不开启 */
+  powerAlert?: boolean;
+
   /** 禁用设备的帧计数器验证 是否开启 ，默认为false,表示不开启禁用 */
   skipFcntCheck?: boolean;
 }
 
 export interface DeviceFieldDto {
+  /** 遥控命令的值，仅遥控属性适用 */
+  commandValue?: string;
+
+  /** 相关的配置信息，json字符串的形式 */
+  config?: string;
+
   /** 设备属性的描述 */
   description?: string;
 
@@ -2002,6 +2680,21 @@ export interface DeviceFieldDto {
 
   /** id */
   id?: string;
+
+  /** 属性的键 */
+  key?: string;
+
+  /** 属性值的精度，即取小数点后几位 */
+  precision?: number;
+
+  /**  */
+  profileId?: string;
+
+  /**  */
+  type?: EnumDeviceFieldDtoType;
+
+  /** 属性值的单位 */
+  unit?: string;
 }
 
 export interface DeviceGatewayDetailDto {
@@ -2481,6 +3174,73 @@ export interface DeviceStatesPropertyDataDto {
   value?: string;
 }
 
+export interface DeviceTypeDetailDto {
+  /** 遥控命令的值，仅遥控属性适用 */
+  commandValue?: string;
+
+  /** 相关的配置信息，json字符串的形式 */
+  config?: string;
+
+  /** 属性值数据的类型 */
+  dataType?: EnumDeviceTypeDetailDtoDataType;
+
+  /** 属性的名称 */
+  fieldName?: string;
+
+  /** id */
+  id?: string;
+
+  /** 属性的键 ，用于MQTT上报数据关联 */
+  key?: string;
+
+  /** 属性值的精度，即取小数点后几位 */
+  precision?: number;
+
+  /** chirpStack上面，设备配置模板文件的ID */
+  profileId?: string;
+
+  /** 设备模板profile文件的名称 */
+  profileName?: string;
+
+  /** 属性的访问类型 ，读/写/读写 */
+  type?: EnumDeviceTypeDetailDtoType;
+
+  /** 属性值的单位 */
+  unit?: string;
+}
+
+export interface DeviceTypeFieldDto {
+  /** 遥控命令的值，仅遥控属性适用 */
+  commandValue?: string;
+
+  /** 相关的配置信息，json字符串的形式 */
+  config?: string;
+
+  /** 属性值数据的类型 */
+  dataType?: EnumDeviceTypeFieldDtoDataType;
+
+  /** 属性的名称 */
+  fieldName?: string;
+
+  /** id */
+  id?: string;
+
+  /** 属性的键 ，用于MQTT上报数据关联 */
+  key?: string;
+
+  /** 属性值的精度，即取小数点后几位 */
+  precision?: number;
+
+  /** chirpStack上面，设备配置模板文件的ID */
+  profileId?: string;
+
+  /** 属性的访问类型 ，读/写/读写 */
+  type?: EnumDeviceTypeFieldDtoType;
+
+  /** 属性值的单位 */
+  unit?: string;
+}
+
 export interface DownLinkDeviceQueueDataDto {
   /**  */
   confirmed?: boolean;
@@ -2616,6 +3376,70 @@ export interface MoveDeviceAreaInputDto {
   newParentId?: string;
 }
 
+export interface SaveAlertMessageInputDto {
+  /** 告警等级： FAILURE故障、WARN警告、INFO消息、NORMAL正常 */
+  alertLevel?: EnumSaveAlertMessageInputDtoAlertLevel;
+
+  /** 告警消息内容 */
+  alertMessage?: string;
+
+  /** 告警时间 */
+  alertTime?: Date;
+
+  /** 告警标题 */
+  alertTitle?: string;
+
+  /** 告警消息关联的设备物联ID */
+  deviceEUI?: string;
+
+  /** 告警是否被消除 */
+  resolved?: boolean;
+
+  /** 告警消除的时间 */
+  resolvedTime?: Date;
+}
+
+export interface SaveDeviceAlertRuleConfigInputDto {
+  /** 告警等级：故障、警告、消息、正常 */
+  alertLevel?: EnumSaveDeviceAlertRuleConfigInputDtoAlertLevel;
+
+  /** 告警消息 */
+  alertMessage?: string;
+
+  /** 告警标题 */
+  alertTitle?: string;
+
+  /** 告警规则所属的类型 */
+  alertType?: EnumSaveDeviceAlertRuleConfigInputDtoAlertType;
+
+  /** 属性值的比较操作符 */
+  comparisonOperator?: EnumSaveDeviceAlertRuleConfigInputDtoComparisonOperator;
+
+  /** 设备物联ID */
+  devEui?: string;
+
+  /** id */
+  id?: string;
+
+  /** 该告警规则是否启用 ， 默认不启用 */
+  isEnabled?: boolean;
+
+  /** 告警属性的键 */
+  key?: string;
+
+  /** 在chirpStack上面，对应的设备配置profile文件模板 ID */
+  profileId?: string;
+
+  /** 告警阈值 */
+  threshold?: number;
+
+  /** 告警阈值的下限 */
+  thresholdLowerLimit?: number;
+
+  /** 告警阈值的上限 */
+  thresholdUpperLimit?: number;
+}
+
 export interface SelectListOutputDto {
   /** 显示名称 */
   displayName?: string;
@@ -2690,11 +3514,82 @@ export interface UpdateGatewaysInputDto {
   /**  */
   gateway?: CreateGatewaysDataDto;
 }
+export enum EnumAlertMessageDetailOutputDtoAlertLevel {
+  'CRIT' = 'CRIT',
+  'WARN' = 'WARN',
+  'INFO' = 'INFO',
+  'NORMAL' = 'NORMAL',
+}
+export enum EnumAlertMessageListDtoAlertLevel {
+  'CRIT' = 'CRIT',
+  'WARN' = 'WARN',
+  'INFO' = 'INFO',
+  'NORMAL' = 'NORMAL',
+}
+export enum EnumDeviceAlertRuleConfigDetailDtoAlertLevel {
+  'CRIT' = 'CRIT',
+  'WARN' = 'WARN',
+  'INFO' = 'INFO',
+  'NORMAL' = 'NORMAL',
+}
+export enum EnumDeviceAlertRuleConfigDetailDtoAlertType {
+  'ONLY_DEVICE' = 'ONLY_DEVICE',
+  'COMMON_DEVICE' = 'COMMON_DEVICE',
+}
+export enum EnumDeviceAlertRuleConfigDetailDtoComparisonOperator {
+  'LESS_THAN' = 'LESS_THAN',
+  'GREATER_THAN' = 'GREATER_THAN',
+  'IN_SECTION' = 'IN_SECTION',
+  'NOT_IN_SECTION' = 'NOT_IN_SECTION',
+}
+export enum EnumDeviceAlertRuleConfigListDtoAlertLevel {
+  'CRIT' = 'CRIT',
+  'WARN' = 'WARN',
+  'INFO' = 'INFO',
+  'NORMAL' = 'NORMAL',
+}
+export enum EnumDeviceAlertRuleConfigListDtoAlertType {
+  'ONLY_DEVICE' = 'ONLY_DEVICE',
+  'COMMON_DEVICE' = 'COMMON_DEVICE',
+}
+export enum EnumDeviceAlertRuleConfigListDtoComparisonOperator {
+  'LESS_THAN' = 'LESS_THAN',
+  'GREATER_THAN' = 'GREATER_THAN',
+  'IN_SECTION' = 'IN_SECTION',
+  'NOT_IN_SECTION' = 'NOT_IN_SECTION',
+}
 export enum EnumDeviceFieldDtoFieldType {
   'DOUBLE' = 'DOUBLE',
   'STRING' = 'STRING',
   'BOOLEAN' = 'BOOLEAN',
   'LONG' = 'LONG',
+}
+export enum EnumDeviceFieldDtoType {
+  'ONLY_READ' = 'ONLY_READ',
+  'ONLY_WRITE' = 'ONLY_WRITE',
+  'READ_AND_WRITE' = 'READ_AND_WRITE',
+}
+export enum EnumDeviceTypeDetailDtoDataType {
+  'DOUBLE' = 'DOUBLE',
+  'STRING' = 'STRING',
+  'BOOLEAN' = 'BOOLEAN',
+  'LONG' = 'LONG',
+}
+export enum EnumDeviceTypeDetailDtoType {
+  'ONLY_READ' = 'ONLY_READ',
+  'ONLY_WRITE' = 'ONLY_WRITE',
+  'READ_AND_WRITE' = 'READ_AND_WRITE',
+}
+export enum EnumDeviceTypeFieldDtoDataType {
+  'DOUBLE' = 'DOUBLE',
+  'STRING' = 'STRING',
+  'BOOLEAN' = 'BOOLEAN',
+  'LONG' = 'LONG',
+}
+export enum EnumDeviceTypeFieldDtoType {
+  'ONLY_READ' = 'ONLY_READ',
+  'ONLY_WRITE' = 'ONLY_WRITE',
+  'READ_AND_WRITE' = 'READ_AND_WRITE',
 }
 export enum EnumGatewayLocationDtoSource {
   'UNKNOWN' = 'UNKNOWN',
@@ -2704,4 +3599,26 @@ export enum EnumGatewayLocationDtoSource {
   'GEO_RESOLVER_RSSI' = 'GEO_RESOLVER_RSSI',
   'GEO_RESOLVER_GNSS' = 'GEO_RESOLVER_GNSS',
   'GEO_RESOLVER_WIFI' = 'GEO_RESOLVER_WIFI',
+}
+export enum EnumSaveAlertMessageInputDtoAlertLevel {
+  'CRIT' = 'CRIT',
+  'WARN' = 'WARN',
+  'INFO' = 'INFO',
+  'NORMAL' = 'NORMAL',
+}
+export enum EnumSaveDeviceAlertRuleConfigInputDtoAlertLevel {
+  'CRIT' = 'CRIT',
+  'WARN' = 'WARN',
+  'INFO' = 'INFO',
+  'NORMAL' = 'NORMAL',
+}
+export enum EnumSaveDeviceAlertRuleConfigInputDtoAlertType {
+  'ONLY_DEVICE' = 'ONLY_DEVICE',
+  'COMMON_DEVICE' = 'COMMON_DEVICE',
+}
+export enum EnumSaveDeviceAlertRuleConfigInputDtoComparisonOperator {
+  'LESS_THAN' = 'LESS_THAN',
+  'GREATER_THAN' = 'GREATER_THAN',
+  'IN_SECTION' = 'IN_SECTION',
+  'NOT_IN_SECTION' = 'NOT_IN_SECTION',
 }
