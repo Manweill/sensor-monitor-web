@@ -84,6 +84,16 @@ const DASHBOARD: AppRouteRecordRaw = {
         permissions: ['*'],
       },
     },
+    {
+      path: 'device-alert-message',
+      name: 'AlertMessage',
+      component: () => import('@/views/devices/alert-message/index.vue'),
+      meta: {
+        locale: '设备告警消息',
+        requiresAuth: true,
+        permissions: ['*'],
+      },
+    },
   ],
 };
 
