@@ -44,15 +44,14 @@ export class AlertMessageService {
    */
   static getAlertMessageDetail(
     params: {
-      /** messageId */
-      messageId: string;
+      /** id */
+      id: string;
     } = {} as any,
     options: IRequestOptions = {},
   ): Promise<AlertMessageDetailOutputDto> {
     return new Promise((resolve, reject) => {
-      let url =
-        basePath + '/alert-message/get-alert-message-detail/{messageId}';
-      url = url.replace('{messageId}', params['messageId'] + '');
+      let url = basePath + '/alert-message/get-alert-message-detail/{id}';
+      url = url.replace('{id}', params['id'] + '');
 
       const configs: IRequestConfig = getConfigs(
         'get',
@@ -166,8 +165,8 @@ export class AlertMessageService {
    */
   static resolveAlertMessage(
     params: {
-      /** messageId */
-      messageId?: string;
+      /** id */
+      id?: string;
     } = {} as any,
     options: IRequestOptions = {},
   ): Promise<any> {
@@ -180,7 +179,7 @@ export class AlertMessageService {
         url,
         options,
       );
-      configs.params = { messageId: params['messageId'] };
+      configs.params = { id: params['id'] };
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
@@ -2253,6 +2252,9 @@ export interface AlertMessageListDto {
   /** 唯一标识 */
   id?: string;
 
+  /** 设备名称 */
+  name?: string;
+
   /** 告警是否被消除 */
   resolved?: boolean;
 
@@ -2720,6 +2722,9 @@ export interface DeviceKeysInfoDto {
 }
 
 export interface DeviceLatestMetricDataDto {
+  /** 属性值数据的类型 */
+  dataType?: EnumDeviceLatestMetricDataDtoDataType;
+
   /** 设备属性的描述 */
   description?: string;
 
@@ -2733,7 +2738,7 @@ export interface DeviceLatestMetricDataDto {
   time?: Date;
 
   /** 设备最新的遥测数据值 */
-  value?: number;
+  value?: object;
 }
 
 export interface DeviceLinkMetricRxPacketsPerDrDto {
@@ -3568,6 +3573,12 @@ export enum EnumDeviceFieldDtoType {
   'ONLY_READ' = 'ONLY_READ',
   'ONLY_WRITE' = 'ONLY_WRITE',
   'READ_AND_WRITE' = 'READ_AND_WRITE',
+}
+export enum EnumDeviceLatestMetricDataDtoDataType {
+  'DOUBLE' = 'DOUBLE',
+  'STRING' = 'STRING',
+  'BOOLEAN' = 'BOOLEAN',
+  'LONG' = 'LONG',
 }
 export enum EnumDeviceTypeDetailDtoDataType {
   'DOUBLE' = 'DOUBLE',

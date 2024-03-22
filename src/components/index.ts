@@ -5,9 +5,12 @@ import { BarChart, LineChart, PieChart, RadarChart } from 'echarts/charts';
 import {
   GridComponent,
   TooltipComponent,
+  ToolboxComponent,
   LegendComponent,
   DataZoomComponent,
   GraphicComponent,
+  MarkPointComponent,
+  MarkLineComponent,
 } from 'echarts/components';
 import Chart from './chart/index.vue';
 import Breadcrumb from './breadcrumb/index.vue';
@@ -22,9 +25,12 @@ use([
   RadarChart,
   GridComponent,
   TooltipComponent,
+  ToolboxComponent,
   LegendComponent,
   DataZoomComponent,
   GraphicComponent,
+  MarkPointComponent,
+  MarkLineComponent,
 ]);
 
 export default {

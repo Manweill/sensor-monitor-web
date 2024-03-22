@@ -381,14 +381,21 @@
           tooltip: {
             trigger: 'axis',
           },
-          // toolbox: {
-          //   show: true,
-          //   feature: {
-          //     magicType: { show: true, type: ['line', 'bar'] },
-          //     restore: { show: true },
-          //     saveAsImage: { show: true },
-          //   },
-          // },
+          toolbox: {
+            show: true,
+            feature: {
+              magicType: {
+                show: true,
+                type: ['line', 'bar'],
+                title: {
+                  line: '切换为折线图',
+                  bar: '切换为柱状图',
+                },
+              },
+              restore: { show: true, title: '还原' },
+              saveAsImage: { show: true, title: '保存为图片' },
+            },
+          },
           xAxis: {
             type: 'category',
             data: timestamps.map((n: any) =>
@@ -415,7 +422,9 @@
           series: [
             {
               name,
-              data: datasets[0].data,
+              data: datasets[0].data
+                .filter((n) => n !== 0)
+                .map((n) => n.toFixed(2)),
               type: 'line',
               smooth: true,
               showSymbol: false,
@@ -428,6 +437,15 @@
                   borderWidth: 2,
                   borderColor: '#E0E3FF',
                 },
+              },
+              markPoint: {
+                data: [
+                  { type: 'max', name: '最大值' },
+                  { type: 'min', name: '最小值' },
+                ],
+              },
+              markLine: {
+                data: [{ type: 'average', name: '平均值' }],
               },
             },
           ],
