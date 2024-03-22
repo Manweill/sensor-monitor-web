@@ -44,8 +44,8 @@
               :bordered="false"
               :pagination="false"
             >
-              <template #upTime="{ record }">
-                {{ dayjs(record.upTime).format('YYYY-MM-DD HH:mm:ss') }}
+              <template #time="{ record }">
+                {{ dayjs(record.time).format('YYYY-MM-DD HH:mm:ss') }}
               </template>
             </a-table>
           </a-tab-pane>
@@ -193,8 +193,8 @@
     },
     {
       title: '上报时间',
-      dataIndex: 'upTime',
-      slotName: 'upTime',
+      dataIndex: 'time',
+      slotName: 'time',
     },
   ];
 
