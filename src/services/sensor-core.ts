@@ -191,7 +191,7 @@ export class AlertMessageService {
     });
   }
   /**
-   * 保存告警消息
+   * 保存设备告警消息
    */
   static saveAlertMessage(
     params: {
@@ -1514,6 +1514,112 @@ export class DeviceService {
         devEui: params['devEui'],
         endTime: params['endTime'],
         startTime: params['startTime'],
+      };
+
+      /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
+
+      console.warn(
+        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
+      );
+
+      axios(configs, resolve, reject);
+    });
+  }
+  /**
+   * 从InfluxDB获取到设备的历史遥测数据（非聚合）
+   */
+  static getDeviceMetricFlatRecords(
+    params: {
+      /** 设备的物联ID */
+      deviceEui?: string;
+      /** 设备名称 */
+      deviceName?: string;
+      /** 截止时间 */
+      endTime?: Date;
+      /** 第几页 */
+      pageNumber?: number;
+      /** 每页的大小 */
+      pageSize?: number;
+      /** 是否分页，默认是true , 分页 */
+      paged?: boolean;
+      /** 开始时间 */
+      startTime?: Date;
+      /** 设备的遥测属性key */
+      telemetryField?: string;
+    } = {} as any,
+    options: IRequestOptions = {},
+  ): Promise<DeviceMetricFlatRecordResponseDto> {
+    return new Promise((resolve, reject) => {
+      let url = basePath + '/device/getDeviceMetricFlatRecords';
+
+      const configs: IRequestConfig = getConfigs(
+        'get',
+        'application/json',
+        url,
+        options,
+      );
+      configs.params = {
+        deviceEUI: params['deviceEui'],
+        deviceName: params['deviceName'],
+        endTime: params['endTime'],
+        pageNumber: params['pageNumber'],
+        pageSize: params['pageSize'],
+        paged: params['paged'],
+        startTime: params['startTime'],
+        telemetryField: params['telemetryField'],
+      };
+
+      /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
+
+      console.warn(
+        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
+      );
+
+      axios(configs, resolve, reject);
+    });
+  }
+  /**
+   * 从InfluxDB获取到设备的历史遥测数据（聚合）
+   */
+  static getDeviceMetricRecords(
+    params: {
+      /** 设备的物联ID */
+      deviceEui?: string;
+      /** 设备名称 */
+      deviceName?: string;
+      /** 截止时间 */
+      endTime?: Date;
+      /** 第几页 */
+      pageNumber?: number;
+      /** 每页的大小 */
+      pageSize?: number;
+      /** 是否分页，默认是true , 分页 */
+      paged?: boolean;
+      /** 开始时间 */
+      startTime?: Date;
+      /** 设备的遥测属性key */
+      telemetryField?: string;
+    } = {} as any,
+    options: IRequestOptions = {},
+  ): Promise<DeviceMetricRecordResponseDto> {
+    return new Promise((resolve, reject) => {
+      let url = basePath + '/device/getDeviceMetricRecords';
+
+      const configs: IRequestConfig = getConfigs(
+        'get',
+        'application/json',
+        url,
+        options,
+      );
+      configs.params = {
+        deviceEUI: params['deviceEui'],
+        deviceName: params['deviceName'],
+        endTime: params['endTime'],
+        pageNumber: params['pageNumber'],
+        pageSize: params['pageSize'],
+        paged: params['paged'],
+        startTime: params['startTime'],
+        telemetryField: params['telemetryField'],
       };
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
@@ -2893,6 +2999,46 @@ export interface DeviceMetricDataSetDto {
   label?: string;
 }
 
+export interface DeviceMetricFlatRecordResponseDto {
+  /** 数据项 */
+  items?: DeviceMetricFlatRecordResponseItemDto[];
+
+  /** 数据总数 */
+  totalCount?: number;
+}
+
+export interface DeviceMetricFlatRecordResponseItemDto {
+  /** 遥测数据的上报时间，字符串类型 */
+  _time?: string;
+
+  /** 遥测属性的值类型 */
+  dataType?: EnumDeviceMetricFlatRecordResponseItemDtoDataType;
+
+  /**  */
+  devEUI?: string;
+
+  /**  */
+  deviceName?: string;
+
+  /** 遥测属性key对应的属性名称 */
+  fileName?: string;
+
+  /**  */
+  key?: string;
+
+  /** 属性值的精度，即取小数点后几位 */
+  precision?: number;
+
+  /** 属性值的单位 */
+  unit?: string;
+
+  /** 遥测数据的上报时间 */
+  upTime?: Date;
+
+  /**  */
+  value?: string;
+}
+
 export interface DeviceMetricListDataDto {
   /** 设备属性的描述 */
   description?: string;
@@ -2933,6 +3079,31 @@ export interface DeviceMetricPropertyDataItemDto {
 
   /**  */
   label?: string;
+}
+
+export interface DeviceMetricRecordResponseDto {
+  /** 数据项 */
+  items?: DeviceMetricRecordResponseItemDto[];
+
+  /** 数据总数 */
+  totalCount?: number;
+}
+
+export interface DeviceMetricRecordResponseItemDto {
+  /** 遥测数据的上报时间，字符串类型 */
+  _time?: string;
+
+  /**  */
+  devEUI?: string;
+
+  /**  */
+  deviceName?: string;
+
+  /** 设备各个属性的 遥测数据 */
+  telemetries?: DeviceTelemetriesDataDto[];
+
+  /** 遥测数据的上报时间 */
+  upTime?: Date;
 }
 
 export interface DeviceMetricResponseDto {
@@ -3179,6 +3350,26 @@ export interface DeviceStatesPropertyDataDto {
   value?: string;
 }
 
+export interface DeviceTelemetriesDataDto {
+  /** 遥测属性的值类型 */
+  dataType?: EnumDeviceTelemetriesDataDtoDataType;
+
+  /** 遥测属性key对应的属性名称 */
+  fileName?: string;
+
+  /** 遥测属性key */
+  key?: string;
+
+  /** 属性值的精度，即取小数点后几位 */
+  precision?: number;
+
+  /** 属性值的单位 */
+  unit?: string;
+
+  /** 遥测属性的值 */
+  value?: object;
+}
+
 export interface DeviceTypeDetailDto {
   /** 遥控命令的值，仅遥控属性适用 */
   commandValue?: string;
@@ -3382,26 +3573,20 @@ export interface MoveDeviceAreaInputDto {
 }
 
 export interface SaveAlertMessageInputDto {
-  /** 告警等级： FAILURE故障、WARN警告、INFO消息、NORMAL正常 */
-  alertLevel?: EnumSaveAlertMessageInputDtoAlertLevel;
+  /**  */
+  _check_name?: string;
 
-  /** 告警消息内容 */
-  alertMessage?: string;
+  /**  */
+  _level?: string;
 
-  /** 告警时间 */
-  alertTime?: Date;
+  /**  */
+  _message?: string;
 
-  /** 告警标题 */
-  alertTitle?: string;
+  /**  */
+  _time?: string;
 
-  /** 告警消息关联的设备物联ID */
-  deviceEUI?: string;
-
-  /** 告警是否被消除 */
-  resolved?: boolean;
-
-  /** 告警消除的时间 */
-  resolvedTime?: Date;
+  /**  */
+  dev_eui?: string;
 }
 
 export interface SaveDeviceAlertRuleConfigInputDto {
@@ -3580,6 +3765,18 @@ export enum EnumDeviceLatestMetricDataDtoDataType {
   'BOOLEAN' = 'BOOLEAN',
   'LONG' = 'LONG',
 }
+export enum EnumDeviceMetricFlatRecordResponseItemDtoDataType {
+  'DOUBLE' = 'DOUBLE',
+  'STRING' = 'STRING',
+  'BOOLEAN' = 'BOOLEAN',
+  'LONG' = 'LONG',
+}
+export enum EnumDeviceTelemetriesDataDtoDataType {
+  'DOUBLE' = 'DOUBLE',
+  'STRING' = 'STRING',
+  'BOOLEAN' = 'BOOLEAN',
+  'LONG' = 'LONG',
+}
 export enum EnumDeviceTypeDetailDtoDataType {
   'DOUBLE' = 'DOUBLE',
   'STRING' = 'STRING',
@@ -3610,12 +3807,6 @@ export enum EnumGatewayLocationDtoSource {
   'GEO_RESOLVER_RSSI' = 'GEO_RESOLVER_RSSI',
   'GEO_RESOLVER_GNSS' = 'GEO_RESOLVER_GNSS',
   'GEO_RESOLVER_WIFI' = 'GEO_RESOLVER_WIFI',
-}
-export enum EnumSaveAlertMessageInputDtoAlertLevel {
-  'CRIT' = 'CRIT',
-  'WARN' = 'WARN',
-  'INFO' = 'INFO',
-  'NORMAL' = 'NORMAL',
 }
 export enum EnumSaveDeviceAlertRuleConfigInputDtoAlertLevel {
   'CRIT' = 'CRIT',

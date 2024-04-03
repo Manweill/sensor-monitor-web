@@ -77,7 +77,10 @@
   import { computed, reactive, ref } from 'vue';
   import { Pagination } from '@/types/global';
   import useLoading from '@/hooks/loading';
-  import { DeviceMetricDataService } from '@/services/sensor-core';
+  import {
+    DeviceMetricRecordResponseItemDto,
+    DeviceService,
+  } from '@/services/sensor-core';
   import dayjs from 'dayjs';
   import DeviceAreaTree from '@/components/tree/device-area-tree/index.vue';
   import { Message } from '@arco-design/web-vue';
@@ -101,23 +104,8 @@
   };
   const searchModel = ref(generateSearchModel());
 
-  // 表格
-  interface Dataset {
-    label: string;
-    data: number[];
-  }
-  interface MetricsPros {
-    name: string;
-    timestamps: string[];
-    datasets: Dataset[];
-    kind: string;
-  }
-  interface Metrics {
-    [key: string]: MetricsPros;
-  }
-
-  const currentDeviceId = ref('');
-  const metricsData = ref<Metrics>({});
+  const currentDeviceEui = ref('');
+  const metricsData = ref<DeviceMetricRecordResponseItemDto[]>([]);
 
   const columns = computed(() => {
     const cols = [
@@ -127,33 +115,52 @@
         slotName: 'date',
       },
     ];
-    Object.entries(metricsData.value).forEach(([key, value]: [string, any]) => {
+
+    metricsData.value[0]?.telemetries?.forEach((n) => {
       cols.push({
-        title: value.name,
-        dataIndex: key as string,
-        slotName: key as string,
+        title: n.fileName as string,
+        dataIndex: n.key as string,
+        slotName: n.key as string,
       });
     });
+    // Object.entries(metricsData.value).forEach(([key, value]: [string, any]) => {
+    //   cols.push({
+    //     title: value.name,
+    //     dataIndex: key as string,
+    //     slotName: key as string,
+    //   });
+    // });
     return cols;
   });
 
   const tableData = computed(() => {
     const table: any[] = [];
-    Object.entries(metricsData.value).forEach(([key, value]: [string, any]) => {
-      value.timestamps.forEach((n: any, index: number) => {
-        const findIndex = table.findIndex((t) => t.date === n);
-        if (findIndex >= 0) {
-          table[findIndex][key] = Number.parseFloat(
-            value.datasets[0].data[index],
-          ).toFixed(2);
-        } else {
-          table.push({
-            date: n,
-            [key]: Number.parseFloat(value.datasets[0].data[index]).toFixed(2),
-          });
-        }
+
+    metricsData.value.forEach((n) => {
+      const data: { [key: string]: any } = {
+        date: n.upTime,
+      };
+      n.telemetries?.forEach((item) => {
+        data[item.key as string] = `${item.value}`;
       });
+      table.push(data);
     });
+
+    // Object.entries(metricsData.value).forEach(([key, value]: [string, any]) => {
+    //   value.timestamps.forEach((n: any, index: number) => {
+    //     const findIndex = table.findIndex((t) => t.date === n);
+    //     if (findIndex >= 0) {
+    //       table[findIndex][key] = Number.parseFloat(
+    //         value.datasets[0].data[index],
+    //       ).toFixed(2);
+    //     } else {
+    //       table.push({
+    //         date: n,
+    //         [key]: Number.parseFloat(value.datasets[0].data[index]).toFixed(2),
+    //       });
+    //     }
+    //   });
+    // });
 
     return table;
   });
@@ -164,16 +171,13 @@
     const [startTime, endTime] = searchModel.value.searchTime;
 
     try {
-      const { metrics, totalCount } =
-        await DeviceMetricDataService.getDeviceMetricData({
-          ...pagination,
-          deviceId: currentDeviceId.value,
-          startTime: dayjs(startTime).startOf('d').toDate(),
-          endTime: dayjs(endTime).endOf('d').toDate(),
-          sorting: 'upTime',
-          sortingDirection: 'DESC',
-        });
-      metricsData.value = metrics as Metrics;
+      const { items, totalCount } = await DeviceService.getDeviceMetricRecords({
+        ...pagination,
+        deviceEui: currentDeviceEui.value,
+        startTime: dayjs(startTime).startOf('d').toDate(),
+        endTime: dayjs(endTime).endOf('d').toDate(),
+      });
+      metricsData.value = (items as DeviceMetricRecordResponseItemDto[]) || [];
       pagination.total = totalCount;
     } catch (err) {
       // you can report use errorHandler or other
@@ -198,7 +202,7 @@
   };
   const handleSelect = async ({ data }: any) => {
     if (data?.raw?.isDevice === true) {
-      currentDeviceId.value = data.key;
+      currentDeviceEui.value = data.raw.raw.devEui;
       queryTable();
     } else {
       Message.error('请选择设备');

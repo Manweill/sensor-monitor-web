@@ -50,7 +50,12 @@
             </a-table>
           </a-tab-pane>
           <a-tab-pane key="2" title="数据明细" style="padding: 20px">
-            <KvTable :device-id="id as string" :filed-list="deviceFieldList" />
+            <KvTable
+              v-if="formData.devEui"
+              :device-id="id as string"
+              :device-eui="formData.devEui"
+              :filed-list="deviceFieldList"
+            />
           </a-tab-pane>
           <a-tab-pane key="3" title="告警配置" style="padding: 20px">
             <alert-table
@@ -60,18 +65,10 @@
             />
           </a-tab-pane>
           <a-tab-pane key="4" title="告警记录" style="padding: 20px">
-            <a-table
-              row-key="id"
-              :loading="loading"
-              :columns="alarmColumns"
-              :data="[]"
-              :bordered="false"
-              :pagination="false"
-            >
-              <template #upTime="{ record }">
-                {{ dayjs(record.upTime).format('YYYY-MM-DD HH:mm:ss') }}
-              </template>
-            </a-table>
+            <alert-message-table
+              v-if="formData.devEui"
+              :device-eui="formData.devEui"
+            />
           </a-tab-pane>
           <!--          <a-tab-pane key="5" title="设备配置">-->
           <!--            <a-form-->
@@ -113,6 +110,7 @@
 
   import dayjs from 'dayjs';
   import AlertTable from '@/views/devices/device-profile/components/alert-table.vue';
+  import AlertMessageTable from '@/views/devices/device-list/components/alter-message-table.vue';
   import KvTable from './components/kv-table.vue';
 
   const deviceTypeImage: Record<string, any> = {
@@ -195,40 +193,6 @@
       title: '上报时间',
       dataIndex: 'time',
       slotName: 'time',
-    },
-  ];
-
-  const alarmConfigColumns = [
-    {
-      title: '告警类型',
-      dataIndex: 'fieldName',
-    },
-    {
-      title: '告警等级',
-      dataIndex: 'fieldName',
-    },
-    {
-      title: '告警内容',
-      dataIndex: 'fieldName',
-    },
-    {
-      title: '告警条件',
-      dataIndex: 'fieldName',
-    },
-  ];
-
-  const alarmColumns = [
-    {
-      title: '告警类型',
-      dataIndex: 'fieldName',
-    },
-    {
-      title: '告警时间',
-      dataIndex: 'fieldName',
-    },
-    {
-      title: '告警内容',
-      dataIndex: 'fieldName',
     },
   ];
 

@@ -6,24 +6,9 @@
         <a-form :model="searchModel" label-align="left">
           <a-row :gutter="16">
             <a-col :span="12">
-              <a-form-item field="key" label="设备属性">
-                <a-select
-                  v-model="searchModel.telemetryField"
-                  placeholder="请选择设备属性"
-                >
-                  <a-option
-                    v-for="item in filedList"
-                    :key="item.deviceFieldName"
-                    :value="item.deviceFieldName"
-                    >{{ item.description }}</a-option
-                  >
-                </a-select>
-              </a-form-item>
-            </a-col>
-            <a-col :span="12">
               <a-form-item field="key" label="时间范围">
                 <a-range-picker
-                  v-model="searchModel.time"
+                  v-model="searchModel.searchTime"
                   style="width: 100%"
                 />
               </a-form-item>
@@ -53,6 +38,7 @@
     </a-row>
     <a-divider style="margin-top: 0" />
     <a-table
+      row-key="id"
       :loading="loading"
       :pagination="pagination"
       :columns="columns"
@@ -60,11 +46,26 @@
       :bordered="false"
       @page-change="onPageChange"
     >
-      <template #value="{ record }">
-        {{ formatValue(record) }}
+      <template #alertTime="{ record }">
+        {{
+          record.alertTime
+            ? dayjs(record.alertTime).format('YYYY-MM-DD HH:mm:ss')
+            : '--'
+        }}
       </template>
-      <template #upTime="{ record }">
-        {{ dayjs(record.upTime).format('YYYY-MM-DD HH:mm:ss') }}
+
+      <template #resolvedTime="{ record }">
+        {{
+          record.resolvedTime
+            ? dayjs(record.resolvedTime).format('YYYY-MM-DD HH:mm:ss')
+            : '--'
+        }}
+      </template>
+
+      <template #resolved="{ record }">
+        <span v-if="record.resolved" class="circle pass"></span>
+        <span v-else class="circle"></span>
+        {{ record.resolved ? '已消除' : '未消除' }}
       </template>
     </a-table>
   </div>
@@ -74,19 +75,15 @@
   import dayjs from 'dayjs';
   import { computed, PropType, reactive, ref } from 'vue';
   import {
+    AlertMessageListDto,
+    AlertMessageService,
     DeviceLatestMetricDataDto,
-    DeviceMetricListDataDto,
-    DeviceService,
   } from '@/services/sensor-core';
   import { TableColumnData } from '@arco-design/web-vue';
   import useLoading from '@/hooks/loading';
   import { Pagination } from '@/types/global';
 
   const props = defineProps({
-    deviceId: {
-      type: String,
-      default: '',
-    },
     deviceEui: {
       type: String,
       default: '',
@@ -98,11 +95,12 @@
       },
     },
   });
-  console.log(props.filedList);
+
+  // 搜索
   const generateSearchModel = () => {
     return {
-      telemetryField: props.filedList[0]?.deviceFieldName,
-      time: [Date.now(), Date.now()],
+      searchTime: [Date.now(), Date.now()],
+      deviceEui: props.deviceEui,
     };
   };
 
@@ -111,27 +109,38 @@
   const { loading, setLoading } = useLoading(false);
 
   // 表格
-  const tableData = ref<DeviceMetricListDataDto[]>([]);
+  const tableData = ref<AlertMessageListDto[]>([]);
   const columns = computed<TableColumnData[]>(() => [
     {
-      title: '属性标识',
-      dataIndex: 'key',
-      slotName: 'key',
+      title: '告警等级',
+      dataIndex: 'alertLevelStrName',
+    },
+    {
+      title: '告警标题',
+      dataIndex: 'alertTitle',
+    },
+    {
+      title: '告警消息',
+      dataIndex: 'alertMessage',
     },
     {
       title: '描述',
-      dataIndex: 'fileName',
-      slotName: 'fileName',
+      dataIndex: 'description',
     },
     {
-      title: '属性值',
-      dataIndex: 'value',
-      slotName: 'value',
+      title: '告警时间',
+      dataIndex: 'alertTime',
+      slotName: 'alertTime',
     },
     {
-      title: '时间',
-      dataIndex: 'upTime',
-      slotName: 'upTime',
+      title: '已消除',
+      dataIndex: 'resolved',
+      slotName: 'resolved',
+    },
+    {
+      title: '消除时间',
+      dataIndex: 'resolvedTime',
+      slotName: 'resolvedTime',
     },
   ]);
 
@@ -148,16 +157,16 @@
   const queryTable = async () => {
     setLoading(true);
     try {
-      const [startTime, endTime] = searchModel.value.time;
-      const result = await DeviceService.getDeviceMetricFlatRecords({
-        ...pagination,
-        ...searchModel.value,
-        startTime: dayjs(startTime).startOf('d').toDate(),
-        endTime: dayjs(endTime).endOf('d').toDate(),
-        deviceEui: props.deviceEui,
-      });
-      tableData.value = result.items as DeviceMetricListDataDto[];
-      pagination.total = result.totalCount;
+      const [startTime, endTime] = searchModel.value.searchTime;
+      const { items, totalCount } =
+        await AlertMessageService.getAlertMessageList({
+          ...pagination,
+          ...searchModel.value,
+          startTime: dayjs(startTime).startOf('d').toDate(),
+          endTime: dayjs(endTime).endOf('d').toDate(),
+        });
+      tableData.value = items as AlertMessageListDto[];
+      pagination.total = totalCount as unknown as number;
     } catch (err) {
       // you can report use errorHandler or other
     } finally {
@@ -180,18 +189,6 @@
     searchModel.value = generateSearchModel();
   };
 
-  const formatValue = (record: any) => {
-    let result = '';
-    switch (record.key) {
-      case 'human':
-        result = Number(record.value) === 1 ? '有人' : '无人';
-        break;
-      default:
-        result = record.value;
-        break;
-    }
-    return result;
-  };
   // 初始化
   queryTable();
 </script>
