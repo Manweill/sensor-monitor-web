@@ -19,7 +19,7 @@ const DASHBOARD: AppRouteRecordRaw = {
       meta: {
         locale: 'menu.dashboard.workplace',
         requiresAuth: true,
-        permissions: ['*'],
+        permissions: ['Pages.Workbench'],
       },
     },
     {
@@ -29,7 +29,7 @@ const DASHBOARD: AppRouteRecordRaw = {
       meta: {
         locale: '平面图',
         requiresAuth: true,
-        permissions: ['*'],
+        permissions: ['Pages.Plane.Graph'],
       },
     },
   ],

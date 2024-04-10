@@ -19,7 +19,7 @@ const DASHBOARD: AppRouteRecordRaw = {
       meta: {
         locale: '用户管理',
         requiresAuth: true,
-        permissions: ['Pages.Sys.Menu'],
+        permissions: ['Pages.User'],
       },
     },
     {
@@ -29,7 +29,7 @@ const DASHBOARD: AppRouteRecordRaw = {
       meta: {
         locale: '角色管理',
         requiresAuth: true,
-        permissions: ['*'],
+        permissions: ['Pages.Role'],
       },
     },
     {
@@ -39,7 +39,7 @@ const DASHBOARD: AppRouteRecordRaw = {
       meta: {
         locale: '系统日志',
         requiresAuth: true,
-        permissions: ['*'],
+        permissions: ['Pages.System.Log'],
       },
     },
   ],

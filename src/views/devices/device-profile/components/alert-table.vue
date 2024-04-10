@@ -37,7 +37,7 @@
       </a-popconfirm>
     </template>
   </a-table>
-  <a-modal v-model:visible="modelVisible" title="属性管理" @before-ok="onOk">
+  <a-modal v-model:visible="modelVisible" title="告警配置" @before-ok="onOk">
     <a-form ref="formRef" :model="formData" auto-label-width>
       <a-form-item field="isEnabled" label="是否启用">
         <a-switch v-model="formData.isEnabled" />

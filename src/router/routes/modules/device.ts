@@ -19,7 +19,7 @@ const DASHBOARD: AppRouteRecordRaw = {
       meta: {
         locale: '网关管理',
         requiresAuth: true,
-        permissions: ['*'],
+        permissions: ['Pages.GateWay'],
       },
     },
     {
@@ -29,7 +29,7 @@ const DASHBOARD: AppRouteRecordRaw = {
       meta: {
         locale: '设备配置',
         requiresAuth: true,
-        permissions: ['*'],
+        permissions: ['Pages.Device.Profile'],
       },
     },
     {
@@ -50,7 +50,7 @@ const DASHBOARD: AppRouteRecordRaw = {
       meta: {
         locale: '设备列表',
         requiresAuth: true,
-        permissions: ['*'],
+        permissions: ['Pages.Device.List'],
       },
     },
     {
@@ -61,7 +61,7 @@ const DASHBOARD: AppRouteRecordRaw = {
         hideInMenu: true,
         locale: '设备详情',
         requiresAuth: true,
-        permissions: ['*'],
+        permissions: ['Pages.Device.List'],
       },
     },
     {
@@ -71,7 +71,7 @@ const DASHBOARD: AppRouteRecordRaw = {
       meta: {
         locale: '设备区域',
         requiresAuth: true,
-        permissions: ['*'],
+        permissions: ['Pages.Device.Area'],
       },
     },
     {
@@ -81,7 +81,7 @@ const DASHBOARD: AppRouteRecordRaw = {
       meta: {
         locale: '设备监测数据',
         requiresAuth: true,
-        permissions: ['*'],
+        permissions: ['Pages.Device.Monitor.Data'],
       },
     },
     {
@@ -91,7 +91,7 @@ const DASHBOARD: AppRouteRecordRaw = {
       meta: {
         locale: '设备告警消息',
         requiresAuth: true,
-        permissions: ['*'],
+        permissions: ['Pages.Device.Alert.Message'],
       },
     },
   ],

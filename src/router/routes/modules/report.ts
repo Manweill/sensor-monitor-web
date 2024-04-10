@@ -19,7 +19,7 @@ const DASHBOARD: AppRouteRecordRaw = {
       meta: {
         locale: '日报表',
         requiresAuth: true,
-        permissions: ['*'],
+        permissions: ['Pages.Statistic.Analysis.Daily.Report'],
       },
     },
     {
@@ -29,7 +29,7 @@ const DASHBOARD: AppRouteRecordRaw = {
       meta: {
         locale: '月报表',
         requiresAuth: true,
-        permissions: ['*'],
+        permissions: ['Pages.Statistic.Analysis.Monthly.Report'],
       },
     },
     {
@@ -39,7 +39,7 @@ const DASHBOARD: AppRouteRecordRaw = {
       meta: {
         locale: '年报表',
         requiresAuth: true,
-        permissions: ['*'],
+        permissions: ['Pages.Statistic.Analysis.Annual.Report'],
       },
     },
   ],
