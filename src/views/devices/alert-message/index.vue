@@ -162,13 +162,12 @@
       dataIndex: 'alertMessage',
     },
     {
-      title: '描述',
-      dataIndex: 'description',
+      title: '告警值',
+      dataIndex: 'value',
     },
-
     {
-      title: '设备ID',
-      dataIndex: 'deviceEUI',
+      title: '设备',
+      dataIndex: 'name',
     },
     {
       title: '告警时间',
@@ -249,7 +248,7 @@
   // 消除
   const onResolve = async (record: any) => {
     await AlertMessageService.resolveAlertMessage({
-      messageId: record.id,
+      id: record.id,
     });
     queryTable();
   };

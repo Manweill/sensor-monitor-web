@@ -124,8 +124,8 @@
       dataIndex: 'alertMessage',
     },
     {
-      title: '描述',
-      dataIndex: 'description',
+      title: '告警值',
+      dataIndex: 'value',
     },
     {
       title: '告警时间',
