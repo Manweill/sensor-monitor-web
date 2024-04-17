@@ -54,6 +54,7 @@
           </a-card>
         </a-col>
         <a-col flex="8" style="text-align: right">
+          <deviceMonitorWS50xv2></deviceMonitorWS50xv2>
           <a-table
             row-key="id"
             :loading="loading"
@@ -84,6 +85,8 @@
   import dayjs from 'dayjs';
   import DeviceAreaTree from '@/components/tree/device-area-tree/index.vue';
   import { Message } from '@arco-design/web-vue';
+  // import imgWS50xv2 from '@/assets/images/WS50x_v2.png';
+  import deviceMonitorWS50xv2 from './components/device-monitor-WS50x_v2.vue';
 
   const { loading, setLoading } = useLoading(false);
 
