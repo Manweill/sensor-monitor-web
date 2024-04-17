@@ -22,4 +22,21 @@ export const regexUrl = new RegExp(
   'i',
 );
 
+export const hexToBase64 = (hexStr: string): string => {
+  // 将16进制字符串转换为字节数组
+  const byteArray = new Uint8Array(
+    hexStr.match(/[\da-f]{2}/gi)?.map((h) => {
+      return parseInt(h, 16);
+    }) || [],
+  );
+
+  // 使用btoa函数将字节数组转换为Base64字符串
+  let binary = '';
+  byteArray.forEach((byte) => {
+    binary += String.fromCharCode(byte);
+  });
+
+  return btoa(binary);
+};
+
 export default null;

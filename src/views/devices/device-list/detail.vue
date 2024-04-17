@@ -10,7 +10,9 @@
         <a-space>
           <a-image
             width="150px"
-            :src="deviceTypeImage[formData.deviceProfileName as string]"
+            :src="
+              deviceTypeImage[formData.deviceProfileName as string] || iotImage
+            "
           />
           <a-descriptions
             :label-style="{
@@ -40,12 +42,32 @@
               row-key="id"
               :loading="loading"
               :columns="filedListColumns"
-              :data="deviceFieldList"
+              :data="latestMetricDataList"
               :bordered="false"
               :pagination="false"
             >
               <template #time="{ record }">
-                {{ dayjs(record.time).format('YYYY-MM-DD HH:mm:ss') }}
+                {{
+                  record.time
+                    ? dayjs(record.time).format('YYYY-MM-DD HH:mm:ss')
+                    : '--'
+                }}
+              </template>
+              <template #operations="{ record }">
+                <template v-if="!!record.propConfig">
+                  <a-button
+                    v-for="config in record.propConfig"
+                    :key="config.label"
+                    type="primary"
+                    size="small"
+                    @click="onCommand(record, config)"
+                  >
+                    <template #icon>
+                      <icon-command />
+                    </template>
+                    {{ config.name }}
+                  </a-button>
+                </template>
               </template>
             </a-table>
           </a-tab-pane>
@@ -98,20 +120,32 @@
 <script setup lang="ts">
   import { useRoute, useRouter } from 'vue-router';
   import {
+    ChirpStackDeviceService,
     DeviceDetailDto,
     DeviceLatestMetricDataDto,
     DeviceService,
+    EnumDeviceFieldDtoType,
   } from '@/services/sensor-core';
   import { computed, onMounted, ref } from 'vue';
   import useLoading from '@/hooks/loading';
   import eppImage from '@/assets/images/Environmental_Parameters_Profile.png';
   import hispImage from '@/assets/images/Human_Infrared_Sensor_Profile.png';
   import thpImage from '@/assets/images/Temperature_Humidity_Profile.png';
+  import iotImage from '@/assets/images/IOT.png';
 
   import dayjs from 'dayjs';
   import AlertTable from '@/views/devices/device-profile/components/alert-table.vue';
   import AlertMessageTable from '@/views/devices/device-list/components/alter-message-table.vue';
+  import { hexToBase64 } from '@/utils';
+  import { Message } from '@arco-design/web-vue';
   import KvTable from './components/kv-table.vue';
+
+  interface ITelemetryPropConfig {
+    value: string;
+    name: string;
+    color: string | null;
+    command: string;
+  }
 
   const deviceTypeImage: Record<string, any> = {
     Environmental_Parameters_Profile: eppImage,
@@ -172,29 +206,140 @@
     ];
   });
 
-  const deviceFieldList = computed<DeviceLatestMetricDataDto[]>(() => {
-    return formData.value.latestMetricDataList || [];
+  const latestMetricDataList = computed<any[]>(() => {
+    // 使用 reduce 函数转换为对象
+    const latestDataObj = (formData.value.latestMetricDataList || []).reduce<{
+      [key: string]: any;
+    }>((obj, item) => {
+      obj[item.deviceFieldName!] = item;
+      return obj;
+    }, {});
+
+    return (
+      // 最新的遥信列表缺少数据，所以以属性配置列表为准
+      formData.value.deviceFieldList?.map((n) => {
+        // 获取属性列表的最新遥测数据
+        const latestValue = latestDataObj[n.key!];
+
+        // 如果包含写的属性
+        if (
+          !!n.config &&
+          (n.type === EnumDeviceFieldDtoType.READ_AND_WRITE ||
+            n.type === EnumDeviceFieldDtoType.ONLY_WRITE)
+        ) {
+          // 安全地解析JSON字符串
+          let propConfig: ITelemetryPropConfig[];
+          try {
+            propConfig = JSON.parse(n.config || '{}');
+          } catch (error) {
+            // eslint-disable-next-line no-console
+            console.error('Failed to parse config JSON:', n.config, error);
+            propConfig = []; // 默认值或根据业务需要进行处理
+          }
+
+          // 根据配置格式化显示值
+          const formatValue =
+            propConfig.find(
+              (item) => `${item.value}` === `${latestValue?.value}`,
+            )?.name ||
+            latestValue?.value ||
+            '';
+
+          // 过滤当前状态的控制
+          const filterConfig = propConfig.filter(
+            (item) => `${item.value}` !== `${latestValue?.value}`,
+          );
+
+          // 组合全部数据
+          return {
+            ...n,
+            value: latestValue?.value,
+            time: latestValue?.time || '',
+            formatValue,
+            propConfig: filterConfig,
+          };
+        }
+        return { ...n, value: latestValue?.value, tim: latestValue?.time };
+      }) || []
+    );
   });
+
+  const deviceFieldList = computed<DeviceLatestMetricDataDto[]>(() => {
+    return formData.value.deviceFieldList || [];
+  });
+
+  // const deviceFieldList = computed(() => {
+  //   return (
+  //     formData.value.deviceFieldList?.map((n) => {
+  //       if (
+  //         !!n.config &&
+  //         (n.type === EnumDeviceFieldDtoType.READ_AND_WRITE ||
+  //           n.type === EnumDeviceFieldDtoType.ONLY_WRITE)
+  //       ) {
+  //         // 安全地解析JSON字符串
+  //         let propConfig: ITelemetryPropConfig[];
+  //         try {
+  //           propConfig = JSON.parse(n.config || '{}');
+  //         } catch (error) {
+  //           console.error('Failed to parse config JSON:', n.config, error);
+  //           propConfig = []; // 默认值或根据业务需要进行处理
+  //         }
+  //         return { ...n, propConfig };
+  //       }
+  //       return n;
+  //     }) || []
+  //   );
+  // });
 
   const filedListColumns = [
     {
       title: '属性标识',
-      dataIndex: 'deviceFieldName',
+      dataIndex: 'key',
     },
     {
       title: '描述',
-      dataIndex: 'description',
+      dataIndex: 'fieldName',
     },
     {
       title: '最新值',
-      dataIndex: 'value',
+      dataIndex: 'formatValue',
     },
     {
       title: '上报时间',
       dataIndex: 'time',
       slotName: 'time',
     },
+    {
+      title: '控制命令',
+      dataIndex: 'operations',
+      slotName: 'operations',
+    },
   ];
+
+  /**
+   * 执行命令操作的异步函数。
+   */
+  const onCommand = async (row: any, config: ITelemetryPropConfig) => {
+    // 创建设备队列项，用于向设备发送命令
+    await ChirpStackDeviceService.createDeviceQueueItem({
+      devEui: formData.value.devEui, // 设备的DevEUI
+      input: {
+        queueItem: {
+          confirmed: true, // 确认发送
+          data: hexToBase64(config.command), // 将命令从十六进制转换为Base64格式
+          fcntDown: '0', // 下行帧计数
+          fport: '1', // 使用的FPort
+          isPending: false, // 不设置为待处理
+          isEncrypted: false, // 命令不加密
+        },
+      },
+    });
+
+    Message.success({
+      content: '命令已下发，请稍后查看！',
+      duration: 5 * 1000,
+    });
+  };
 
   const onBack = () => {
     router.back();
@@ -202,6 +347,20 @@
 
   onMounted(async () => {
     if (id) {
+      // 定时刷新
+      setInterval(async () => {
+        try {
+          const result = await DeviceService.getDetailById({
+            id: id as string,
+          });
+          formData.value = {
+            ...result,
+          };
+        } catch (error) {
+          console.error(error);
+        }
+      }, 5000);
+
       setLoading(true);
       try {
         const result = await DeviceService.getDetailById({
@@ -221,6 +380,7 @@
   .container {
     padding: 20px;
   }
+
   .form {
     width: 540px;
     margin: 0 auto;

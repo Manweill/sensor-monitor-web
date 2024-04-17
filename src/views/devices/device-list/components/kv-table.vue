@@ -13,9 +13,9 @@
                 >
                   <a-option
                     v-for="item in filedList"
-                    :key="item.deviceFieldName"
-                    :value="item.deviceFieldName"
-                    >{{ item.description }}</a-option
+                    :key="item.key"
+                    :value="item.key"
+                    >{{ item.fieldName }}</a-option
                   >
                 </a-select>
               </a-form-item>
@@ -74,7 +74,7 @@
   import dayjs from 'dayjs';
   import { computed, PropType, reactive, ref } from 'vue';
   import {
-    DeviceLatestMetricDataDto,
+    DeviceFieldDto,
     DeviceMetricListDataDto,
     DeviceService,
   } from '@/services/sensor-core';
@@ -92,16 +92,15 @@
       default: '',
     },
     filedList: {
-      type: Array as PropType<DeviceLatestMetricDataDto[]>,
+      type: Array as PropType<DeviceFieldDto[]>,
       default() {
         return [];
       },
     },
   });
-  console.log(props.filedList);
   const generateSearchModel = () => {
     return {
-      telemetryField: props.filedList[0]?.deviceFieldName,
+      telemetryField: props.filedList[0]?.key,
       time: [Date.now(), Date.now()],
     };
   };
