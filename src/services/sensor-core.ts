@@ -2334,6 +2334,9 @@ export interface AlertMessageDetailOutputDto {
 
   /** 告警消除的时间 */
   resolvedTime?: Date;
+
+  /** 告警值 */
+  value?: number;
 }
 
 export interface AlertMessageListDto {
@@ -2366,6 +2369,9 @@ export interface AlertMessageListDto {
 
   /** 告警消除的时间 */
   resolvedTime?: Date;
+
+  /** 告警值 */
+  value?: number;
 }
 
 export interface BatchBindDeviceAreaInputDto {
@@ -3587,6 +3593,12 @@ export interface SaveAlertMessageInputDto {
 
   /**  */
   dev_eui?: string;
+
+  /**  */
+  device_name?: string;
+
+  /**  */
+  value?: number;
 }
 
 export interface SaveDeviceAlertRuleConfigInputDto {
