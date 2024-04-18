@@ -14,10 +14,12 @@
         v-for="valueProp in latestMetricDataList"
         :key="valueProp.deviceFieldName"
         class="switch-btn-bg"
-        @click="onActionClick(valueProp.commandProp)"
       >
         <div
-          class="switch-btn-bg-off"
+          :class="{
+            'switch-btn-bg-off': !commandState[valueProp.key],
+            'switch-btn-bg-off-blinking': commandState[valueProp.key],
+          }"
           :style="{ backgroundColor: valueProp.config[valueProp.value].color }"
         >
         </div>
@@ -29,7 +31,7 @@
         v-for="valueProp in latestMetricDataList"
         :key="valueProp.deviceFieldName"
         class="switch-btn-action"
-        @click="onActionClick(valueProp.commandProp)"
+        @click="onActionClick(valueProp.commandProp, valueProp.key)"
       >
       </div>
     </div>
@@ -49,6 +51,8 @@
   import img from '@/assets/images/WS50x_v2.png';
 
   const device = ref<DeviceDetailDto>({});
+
+  const commandState = ref<Record<string, boolean>>({});
 
   interface ITelemetryPropConfig {
     value: string;
@@ -117,7 +121,19 @@
     );
   });
 
-  const onActionClick = async (commandProp: ITelemetryPropConfig[]) => {
+  const onActionClick = async (
+    commandProp: ITelemetryPropConfig[],
+    stateName: string,
+  ) => {
+    if (commandState.value[stateName]) {
+      Message.success({
+        content: '请等待状态刷新！',
+        duration: 3 * 1000,
+      });
+      return;
+    }
+
+    commandState.value[stateName] = true;
     await DeviceService.createDeviceQueueItem({
       devEui: device.value.devEui,
       input: {
@@ -131,6 +147,10 @@
         },
       },
     });
+
+    setTimeout(() => {
+      commandState.value[stateName] = false;
+    }, 9500);
 
     Message.success({
       content: '命令已下发，请等待状态刷新！',
@@ -170,6 +190,21 @@
     flex: 1;
     background-color: gray;
     border-radius: 5px;
+  }
+  /* 定义闪烁动画效果 */
+  @keyframes blink {
+    50% {
+      opacity: 0.35;
+    }
+  }
+
+  /* 将动画应用于需要闪烁的元素 */
+  .switch-btn-bg-off-blinking {
+    margin: 10px;
+    flex: 1;
+    background-color: gray;
+    border-radius: 5px;
+    animation: blink 1s infinite;
   }
   .action-container {
     flex: 1;

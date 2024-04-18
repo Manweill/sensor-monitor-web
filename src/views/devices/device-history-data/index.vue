@@ -43,7 +43,7 @@
         </a-col>
       </a-row>
       <a-divider style="margin-top: 0" />
-      <a-row :gutter="8">
+      <a-row :gutter="8" style="height: 100%">
         <a-col :flex="4" class="card-area-tree">
           <a-card title="设备区域" :bordered="false">
             <device-area-tree
@@ -52,9 +52,21 @@
               @on-select-change="handleSelect"
             ></device-area-tree>
           </a-card>
+          <div
+            v-if="currentDevice?.deviceProfileName === 'WS50X_v2'"
+            style="
+              max-height: 500px;
+              margin-top: 30px 0;
+              padding: 80px 0;
+              display: flex;
+              align-items: center;
+              flex-direction: column;
+            "
+            ><a-divider />
+            <deviceMonitorWS50xv2></deviceMonitorWS50xv2>
+          </div>
         </a-col>
         <a-col flex="8" style="text-align: right">
-          <deviceMonitorWS50xv2></deviceMonitorWS50xv2>
           <a-table
             row-key="id"
             :loading="loading"
@@ -85,7 +97,6 @@
   import dayjs from 'dayjs';
   import DeviceAreaTree from '@/components/tree/device-area-tree/index.vue';
   import { Message } from '@arco-design/web-vue';
-  // import imgWS50xv2 from '@/assets/images/WS50x_v2.png';
   import deviceMonitorWS50xv2 from './components/device-monitor-WS50x_v2.vue';
 
   const { loading, setLoading } = useLoading(false);
@@ -107,7 +118,7 @@
   };
   const searchModel = ref(generateSearchModel());
 
-  const currentDeviceEui = ref('');
+  const currentDevice = ref<{ devEui: string; deviceProfileName: string }>();
   const metricsData = ref<DeviceMetricRecordResponseItemDto[]>([]);
 
   const columns = computed(() => {
@@ -176,7 +187,7 @@
     try {
       const { items, totalCount } = await DeviceService.getDeviceMetricRecords({
         ...pagination,
-        deviceEui: currentDeviceEui.value,
+        deviceEui: currentDevice.value?.devEui,
         startTime: dayjs(startTime).startOf('d').toDate(),
         endTime: dayjs(endTime).endOf('d').toDate(),
       });
@@ -205,7 +216,7 @@
   };
   const handleSelect = async ({ data }: any) => {
     if (data?.raw?.isDevice === true) {
-      currentDeviceEui.value = data.raw.raw.devEui;
+      currentDevice.value = data.raw.raw;
       queryTable();
     } else {
       Message.error('请选择设备');
