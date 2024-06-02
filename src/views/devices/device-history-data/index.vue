@@ -52,19 +52,6 @@
               @on-select-change="handleSelect"
             ></device-area-tree>
           </a-card>
-          <div
-            v-if="currentDevice?.deviceProfileName === 'WS50X_v2'"
-            style="
-              max-height: 500px;
-              margin-top: 30px 0;
-              padding: 80px 0;
-              display: flex;
-              align-items: center;
-              flex-direction: column;
-            "
-            ><a-divider />
-            <deviceMonitorWS50xv2></deviceMonitorWS50xv2>
-          </div>
         </a-col>
         <a-col flex="8" style="text-align: right">
           <a-table
@@ -80,6 +67,19 @@
               {{ dayjs(record.date).format('YYYY-MM-DD HH:mm:ss') }}
             </template>
           </a-table>
+        </a-col>
+        <a-col
+          v-if="currentDevice?.deviceProfileName.includes('WS50X_v2')"
+          :flex="1"
+          class="card-area-tree"
+        >
+          <a-card
+            title="设备控制"
+            :bordered="false"
+            :body-style="{ align: 'center' }"
+          >
+            <deviceMonitorWS50xv2></deviceMonitorWS50xv2>
+          </a-card>
         </a-col>
       </a-row>
     </a-card>
