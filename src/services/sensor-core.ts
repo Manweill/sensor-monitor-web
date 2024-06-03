@@ -3017,6 +3017,9 @@ export interface DeviceMetricFlatRecordResponseItemDto {
   /** 遥测数据的上报时间，字符串类型 */
   _time?: string;
 
+  /** 相关的配置信息，json字符串的形式 */
+  config?: string;
+
   /** 遥测属性的值类型 */
   dataType?: EnumDeviceMetricFlatRecordResponseItemDtoDataType;
 
@@ -3357,6 +3360,9 @@ export interface DeviceStatesPropertyDataDto {
 }
 
 export interface DeviceTelemetriesDataDto {
+  /** 相关的配置信息，json字符串的形式 */
+  config?: string;
+
   /** 遥测属性的值类型 */
   dataType?: EnumDeviceTelemetriesDataDtoDataType;
 

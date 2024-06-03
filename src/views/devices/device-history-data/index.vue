@@ -162,6 +162,18 @@
       };
       n.telemetries?.forEach((item) => {
         data[item.key as string] = `${item.value}`;
+        if (item.config) {
+          try {
+            const propsConfig: [{ name: string; value: string }] = JSON.parse(
+              item.config,
+            );
+            data[item.key as string] =
+              propsConfig.find((m: any) => `${m.value}` === `${item.value}`)
+                ?.name || item.value;
+          } catch (e) {
+            console.error(e);
+          }
+        }
       });
       table.push(data);
     });
