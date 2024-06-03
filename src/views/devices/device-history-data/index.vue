@@ -78,7 +78,9 @@
             :bordered="false"
             :body-style="{ align: 'center' }"
           >
-            <deviceMonitorWS50xv2></deviceMonitorWS50xv2>
+            <deviceMonitorWS50xv2
+              :device-id="currentDevice.id as string"
+            ></deviceMonitorWS50xv2>
           </a-card>
         </a-col>
       </a-row>
@@ -118,7 +120,11 @@
   };
   const searchModel = ref(generateSearchModel());
 
-  const currentDevice = ref<{ devEui: string; deviceProfileName: string }>();
+  const currentDevice = ref<{
+    devEui: string;
+    deviceProfileName: string;
+    id: string;
+  }>();
   const metricsData = ref<DeviceMetricRecordResponseItemDto[]>([]);
 
   const columns = computed(() => {

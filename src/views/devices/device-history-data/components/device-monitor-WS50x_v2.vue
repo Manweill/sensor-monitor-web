@@ -50,6 +50,13 @@
   import { computed, onMounted, ref } from 'vue';
   import img from '@/assets/images/WS50x_v2.png';
 
+  const props = defineProps({
+    deviceId: {
+      type: String,
+      default: '',
+    },
+  });
+
   const device = ref<DeviceDetailDto>({});
 
   const commandState = ref<Record<string, boolean>>({});
@@ -160,7 +167,7 @@
 
   const init = async () => {
     const result = await DeviceService.getDetailById({
-      id: '1779876311041331202',
+      id: props.deviceId,
     });
 
     device.value = { ...result };
