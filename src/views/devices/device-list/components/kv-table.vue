@@ -145,6 +145,9 @@
 
   // 查询表格数据
   const queryTable = async () => {
+    if (!props.filedList[0]?.key) {
+      return;
+    }
     setLoading(true);
     try {
       const [startTime, endTime] = searchModel.value.time;

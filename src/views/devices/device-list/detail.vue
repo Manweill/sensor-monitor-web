@@ -259,7 +259,12 @@
             propConfig: filterConfig,
           };
         }
-        return { ...n, value: latestValue?.value, tim: latestValue?.time };
+        return {
+          ...n,
+          value: latestValue?.value,
+          formatValue: latestValue?.value,
+          time: latestValue?.time,
+        };
       }) || []
     );
   });

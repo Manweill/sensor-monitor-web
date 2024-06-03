@@ -138,7 +138,7 @@
 
     metricsData.value[0]?.telemetries?.forEach((n) => {
       cols.push({
-        title: n.fileName as string,
+        title: n.unit ? `${n.fileName}(${n.unit})` : (n.fileName as string),
         dataIndex: n.key as string,
         slotName: n.key as string,
       });
