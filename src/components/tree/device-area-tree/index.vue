@@ -107,6 +107,10 @@
       type: Boolean,
       default: false,
     },
+    deviceProfileName: {
+      type: Array,
+      default: () => [],
+    },
   });
 
   const emit = defineEmits(['onSelectChange']);
@@ -160,8 +164,15 @@
       const areaResult = await DeviceAreaService.getAllDeviceArea();
       if (props.appendDevice) {
         const deviceResult = await DeviceAreaService.getDeviceListByArea();
-
-        tableData.value = deviceResult.items as DeviceAreaDto[];
+        tableData.value = deviceResult.items as DeviceListDto[];
+        // 过滤设备类型
+        if (props.deviceProfileName && props.deviceProfileName.length > 0) {
+          tableData.value = tableData.value.filter((item: DeviceListDto) =>
+            props.deviceProfileName.some(
+              (name) => item.deviceProfileName?.includes(name as string),
+            ),
+          );
+        }
       }
       areaData.value = areaResult.items as DeviceAreaDto[];
     } catch (err) {
