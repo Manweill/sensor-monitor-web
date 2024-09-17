@@ -1,55 +1,52 @@
 <template>
   <div class="container">
-    <div class="left-side">
-      <div class="panel">
-        <Banner />
+    <a-space direction="vertical" :size="16" fill>
+      <div class="space-unit">
+        <!-- 数据面板 -->
         <DataPanel />
-        <!-- <ContentChart /> -->
       </div>
-      <a-col :flex="1" style="margin-top: 16px">
-        <CategoriesPercent />
-        <!-- <a-grid-item
-          :span="{ xs: 24, sm: 24, md: 24, lg: 12, xl: 12, xxl: 12 }"
-        >
-          <CategoriesPercent />
-        </a-grid-item> -->
-      </a-col>
-    </div>
-    <div class="right-side">
-      <a-grid :cols="24" :row-gap="16">
-        <a-grid-item :span="24">
-          <div class="panel moduler-wrap">
-            <QuickOperation />
-            <RecentlyVisited />
-          </div>
-        </a-grid-item>
-        <a-grid-item class="panel" :span="24">
-          <Carousel />
-        </a-grid-item>
-        <!--        <a-grid-item class="panel" :span="24">-->
-        <!--          <Announcement />-->
-        <!--        </a-grid-item>-->
-        <!--        <a-grid-item class="panel" :span="24">-->
-        <!--          <Docs />-->
-        <!--        </a-grid-item>-->
-      </a-grid>
-    </div>
+      <div>
+        <a-grid :cols="24" :col-gap="16" :row-gap="16">
+          <a-grid-item
+            :span="{ xs: 24, sm: 24, md: 24, lg: 24, xl: 16, xxl: 16 }"
+          >
+            <!-- 设备接入统计 -->
+            <DeviceChart />
+          </a-grid-item>
+          <a-grid-item
+            :span="{ xs: 24, sm: 24, md: 24, lg: 24, xl: 8, xxl: 8 }"
+          >
+            <!-- 设备区域分布 -->
+            <DeviceAreaTable />
+          </a-grid-item>
+        </a-grid>
+      </div>
+      <div>
+        <a-grid :cols="24" :col-gap="16" :row-gap="16">
+          <a-grid-item
+            :span="{ xs: 24, sm: 24, md: 24, lg: 24, xl: 12, xxl: 12 }"
+          >
+            <!-- 今日告警 -->
+            <TodayAlert />
+          </a-grid-item>
+          <a-grid-item
+            :span="{ xs: 24, sm: 24, md: 24, lg: 24, xl: 12, xxl: 12 }"
+          >
+            <!-- 告警趋势统计 -->
+            <AlertChart />
+          </a-grid-item>
+        </a-grid>
+      </div>
+    </a-space>
   </div>
 </template>
 
 <script lang="ts" setup>
-  import Banner from './components/banner.vue';
   import DataPanel from './components/data-panel.vue';
-  import CategoriesPercent from './components/categories-percent.vue';
-  import RecentlyVisited from './components/recently-visited.vue';
-  import QuickOperation from './components/quick-operation.vue';
-  import Carousel from './components/carousel.vue';
-</script>
-
-<script lang="ts">
-  export default {
-    name: 'Dashboard', // If you want the include property of keep-alive to take effect, you must name the component
-  };
+  import DeviceChart from './components/device-chart.vue';
+  import DeviceAreaTable from './components/device-area-table.vue';
+  import TodayAlert from './components/today-alert.vue';
+  import AlertChart from './components/alert-chart.vue';
 </script>
 
 <style lang="less" scoped>
@@ -57,86 +54,5 @@
     background-color: var(--color-fill-2);
     padding: 16px 20px;
     padding-bottom: 0;
-    display: flex;
-  }
-
-  .left-side {
-    flex: 1;
-    overflow: auto;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .right-side {
-    width: 280px;
-    margin-left: 16px;
-  }
-
-  .panel {
-    background-color: var(--color-bg-2);
-    border-radius: 4px;
-    overflow: auto;
-  }
-  :deep(.panel-border) {
-    margin-bottom: 0;
-    border-bottom: 1px solid rgb(var(--gray-2));
-  }
-  .moduler-wrap {
-    border-radius: 4px;
-    background-color: var(--color-bg-2);
-    :deep(.text) {
-      font-size: 12px;
-      text-align: center;
-      color: rgb(var(--gray-8));
-    }
-
-    :deep(.wrapper) {
-      margin-bottom: 8px;
-      text-align: center;
-      cursor: pointer;
-
-      &:last-child {
-        .text {
-          margin-bottom: 0;
-        }
-      }
-      &:hover {
-        .icon {
-          color: rgb(var(--arcoblue-6));
-          background-color: #e8f3ff;
-        }
-        .text {
-          color: rgb(var(--arcoblue-6));
-        }
-      }
-    }
-
-    :deep(.icon) {
-      display: inline-block;
-      width: 32px;
-      height: 32px;
-      margin-bottom: 4px;
-      color: rgb(var(--dark-gray-1));
-      line-height: 32px;
-      font-size: 16px;
-      text-align: center;
-      background-color: rgb(var(--gray-1));
-      border-radius: 4px;
-    }
-  }
-</style>
-
-<style lang="less" scoped>
-  // responsive
-  .mobile {
-    .container {
-      display: block;
-    }
-    .right-side {
-      // display: none;
-      width: 100%;
-      margin-left: 0;
-      margin-top: 16px;
-    }
   }
 </style>

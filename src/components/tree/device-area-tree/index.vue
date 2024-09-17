@@ -33,7 +33,6 @@
     IconHome,
     IconCommon,
   } from '@arco-design/web-vue/es/icon';
-  import _ from 'lodash';
   import { computed, h, ref, toRaw } from 'vue';
 
   /** 区域树列表 */

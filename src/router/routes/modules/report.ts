@@ -32,16 +32,16 @@ const DASHBOARD: AppRouteRecordRaw = {
         permissions: ['Pages.Statistic.Analysis.Monthly.Report'],
       },
     },
-    {
-      path: 'yearly-report',
-      name: 'YearlyReport',
-      component: () => import('@/views/reports/date-report/index.vue'),
-      meta: {
-        locale: '年报表',
-        requiresAuth: true,
-        permissions: ['Pages.Statistic.Analysis.Annual.Report'],
-      },
-    },
+    // {
+    //   path: 'yearly-report',
+    //   name: 'YearlyReport',
+    //   component: () => import('@/views/reports/date-report/index.vue'),
+    //   meta: {
+    //     locale: '年报表',
+    //     requiresAuth: true,
+    //     permissions: ['Pages.Statistic.Analysis.Annual.Report'],
+    //   },
+    // },
   ],
 };
 
