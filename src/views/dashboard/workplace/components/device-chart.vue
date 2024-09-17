@@ -26,6 +26,13 @@
 <script lang="ts" setup>
   import useChartOption from '@/hooks/chart-option';
 
+  const props = defineProps<{
+    deviceChartData: {
+      deviceTypeData: number[];
+      deviceStatusData: number[];
+    };
+  }>();
+
   const { chartOption: deviceStatusChartOption } = useChartOption((isDark) => {
     return {
       grid: {
@@ -48,7 +55,7 @@
       },
       yAxis: {
         type: 'category',
-        data: ['在线', '离线', '异常'],
+        data: ['在线', '离线'],
         axisLabel: {
           show: true,
           color: isDark ? '#ffffffb3' : '#4E5969',
@@ -71,7 +78,7 @@
       },
       series: [
         {
-          data: [30, 4, 1],
+          data: props.deviceChartData.deviceStatusData,
           type: 'bar',
           barWidth: '60%',
           itemStyle: {
@@ -131,14 +138,14 @@
           },
           data: [
             {
-              value: 126,
+              value: props.deviceChartData.deviceTypeData[0],
               name: '温湿度传感器',
               itemStyle: {
                 color: isDark ? '#3D72F6' : '#249EFF',
               },
             },
             {
-              value: 78,
+              value: props.deviceChartData.deviceTypeData[1],
               name: '环境监测传感器',
               itemStyle: {
                 color: isDark ? '#A079DC' : '#313CA9',
