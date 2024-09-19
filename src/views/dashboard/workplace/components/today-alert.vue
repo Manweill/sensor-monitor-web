@@ -11,6 +11,7 @@
       :columns="columns"
       :data="tableData"
       :bordered="false"
+      style="min-height: 510px"
       @page-change="onPageChange"
     >
       <template #alertTime="{ record }">
