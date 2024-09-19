@@ -37,23 +37,33 @@
   }));
 
   async function onRefreshData() {
+    const now = new Date();
     const result = await AlertMessageService.getAlertMessageList({
-      startTime: dayjs(new Date()).add(-7, 'day').toDate(),
-      endTime: new Date(),
+      startTime: dayjs(now).add(-7, 'day').toDate(),
+      endTime: now,
       unPage: true,
       // sorting: 'alertTime',
       // sortingDirection: 'ASC',
     });
 
-    const data = result.items?.reduce((stats, item) => {
+    const xAxisData = [];
+    const yAxisData = {};
+    let i = 0;
+    do {
+      const xAxis = dayjs(now).add(-i, 'day').format('MM-DD');
+      xAxisData.unshift(xAxis);
+      yAxisData[xAxis] = 0;
+      i += 1;
+    } while (i < 7);
+
+    result.items?.forEach((item) => {
       const xAxis = dayjs(item.alertTime).format('MM-DD');
-      stats[xAxis] = stats[xAxis] ? stats[xAxis] + 1 : 1;
-      return stats;
+      yAxisData[xAxis] = yAxisData[xAxis] ? yAxisData[xAxis] + 1 : 1;
     }, {});
 
     alerteStats.value = {
-      xAxisData: Object.keys(data).reverse(),
-      yAxisData: Object.values(data).reverse(),
+      xAxisData,
+      yAxisData: Object.values(yAxisData).reverse(),
     };
   }
 
