@@ -123,6 +123,19 @@
           <Chart style="width: 100%; height: 370px" :option="option" />
         </template>
       </a-card>
+
+      <!-- 在原有表格下方添加新的统计表格 -->
+      <a-divider>统计数据</a-divider>
+      <a-table
+        :loading="loading"
+        :pagination="false"
+        :columns="statisticsColumns"
+        :data="statisticsData"
+      >
+        <template #metric="{ record }">
+          {{ record.name }}
+        </template>
+      </a-table>
     </a-card>
   </div>
 </template>
@@ -364,6 +377,11 @@
     Object.entries(metricsData.value).forEach(
       ([, value]: [string, MetricsPros]) => {
         const { timestamps, name, datasets } = value;
+        const data = datasets[0].data.filter((n) => n !== 0);
+        const max = Math.max(...data);
+        const min = Math.min(...data);
+        const avg = data.reduce((a, b) => a + b, 0) / data.length;
+
         list.push({
           grid: {
             left: '50',
@@ -414,17 +432,12 @@
               axisLine: {
                 show: true,
               },
-              // axisLabel: {
-              //   formatter: '{value} °C',
-              // },
             },
           ],
           series: [
             {
               name,
-              data: datasets[0].data
-                .filter((n) => n !== 0)
-                .map((n) => n.toFixed(2)),
+              data: data.map((n) => n.toFixed(2)),
               type: 'line',
               smooth: true,
               showSymbol: false,
@@ -438,14 +451,31 @@
                   borderColor: '#E0E3FF',
                 },
               },
-              markPoint: {
-                data: [
-                  { type: 'max', name: '最大值' },
-                  { type: 'min', name: '最小值' },
-                ],
-              },
+              // markPoint: {
+              //   data: [
+              //     { type: 'max', name: '最大值' },
+              //     { type: 'min', name: '最小值' },
+              //   ],
+              // },
               markLine: {
-                data: [{ type: 'average', name: '平均值' }],
+                data: [
+                  { type: 'average', name: '平均值' },
+                  {
+                    yAxis: max,
+                    name: '最大值',
+                    lineStyle: { color: '#FF4D4F' },
+                  },
+                  {
+                    yAxis: min,
+                    name: '最小值',
+                    lineStyle: { color: '#52C41A' },
+                  },
+                  {
+                    yAxis: avg,
+                    name: '平均值',
+                    lineStyle: { color: '#FAAD14' },
+                  },
+                ],
               },
             },
           ],
@@ -453,6 +483,47 @@
       },
     );
     return list;
+  });
+
+  // 新增统计数据列定义
+  const statisticsColumns = [
+    {
+      title: '指标',
+      dataIndex: 'metric',
+      slotName: 'metric',
+    },
+    {
+      title: '最大值',
+      dataIndex: 'max',
+    },
+    {
+      title: '最小值',
+      dataIndex: 'min',
+    },
+    {
+      title: '平均值',
+      dataIndex: 'avg',
+    },
+  ];
+
+  // 计算统计数据
+  const statisticsData = computed(() => {
+    return Object.entries(metricsData.value).map(
+      ([key, { datasets, name }]) => {
+        const { data } = datasets[0];
+        const max = Math.max(...data);
+        const min = Math.min(...data);
+        const avg = data.reduce((a, b) => a + b, 0) / data.length;
+
+        return {
+          metric: key,
+          name,
+          max: max.toFixed(2),
+          min: min.toFixed(2),
+          avg: avg.toFixed(2),
+        };
+      },
+    );
   });
 </script>
 

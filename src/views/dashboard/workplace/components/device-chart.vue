@@ -33,7 +33,7 @@
     };
   }>();
 
-  const { chartOption: deviceStatusChartOption } = useChartOption((isDark) => {
+  const { chartOption: deviceStatusChartOption } = useChartOption(() => {
     return {
       grid: {
         left: 40,
@@ -45,12 +45,6 @@
         type: 'value',
         axisLabel: {
           show: true,
-          color: isDark ? '#ffffffb3' : '#4E5969',
-        },
-        splitLine: {
-          lineStyle: {
-            color: isDark ? '#484849' : '#E5E8EF',
-          },
         },
       },
       yAxis: {
@@ -58,15 +52,9 @@
         data: ['在线', '离线'],
         axisLabel: {
           show: true,
-          color: isDark ? '#ffffffb3' : '#4E5969',
         },
         axisTick: {
           show: false,
-        },
-        axisLine: {
-          lineStyle: {
-            color: isDark ? '#484849' : '#E5E8EF',
-          },
         },
       },
       tooltip: {
@@ -87,7 +75,6 @@
           label: {
             show: true,
             position: 'right',
-            color: isDark ? '#ffffffb3' : '#1D2129',
           },
         },
       ],
@@ -97,19 +84,7 @@
   const { chartOption: deviceTypeChartOption } = useChartOption((isDark) => {
     return {
       legend: {
-        orient: 'vertical',
-        left: 'left',
-        top: 'center',
-        data: ['温湿度传感器', '环境监测传感器'],
         icon: 'circle',
-        itemWidth: 10,
-        itemHeight: 10,
-        textStyle: {
-          color: isDark ? 'rgba(255, 255, 255, 0.7)' : '#4E5969',
-        },
-        itemStyle: {
-          borderWidth: 0,
-        },
       },
       tooltip: {
         show: true,
@@ -121,17 +96,9 @@
           name: '设备类型',
           type: 'pie',
           radius: ['40%', '70%'],
-          center: ['65%', '50%'],
           avoidLabelOverlap: false,
           label: {
             show: false,
-          },
-          emphasis: {
-            label: {
-              show: true,
-              fontSize: '18',
-              fontWeight: 'bold',
-            },
           },
           labelLine: {
             show: false,
@@ -140,16 +107,16 @@
             {
               value: props.deviceChartData.deviceTypeData[0],
               name: '温湿度传感器',
-              itemStyle: {
-                color: isDark ? '#3D72F6' : '#249EFF',
-              },
+              // itemStyle: {
+              //   color: isDark ? '#3D72F6' : '#249EFF',
+              // },
             },
             {
               value: props.deviceChartData.deviceTypeData[1],
               name: '环境监测传感器',
-              itemStyle: {
-                color: isDark ? '#A079DC' : '#313CA9',
-              },
+              // itemStyle: {
+              //   color: isDark ? '#A079DC' : '#313CA9',
+              // },
             },
           ],
         },

@@ -24,16 +24,16 @@
       <div>
         <a-grid :cols="24" :col-gap="16" :row-gap="16">
           <a-grid-item
-            :span="{ xs: 24, sm: 24, md: 24, lg: 24, xl: 12, xxl: 12 }"
-          >
-            <!-- 今日告警 -->
-            <TodayAlert />
-          </a-grid-item>
-          <a-grid-item
-            :span="{ xs: 24, sm: 24, md: 24, lg: 24, xl: 12, xxl: 12 }"
+            :span="{ xs: 24, sm: 24, md: 24, lg: 24, xl: 24, xxl: 24 }"
           >
             <!-- 告警趋势统计 -->
             <AlertChart />
+          </a-grid-item>
+          <a-grid-item
+            :span="{ xs: 24, sm: 24, md: 24, lg: 24, xl: 24, xxl: 24 }"
+          >
+            <!-- 今日告警 -->
+            <TodayAlert />
           </a-grid-item>
         </a-grid>
       </div>

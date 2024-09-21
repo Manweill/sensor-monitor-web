@@ -20,18 +20,18 @@
                 animation
                 show-group-separator
               />
-              <div class="desc">
-                <a-typography-text type="secondary" class="label">
-                  较昨日
-                </a-typography-text>
-                <a-typography-text
-                  :type="item.trend === 'up' ? 'danger' : 'success'"
-                >
-                  {{ item.change }}
-                  <icon-arrow-rise v-if="item.trend === 'up'" />
-                  <icon-arrow-fall v-else />
-                </a-typography-text>
-              </div>
+              <!--              <div class="desc">-->
+              <!--                <a-typography-text type="secondary" class="label">-->
+              <!--                  较昨日-->
+              <!--                </a-typography-text>-->
+              <!--                <a-typography-text-->
+              <!--                  :type="item.trend === 'up' ? 'danger' : 'success'"-->
+              <!--                >-->
+              <!--                  {{ item.change }}-->
+              <!--                  <icon-arrow-rise v-if="item.trend === 'up'" />-->
+              <!--                  <icon-arrow-fall v-else />-->
+              <!--                </a-typography-text>-->
+              <!--              </div>-->
             </div>
             <div class="right-icon">
               <a-avatar :size="84" class="icon-avatar">

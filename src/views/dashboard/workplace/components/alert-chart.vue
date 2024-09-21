@@ -20,12 +20,23 @@
   });
 
   const { chartOption } = useChartOption(() => ({
+    tooltip: {
+      show: true,
+      trigger: 'item',
+      formatter: '{b}: {c} 个',
+    },
     xAxis: {
       type: 'category',
       data: alerteStats.value.xAxisData,
+      axisLabel: {
+        show: true,
+      },
     },
     yAxis: {
       type: 'value',
+      axisLabel: {
+        show: true,
+      },
     },
     series: [
       {
