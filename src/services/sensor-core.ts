@@ -126,6 +126,91 @@ export class AlertMessageService {
     });
   }
   /**
+   * 获取物联设备属性的告警持续时间的列表
+   */
+  static getDeviceAlertTimeInfoList(
+    params: {
+      /**  */
+      alertFieldName?: string;
+      /**  */
+      deviceEui?: string;
+      /** 页码 */
+      pageNumber?: number;
+      /** 每页显示的记录数 */
+      pageSize?: number;
+      /** 排序字段名 */
+      sorting?: string;
+      /** 排序的方式 */
+      sortingDirection?: string;
+      /** 是否不分页，默认分页 */
+      unPage?: boolean;
+    } = {} as any,
+    options: IRequestOptions = {},
+  ): Promise<PagedResultDto<DeviceAlertTimeInfoListDto>> {
+    return new Promise((resolve, reject) => {
+      let url = basePath + '/alert-message/get-device-alert-time-info-list';
+
+      const configs: IRequestConfig = getConfigs(
+        'get',
+        'application/json',
+        url,
+        options,
+      );
+      configs.params = {
+        alertFieldName: params['alertFieldName'],
+        deviceEUI: params['deviceEui'],
+        pageNumber: params['pageNumber'],
+        pageSize: params['pageSize'],
+        sorting: params['sorting'],
+        sortingDirection: params['sortingDirection'],
+        unPage: params['unPage'],
+      };
+
+      /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
+
+      console.warn(
+        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
+      );
+
+      axios(configs, resolve, reject);
+    });
+  }
+  /**
+   * 获取物联设备属性的告警持续时间信息
+   */
+  static getDeviceAlertTimeInfo(
+    params: {
+      /** deviceAlertTimeInfoId */
+      deviceAlertTimeInfoId: string;
+    } = {} as any,
+    options: IRequestOptions = {},
+  ): Promise<DeviceAlertTimeInfoListDto> {
+    return new Promise((resolve, reject) => {
+      let url =
+        basePath +
+        '/alert-message/get-device-alert-time-info/{deviceAlertTimeInfoId}';
+      url = url.replace(
+        '{deviceAlertTimeInfoId}',
+        params['deviceAlertTimeInfoId'] + '',
+      );
+
+      const configs: IRequestConfig = getConfigs(
+        'get',
+        'application/json',
+        url,
+        options,
+      );
+
+      /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
+
+      console.warn(
+        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
+      );
+
+      axios(configs, resolve, reject);
+    });
+  }
+  /**
    * 删除告警消息
    */
   static removeAlertMessages(
@@ -2663,6 +2748,32 @@ export interface DeviceAlertRuleConfigListDto {
   thresholdUpperLimit?: number;
 }
 
+export interface DeviceAlertTimeInfoListDto {
+  /**  */
+  alertFieldName?: string;
+
+  /**  */
+  alertMessage?: string;
+
+  /**  */
+  alertTitle?: string;
+
+  /**  */
+  deviceEUI?: string;
+
+  /**  */
+  durationTimeValue?: number;
+
+  /**  */
+  firstAlertTime?: Date;
+
+  /** id */
+  id?: string;
+
+  /**  */
+  resolvedTime?: Date;
+}
+
 export interface DeviceAreaDto {
   /** 区域名称 */
   areaName?: string;
@@ -3593,6 +3704,9 @@ export interface SaveAlertMessageInputDto {
 
   /**  */
   _message?: string;
+
+  /**  */
+  _source_measurement?: string;
 
   /**  */
   _time?: string;
