@@ -224,9 +224,11 @@
   // 获取传感器值
   const getSensorValue = (sensor: DeviceDto, fieldName: string) => {
     return (
-      sensor as DeviceDto & { latestMetricDataList: any[] }
-    ).latestMetricDataList.find((data) => data.deviceFieldName === fieldName)
-      ?.value;
+      (
+        sensor as DeviceDto & { latestMetricDataList: any[] }
+      ).latestMetricDataList?.find((data) => data.deviceFieldName === fieldName)
+        ?.value || '--'
+    );
   };
   // 获取字段描述
   const getFieldDescription = (sensor: DeviceDto, fieldName: string) => {
@@ -240,7 +242,7 @@
   // 获取最近更新时间
   const getLastUpdateTime = (sensor: DeviceDto) => {
     const latestData = (sensor as DeviceDto & { latestMetricDataList: any[] })
-      .latestMetricDataList[0];
+      .latestMetricDataList?.[0];
     return latestData ? new Date(latestData.time).toLocaleString() : '未知';
   };
 </script>
