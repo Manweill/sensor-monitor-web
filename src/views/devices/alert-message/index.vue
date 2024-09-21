@@ -101,7 +101,7 @@
             >{{
               record.durationTimeValue
                 ? durationFormat(record.durationTimeValue)
-                : `直至现在（${durationWithNow(record.firstAlertTime)}）`
+                : `直至现在（${durationWithNow(record.alertTime)}）`
             }}</span
           >
         </template>
@@ -112,6 +112,13 @@
         </template>
 
         <template #operations="{ record }">
+          <a-button
+            type="text"
+            size="small"
+            @click="() => handleQueryAlertLog(record)"
+          >
+            查看
+          </a-button>
           <template v-if="!record.resolved">
             <a-popconfirm content="确认手动消除?" @ok="onResolve(record)">
               <a-button type="text" status="danger" size="small">
@@ -122,6 +129,44 @@
         </template>
       </a-table>
     </a-card>
+    <a-modal
+      v-model:visible="modelVisible"
+      title="告警详情"
+      :hide-title="true"
+      width="auto"
+      @close="handleModelClose"
+    >
+      <a-row style="justify-content: space-between; align-items: center"
+        ><h4 class="chart-title">告警详情</h4
+        ><a-switch
+          v-model="mode"
+          type="round"
+          checked-color="#125cfe"
+          unchecked-color="#125cfe"
+        >
+          <template #checked> 图表 </template>
+          <template #unchecked> 列表 </template>
+        </a-switch>
+      </a-row>
+      <a-table
+        v-if="mode"
+        row-key="id"
+        :loading="loading"
+        :columns="logColumns"
+        :data="alertLog"
+        :bordered="false"
+        style="width: 880px; height: 490px"
+      >
+        <template #alertTime="{ record }">
+          {{
+            record.alertTime
+              ? dayjs(record.alertTime).format('YYYY-MM-DD HH:mm:ss')
+              : '--'
+          }}
+        </template>
+      </a-table>
+      <Chart v-else style="width: 880px; height: 490px" :option="chartOption" />
+    </a-modal>
   </div>
 </template>
 
@@ -138,6 +183,7 @@
     DeviceListDto,
     DeviceService,
   } from '@/services/sensor-core';
+  import useChartOption from '@/hooks/chart-option';
 
   const { loading, setLoading } = useLoading(false);
 
@@ -270,6 +316,83 @@
       id: record.id,
     });
     queryTable();
+  };
+
+  const modelVisible = ref(false);
+
+  const mode = ref(false);
+
+  const alertLog = ref([]);
+
+  const logColumns = computed<TableColumnData[]>(() => [
+    {
+      title: '告警等级',
+      dataIndex: 'alertLevelStrName',
+    },
+    {
+      title: '告警标题',
+      dataIndex: 'alertTitle',
+    },
+    {
+      title: '告警值',
+      dataIndex: 'value',
+    },
+    {
+      title: '告警时间',
+      dataIndex: 'alertTime',
+      slotName: 'alertTime',
+    },
+  ]);
+
+  const { chartOption } = useChartOption(() => ({
+    xAxis: {
+      type: 'category',
+      data: alertLog.value.map((item) =>
+        dayjs(item.alertTime).format('MM-DD HH:mm'),
+      ),
+    },
+    yAxis: {
+      type: 'value',
+    },
+    series: [
+      {
+        data: alertLog.value.map((item) => item.value),
+        type: 'line',
+        smooth: true,
+      },
+    ],
+  }));
+
+  const handleQueryAlertLog = async ({
+    alertTime,
+    resolvedTime,
+    deviceEUI,
+  }) => {
+    modelVisible.value = true;
+    setLoading(true);
+    try {
+      const { items, totalCount } =
+        await AlertMessageService.getAlertMessageList({
+          ...pagination,
+          ...searchModel.value,
+          startTime: alertTime && dayjs(alertTime).startOf('d').toDate(),
+          endTime: resolvedTime && dayjs(resolvedTime).endOf('d').toDate(),
+          deviceEui: deviceEUI,
+        });
+      alertLog.value = items as AlertMessageListDto[];
+      // pagination.total = totalCount as unknown as number;
+    } catch (err) {
+      // you can report use errorHandler or other
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleModelClose = async () => {
+    console.log('1213213123');
+    alertLog.value = [];
+    mode.value = false;
+    modelVisible.value = false;
   };
 </script>
 
