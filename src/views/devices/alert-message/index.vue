@@ -131,23 +131,31 @@
     </a-card>
     <a-modal
       v-model:visible="modelVisible"
-      title="告警详情"
-      :hide-title="true"
       width="auto"
+      :footer="false"
       @close="handleModelClose"
     >
-      <a-row style="justify-content: space-between; align-items: center"
-        ><h4 class="chart-title">告警详情</h4
-        ><a-switch
-          v-model="mode"
-          type="round"
-          checked-color="#125cfe"
-          unchecked-color="#125cfe"
-        >
-          <template #checked> 图表 </template>
-          <template #unchecked> 列表 </template>
-        </a-switch>
-      </a-row>
+      <template #title>
+        <a-row
+          style="
+            justify-content: space-between;
+            align-items: center;
+            flex: 1;
+            margin-right: 24px;
+          "
+          ><h4 class="chart-title">告警详情</h4
+          ><a-switch
+            v-model="mode"
+            type="round"
+            checked-color="#125cfe"
+            unchecked-color="#125cfe"
+          >
+            <template #checked> 图表 </template>
+            <template #unchecked> 列表 </template>
+          </a-switch>
+        </a-row>
+      </template>
+
       <a-table
         v-if="mode"
         row-key="id"

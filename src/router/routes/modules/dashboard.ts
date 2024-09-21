@@ -2,7 +2,7 @@ import { DEFAULT_LAYOUT } from '../base';
 import { AppRouteRecordRaw } from '../types';
 
 const DASHBOARD: AppRouteRecordRaw = {
-  path: '/dashboard',
+  path: '/dashboard/',
   name: 'dashboard',
   component: DEFAULT_LAYOUT,
   meta: {
@@ -22,16 +22,16 @@ const DASHBOARD: AppRouteRecordRaw = {
         permissions: ['Pages.Workbench'],
       },
     },
-    {
-      path: 'floor-plan',
-      name: 'FloorPlan',
-      component: () => import('@/views/dashboard/floor-plan/index.vue'),
-      meta: {
-        locale: '平面图',
-        requiresAuth: true,
-        permissions: ['Pages.Plane.Graph'],
-      },
-    },
+    // {
+    //   path: 'floor-plan',
+    //   name: 'FloorPlan',
+    //   component: () => import('@/views/dashboard/floor-plan/index.vue'),
+    //   meta: {
+    //     locale: '平面图',
+    //     requiresAuth: true,
+    //     permissions: ['Pages.Plane.Graph'],
+    //   },
+    // },
   ],
 };
 
