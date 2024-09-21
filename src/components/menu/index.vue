@@ -93,12 +93,29 @@
         function travel(_route: RouteRecordRaw[], nodes = []) {
           if (_route) {
             _route.forEach((element) => {
-              // This is demo, modify nodes as needed
               const icon = element?.meta?.icon
                 ? () => h(compile(`<${element?.meta?.icon}/>`))
                 : null;
-              const node =
-                element?.children && element?.children.length !== 0 ? (
+
+              if (element?.children && element?.children.length === 1) {
+                // 当只有一个子菜单时，直接渲染子菜单
+                const childElement = element.children[0];
+                const node = (
+                  <a-menu-item
+                    key={childElement?.name}
+                    v-slots={{
+                      icon: childElement?.meta?.icon
+                        ? () => h(compile(`<${childElement?.meta?.icon}/>`))
+                        : icon,
+                    }}
+                    onClick={() => goto(childElement)}
+                  >
+                    {t(childElement?.meta?.locale || '')}
+                  </a-menu-item>
+                );
+                nodes.push(node as never);
+              } else if (element?.children && element?.children.length > 1) {
+                const node = (
                   <a-sub-menu
                     key={element?.name}
                     v-slots={{
@@ -108,7 +125,10 @@
                   >
                     {travel(element?.children)}
                   </a-sub-menu>
-                ) : (
+                );
+                nodes.push(node as never);
+              } else {
+                const node = (
                   <a-menu-item
                     key={element?.name}
                     v-slots={{ icon }}
@@ -117,7 +137,8 @@
                     {t(element?.meta?.locale || '')}
                   </a-menu-item>
                 );
-              nodes.push(node as never);
+                nodes.push(node as never);
+              }
             });
           }
           return nodes;
