@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <a-card class="general-card" title="设备告警">
+    <a-card class="general-card" title="设备告警日志">
       <a-row>
         <!--       搜索表单       -->
         <a-col :flex="1">
@@ -40,6 +40,7 @@
                   <a-select v-model="searchModel.resolved">
                     <a-option :value="true">已消除</a-option>
                     <a-option :value="false">未消除</a-option>
+                    <a-option :value="null">全部</a-option>
                   </a-select>
                 </a-form-item>
               </a-col>
@@ -91,20 +92,7 @@
               : '--'
           }}
         </template>
-        <template #durationTimeValue="{ record }">
-          <span
-            :title="
-              record.durationTimeValue
-                ? ''
-                : durationWithNow(record.firstAlertTime)
-            "
-            >{{
-              record.durationTimeValue
-                ? durationFormat(record.durationTimeValue)
-                : `直至现在（${durationWithNow(record.firstAlertTime)}）`
-            }}</span
-          >
-        </template>
+
         <template #resolved="{ record }">
           <span v-if="record.resolved" class="circle pass"></span>
           <span v-else class="circle"></span>
@@ -115,7 +103,7 @@
           <template v-if="!record.resolved">
             <a-popconfirm content="确认手动消除?" @ok="onResolve(record)">
               <a-button type="text" status="danger" size="small">
-                确认消除
+                消除
               </a-button>
             </a-popconfirm>
           </template>
@@ -131,7 +119,6 @@
   import { Pagination } from '@/types/global';
   import useLoading from '@/hooks/loading';
   import dayjs from 'dayjs';
-  import { durationFormat, durationWithNow } from '@/utils/dayjs-utils';
   import {
     AlertMessageListDto,
     AlertMessageService,
@@ -153,8 +140,8 @@
   // 搜索
   const generateSearchModel = () => {
     return {
-      searchTime: [Date.now(), Date.now()],
-      resolved: false,
+      searchTime: [],
+      resolved: null,
       deviceEui: '',
     };
   };
@@ -168,20 +155,20 @@
       dataIndex: 'alertLevelStrName',
     },
     {
-      title: '设备',
-      dataIndex: 'deviceEUI',
+      title: '告警标题',
+      dataIndex: 'alertTitle',
     },
-    // {
-    //   title: '告警标题',
-    //   dataIndex: 'alertTitle',
-    // },
-    // {
-    //   title: '告警消息',
-    //   dataIndex: 'alertMessage',
-    // },
+    {
+      title: '告警消息',
+      dataIndex: 'alertMessage',
+    },
     {
       title: '告警值',
       dataIndex: 'value',
+    },
+    {
+      title: '设备',
+      dataIndex: 'name',
     },
     {
       title: '告警时间',
@@ -199,11 +186,6 @@
       slotName: 'resolvedTime',
     },
     {
-      title: '持续时间',
-      dataIndex: 'durationTimeValue',
-      slotName: 'durationTimeValue',
-    },
-    {
       title: '操作',
       slotName: 'operations',
     },
@@ -215,11 +197,11 @@
     try {
       const [startTime, endTime] = searchModel.value.searchTime;
       const { items, totalCount } =
-        await AlertMessageService.getDeviceAlertTimeInfoList({
+        await AlertMessageService.getAlertMessageList({
           ...pagination,
           ...searchModel.value,
-          startTime: dayjs(startTime).startOf('d').toDate(),
-          endTime: dayjs(endTime).endOf('d').toDate(),
+          startTime: startTime && dayjs(startTime).startOf('d').toDate(),
+          endTime: endTime && dayjs(endTime).endOf('d').toDate(),
         });
       tableData.value = items as AlertMessageListDto[];
       pagination.total = totalCount as unknown as number;

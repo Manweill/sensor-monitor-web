@@ -1,4 +1,6 @@
 import { createApp } from 'vue';
+import dayjs from 'dayjs';
+import duration from 'dayjs/plugin/duration';
 import ArcoVue from '@arco-design/web-vue';
 import ArcoVueIcon from '@arco-design/web-vue/es/icon';
 import globalComponents from '@/components';
@@ -14,6 +16,7 @@ import App from './App.vue';
 import '@/assets/style/global.less';
 import '@/api/interceptor';
 
+dayjs.extend(duration);
 const app = createApp(App);
 
 app.use(ArcoVue, {});

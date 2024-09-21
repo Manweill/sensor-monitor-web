@@ -4,40 +4,70 @@
     title="告警趋势统计"
     :header-style="{ paddingBottom: '12px' }"
   >
-    <Chart height="300px" :option="chartOption" />
+    <Chart height="510px" :option="chartOption" />
   </a-card>
 </template>
 
 <script setup lang="ts">
   import useChartOption from '@/hooks/chart-option';
   import dayjs from 'dayjs';
+  import { onMounted, ref } from 'vue';
+  import { AlertMessageService } from '@/services/sensor-core';
 
-  const { chartOption } = useChartOption(() => {
-    return {
-      xAxis: {
-        type: 'category',
-        data: [
-          dayjs().subtract(6, 'day').format('MM-DD'),
-          dayjs().subtract(5, 'day').format('MM-DD'),
-          dayjs().subtract(4, 'day').format('MM-DD'),
-          dayjs().subtract(3, 'day').format('MM-DD'),
-          dayjs().subtract(2, 'day').format('MM-DD'),
-          dayjs().subtract(1, 'day').format('MM-DD'),
-          dayjs().format('MM-DD'),
-        ],
-      },
-      yAxis: {
-        type: 'value',
-      },
-      series: [
-        {
-          data: [3, 4, 1, 4, 0, 0, 3],
-          type: 'line',
-          smooth: true,
-        },
-      ],
-    };
+  const alerteStats = ref<{ xAxisData: string[]; yAxisData: number[] }>({
+    xAxisData: [],
+    yAxisData: [],
   });
+
+  const { chartOption } = useChartOption(() => ({
+    xAxis: {
+      type: 'category',
+      data: alerteStats.value.xAxisData,
+    },
+    yAxis: {
+      type: 'value',
+    },
+    series: [
+      {
+        data: alerteStats.value.yAxisData,
+        type: 'line',
+        smooth: true,
+      },
+    ],
+  }));
+
+  async function onRefreshData() {
+    const now = new Date();
+    const result = await AlertMessageService.getAlertMessageList({
+      startTime: dayjs(now).add(-7, 'day').toDate(),
+      endTime: now,
+      unPage: true,
+      // sorting: 'alertTime',
+      // sortingDirection: 'ASC',
+    });
+
+    const xAxisData = [];
+    const yAxisData = {};
+    let i = 0;
+    do {
+      const xAxis = dayjs(now).add(-i, 'day').format('MM-DD');
+      xAxisData.unshift(xAxis);
+      yAxisData[xAxis] = 0;
+      i += 1;
+    } while (i < 7);
+
+    result.items?.forEach((item) => {
+      const xAxis = dayjs(item.alertTime).format('MM-DD');
+      yAxisData[xAxis] = yAxisData[xAxis] ? yAxisData[xAxis] + 1 : 1;
+    }, {});
+
+    alerteStats.value = {
+      xAxisData,
+      yAxisData: Object.values(yAxisData).reverse(),
+    };
+  }
+
+  onMounted(onRefreshData);
 </script>
 
 <style scoped>

@@ -46,8 +46,7 @@
 </template>
 
 <script lang="ts" setup>
-  import { ref, PropType, watch, computed } from 'vue';
-  import useLoading from '@/hooks/loading';
+  import { PropType, computed } from 'vue';
 
   const props = defineProps({
     dataPanelData: {
@@ -60,8 +59,6 @@
       required: true,
     },
   });
-
-  console.log(props.dataPanelData);
 
   const statisticsData = computed(() => {
     return [
