@@ -38,8 +38,8 @@
               <a-col :span="12">
                 <a-form-item field="name" label="是否已消除">
                   <a-select v-model="searchModel.resolved">
-                    <a-option :value="true">已消除</a-option>
-                    <a-option :value="false">未消除</a-option>
+                    <a-option :value="true">已确认</a-option>
+                    <a-option :value="false">未确认</a-option>
                   </a-select>
                 </a-form-item>
               </a-col>
@@ -76,6 +76,14 @@
         :bordered="false"
         @page-change="onPageChange"
       >
+        <template #value="{ record }">
+          {{
+            record.value
+              ? `${record.alertFieldDisplayName}(${record.value})`
+              : '--'
+          }}
+        </template>
+
         <template #alertTime="{ record }">
           {{
             record.alertTime
@@ -105,10 +113,18 @@
             }}</span
           >
         </template>
-        <template #resolved="{ record }">
+
+        <template #confirm="{ record }">
           <span v-if="record.resolved" class="circle pass"></span>
           <span v-else class="circle"></span>
-          {{ record.resolved ? '已消除' : '未消除' }}
+          {{ record.confirm ? '已确认' : '未确认' }}
+        </template>
+        <template #confirmTime="{ record }">
+          {{
+            record.confirmTime
+              ? dayjs(record.confirmTime).format('YYYY-MM-DD HH:mm:ss')
+              : '--'
+          }}
         </template>
 
         <template #operations="{ record }">
@@ -119,7 +135,7 @@
           >
             查看
           </a-button>
-          <template v-if="!record.resolved">
+          <template v-if="record.durationTimeValue && !record.confirm">
             <a-popconfirm content="确认手动消除?" @ok="onResolve(record)">
               <a-button type="text" status="danger" size="small">
                 确认消除
@@ -209,6 +225,7 @@
     return {
       searchTime: [Date.now(), Date.now()],
       resolved: false,
+      confirm: false,
       deviceEui: '',
     };
   };
@@ -222,20 +239,21 @@
       dataIndex: 'alertLevelDisplayName',
     },
     {
+      title: '告警标题',
+      dataIndex: 'alertTitle',
+    },
+    {
       title: '设备',
       dataIndex: 'deviceName',
     },
-    // {
-    //   title: '告警标题',
-    //   dataIndex: 'alertTitle',
-    // },
     // {
     //   title: '告警消息',
     //   dataIndex: 'alertMessage',
     // },
     {
-      title: '告警值',
+      title: '告警值(最高)',
       dataIndex: 'value',
+      slotName: 'value',
     },
     {
       title: '告警时间',
@@ -248,16 +266,20 @@
       slotName: 'durationTimeValue',
     },
     {
-      title: '已消除',
-      dataIndex: 'resolved',
-      slotName: 'resolved',
-    },
-    {
       title: '消除时间',
       dataIndex: 'resolvedTime',
       slotName: 'resolvedTime',
     },
-
+    {
+      title: '是否确认',
+      dataIndex: 'confirm',
+      slotName: 'confirm',
+    },
+    {
+      title: '确认时间',
+      dataIndex: 'confirmTime',
+      slotName: 'confirmTime',
+    },
     {
       title: '操作',
       slotName: 'operations',
@@ -376,18 +398,18 @@
     alertTime,
     resolvedTime,
     deviceEUI,
+    alertFieldName,
   }) => {
     modelVisible.value = true;
     setLoading(true);
     try {
-      const { items, totalCount } =
-        await AlertMessageService.getAlertMessageList({
-          ...pagination,
-          ...searchModel.value,
-          startTime: alertTime && dayjs(alertTime).startOf('d').toDate(),
-          endTime: resolvedTime && dayjs(resolvedTime).endOf('d').toDate(),
-          deviceEui: deviceEUI,
-        });
+      const { items } = await AlertMessageService.getAlertMessageList({
+        ...pagination,
+        startTime: alertTime && dayjs(alertTime).startOf('d').toDate(),
+        endTime: resolvedTime && dayjs(resolvedTime).endOf('d').toDate(),
+        deviceEui: deviceEUI,
+        deviceField: alertFieldName,
+      });
       alertLog.value = items as AlertMessageListDto[];
       // pagination.total = totalCount as unknown as number;
     } catch (err) {

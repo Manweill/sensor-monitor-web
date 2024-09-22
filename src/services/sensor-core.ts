@@ -76,6 +76,8 @@ export class AlertMessageService {
     params: {
       /** 设备的物联ID */
       deviceEui?: string;
+      /** 设备属性 */
+      deviceField?: string;
       /** 截止时间 */
       endTime?: Date;
       /** 页码 */
@@ -106,6 +108,7 @@ export class AlertMessageService {
       );
       configs.params = {
         deviceEui: params['deviceEui'],
+        deviceField: params['deviceField'],
         endTime: params['endTime'],
         pageNumber: params['pageNumber'],
         pageSize: params['pageSize'],
@@ -2749,29 +2752,50 @@ export interface DeviceAlertRuleConfigListDto {
 }
 
 export interface DeviceAlertTimeInfoListDto {
+  /** 告警属性名显示名称 */
+  alertFieldDisplayName?: string;
+
   /**  */
   alertFieldName?: string;
+
+  /**  */
+  alertLevel?: EnumDeviceAlertTimeInfoListDtoAlertLevel;
+
+  /** 告警等级名称 */
+  alertLevelDisplayName?: string;
 
   /**  */
   alertMessage?: string;
 
   /**  */
+  alertTime?: Date;
+
+  /**  */
   alertTitle?: string;
+
+  /**  */
+  confirm?: boolean;
+
+  /**  */
+  confirmTime?: Date;
 
   /**  */
   deviceEUI?: string;
 
   /**  */
-  durationTimeValue?: number;
+  deviceName?: string;
 
   /**  */
-  firstAlertTime?: Date;
+  durationTimeValue?: number;
 
   /** id */
   id?: string;
 
   /**  */
   resolvedTime?: Date;
+
+  /**  */
+  value?: string;
 }
 
 export interface DeviceAreaDto {
@@ -3879,6 +3903,12 @@ export enum EnumDeviceAlertRuleConfigListDtoComparisonOperator {
   'GREATER_THAN' = 'GREATER_THAN',
   'IN_SECTION' = 'IN_SECTION',
   'NOT_IN_SECTION' = 'NOT_IN_SECTION',
+}
+export enum EnumDeviceAlertTimeInfoListDtoAlertLevel {
+  'CRIT' = 'CRIT',
+  'WARN' = 'WARN',
+  'INFO' = 'INFO',
+  'NORMAL' = 'NORMAL',
 }
 export enum EnumDeviceFieldDtoFieldType {
   'DOUBLE' = 'DOUBLE',

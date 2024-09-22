@@ -175,20 +175,20 @@
       dataIndex: 'alertTime',
       slotName: 'alertTime',
     },
-    {
-      title: '已消除',
-      dataIndex: 'resolved',
-      slotName: 'resolved',
-    },
-    {
-      title: '消除时间',
-      dataIndex: 'resolvedTime',
-      slotName: 'resolvedTime',
-    },
-    {
-      title: '操作',
-      slotName: 'operations',
-    },
+    // {
+    //   title: '已消除',
+    //   dataIndex: 'resolved',
+    //   slotName: 'resolved',
+    // },
+    // {
+    //   title: '消除时间',
+    //   dataIndex: 'resolvedTime',
+    //   slotName: 'resolvedTime',
+    // },
+    // {
+    //   title: '操作',
+    //   slotName: 'operations',
+    // },
   ]);
 
   // 查询表格数据
