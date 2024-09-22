@@ -2,8 +2,8 @@
   <div class="container">
     <div class="left-side">
       <div class="panel">
-        <Banner />
-        <DataPanel />
+        <!--        <Banner />-->
+        <!--        <DataPanel />-->
         <!-- <ContentChart /> -->
       </div>
       <a-col :flex="1" style="margin-top: 16px">
@@ -25,8 +25,8 @@
   import Graph from '@/components/graph/index.vue';
   import { DeviceService } from '@/services/sensor-core';
   import { units } from '@/utils/profile-utils';
-  import Banner from '@/views/dashboard/workplace/components/banner.vue';
-  import DataPanel from '@/views/dashboard/workplace/components/data-panel.vue';
+  // import Banner from '@/views/dashboard/workplace/components/banner.vue';
+  // import DataPanel from '@/views/dashboard/workplace/components/data-panel.vue';
   import * as fabric from 'fabric';
   import { ref } from 'vue';
 
