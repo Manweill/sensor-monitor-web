@@ -22,16 +22,17 @@ const DASHBOARD: AppRouteRecordRaw = {
         permissions: ['Pages.Workbench'],
       },
     },
-    // {
-    //   path: 'floor-plan',
-    //   name: 'FloorPlan',
-    //   component: () => import('@/views/dashboard/floor-plan/index.vue'),
-    //   meta: {
-    //     locale: '平面图',
-    //     requiresAuth: true,
-    //     permissions: ['Pages.Plane.Graph'],
-    //   },
-    // },
+    {
+      path: 'floor-plan',
+      name: 'FloorPlan',
+      component: () => import('@/views/dashboard/floor-plan/index.vue'),
+      meta: {
+        hideInMenu: true,
+        locale: '平面图',
+        requiresAuth: true,
+        permissions: ['Pages.Plane.Graph'],
+      },
+    },
   ],
 };
 

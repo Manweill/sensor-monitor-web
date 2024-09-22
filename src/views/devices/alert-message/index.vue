@@ -219,11 +219,11 @@
   const columns = computed<TableColumnData[]>(() => [
     {
       title: '告警等级',
-      dataIndex: 'alertLevelStrName',
+      dataIndex: 'alertLevelDisplayName',
     },
     {
       title: '设备',
-      dataIndex: 'deviceEUI',
+      dataIndex: 'deviceName',
     },
     // {
     //   title: '告警标题',
@@ -243,6 +243,11 @@
       slotName: 'alertTime',
     },
     {
+      title: '持续时间',
+      dataIndex: 'durationTimeValue',
+      slotName: 'durationTimeValue',
+    },
+    {
       title: '已消除',
       dataIndex: 'resolved',
       slotName: 'resolved',
@@ -252,11 +257,7 @@
       dataIndex: 'resolvedTime',
       slotName: 'resolvedTime',
     },
-    {
-      title: '持续时间',
-      dataIndex: 'durationTimeValue',
-      slotName: 'durationTimeValue',
-    },
+
     {
       title: '操作',
       slotName: 'operations',

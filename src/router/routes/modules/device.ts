@@ -74,16 +74,16 @@ const DASHBOARD: AppRouteRecordRaw = {
         permissions: ['Pages.Device.Area'],
       },
     },
-    {
-      path: 'device-history-data',
-      name: 'DeviceHistoryData',
-      component: () => import('@/views/devices/device-history-data/index.vue'),
-      meta: {
-        locale: '设备监测数据',
-        requiresAuth: true,
-        permissions: ['Pages.Device.Monitor.Data'],
-      },
-    },
+    // {
+    //   path: 'device-history-data',
+    //   name: 'DeviceHistoryData',
+    //   component: () => import('@/views/devices/device-history-data/index.vue'),
+    //   meta: {
+    //     locale: '设备监测数据',
+    //     requiresAuth: true,
+    //     permissions: ['Pages.Device.Monitor.Data'],
+    //   },
+    // },
     {
       path: 'device-alert-message',
       name: 'AlertMessage',
