@@ -2366,6 +2366,69 @@ export class DeviceMetricDataService {
   }
 }
 
+export class DeviceConfigInfoService {
+  /**
+   * 获取到设备生产配置信息
+   */
+  static getDeviceProducerConfig(
+    params: {
+      /** devEui */
+      devEui: string;
+    } = {} as any,
+    options: IRequestOptions = {},
+  ): Promise<DeviceProducerConfigInputDto> {
+    return new Promise((resolve, reject) => {
+      let url =
+        basePath +
+        '/device_producer_config/get_device_producer_config/{devEui}';
+      url = url.replace('{devEui}', params['devEui'] + '');
+
+      const configs: IRequestConfig = getConfigs(
+        'get',
+        'application/json',
+        url,
+        options,
+      );
+
+      /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
+
+      console.warn(
+        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
+      );
+
+      axios(configs, resolve, reject);
+    });
+  }
+  /**
+   * 保存设备生产配置信息
+   */
+  static saveDeviceProducerConfig(
+    params: {
+      /** input */
+      input: SaveDeviceProducerConfigInputDto;
+    } = {} as any,
+    options: IRequestOptions = {},
+  ): Promise<string> {
+    return new Promise((resolve, reject) => {
+      let url =
+        basePath + '/device_producer_config/save_device_producer_config';
+
+      const configs: IRequestConfig = getConfigs(
+        'post',
+        'application/json',
+        url,
+        options,
+      );
+
+      let data = params['input'];
+
+      configs.data = data;
+
+      axios(configs, resolve, reject);
+    });
+  }
+}
+
 export class StorehouseEnumService {
   /**
    * 获取枚举定义
@@ -3096,6 +3159,9 @@ export interface DeviceListDto {
   /** 设备所属的区域ID */
   areaId?: string;
 
+  /** 设备所属的区域名称 */
+  areaName?: string;
+
   /** 设备描述 */
   description?: string;
 
@@ -3122,6 +3188,9 @@ export interface DeviceListDto {
 
   /** 设备是否在线，true表示在线 */
   online?: boolean;
+
+  /** 设备的生产配置信息 */
+  producerConfigInfo?: DeviceProducerConfigDetailDto;
 }
 
 export interface DeviceMetricAggregationDataDetailDto {
@@ -3278,6 +3347,88 @@ export interface DeviceOtaaKeyInfoDto {
 
   /**  */
   nwkKey?: string;
+}
+
+export interface DeviceProducerConfigDetailDto {
+  /**  */
+  calibrationPeriod?: number;
+
+  /**  */
+  humidityLowerValue?: number;
+
+  /**  */
+  humidityUpperValue?: number;
+
+  /** id */
+  id?: string;
+
+  /**  */
+  lastCalibrationTime?: Date;
+
+  /**  */
+  modelNumber?: string;
+
+  /**  */
+  powerAlertValue?: number;
+
+  /**  */
+  producer?: string;
+
+  /**  */
+  serialNumber?: string;
+
+  /**  */
+  serviceTime?: Date;
+
+  /**  */
+  temperatureLowerValue?: number;
+
+  /**  */
+  temperatureUpperValue?: number;
+}
+
+export interface DeviceProducerConfigInputDto {
+  /**  */
+  calibrationPeriod?: number;
+
+  /** 设备物联ID */
+  devEui?: string;
+
+  /**  */
+  deviceName?: string;
+
+  /**  */
+  humidityLowerValue?: number;
+
+  /**  */
+  humidityUpperValue?: number;
+
+  /** id */
+  id?: string;
+
+  /**  */
+  lastCalibrationTime?: Date;
+
+  /**  */
+  modelNumber?: string;
+
+  /**  */
+  powerAlertValue?: number;
+
+  /**  */
+  producer?: string;
+
+  /**  */
+  serialNumber?: string;
+
+  /**  */
+  serviceTime?: Date;
+
+  /**  */
+  temperatureLowerValue?: number;
+
+  /**  */
+  temperatureUpperValue?: number;
 }
 
 export interface DeviceProfileDetailDataDto {
@@ -3784,6 +3935,47 @@ export interface SaveDeviceAlertRuleConfigInputDto {
 
   /** 告警阈值的上限 */
   thresholdUpperLimit?: number;
+}
+
+export interface SaveDeviceProducerConfigInputDto {
+  /**  */
+  calibrationPeriod?: number;
+
+  /** 设备物联ID */
+  devEui?: string;
+
+  /**  */
+  humidityLowerValue?: number;
+
+  /**  */
+  humidityUpperValue?: number;
+
+  /** id */
+  id?: string;
+
+  /**  */
+  lastCalibrationTime?: Date;
+
+  /**  */
+  modelNumber?: string;
+
+  /**  */
+  powerAlertValue?: number;
+
+  /**  */
+  producer?: string;
+
+  /**  */
+  serialNumber?: string;
+
+  /**  */
+  serviceTime?: Date;
+
+  /**  */
+  temperatureLowerValue?: number;
+
+  /**  */
+  temperatureUpperValue?: number;
 }
 
 export interface SelectListOutputDto {

@@ -84,7 +84,7 @@
           </a-popconfirm>
           <a-popconfirm content="确认删除?" @ok="onLogicDel(record)">
             <a-button type="text" status="danger" size="small">
-              仅删除设备
+              强制删除
             </a-button>
           </a-popconfirm>
         </template>

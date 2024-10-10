@@ -59,15 +59,44 @@
           :key="sensor.id"
           :span="{ xs: 12, sm: 12, md: 12, lg: 12, xl: 6, xxl: 6 }"
         >
-          <a-card
-            :bordered="false"
-            :style="{
-              background: '#206CCF',
-            }"
-          >
+          <a-card :bordered="false" class="sensor-card">
+            <template #title>
+              <a-space>
+                <a-tooltip
+                  :content="`剩余检验天数：${getRemainingCalibrationDays(
+                    sensor,
+                  )}天`"
+                >
+                  <a-badge
+                    :status="
+                      getRemainingCalibrationDays(sensor) >
+                      minRemainingCalibrationDays
+                        ? 'success'
+                        : 'warning'
+                    "
+                  />
+                </a-tooltip>
+                <span>{{ sensor.name }}</span>
+              </a-space>
+            </template>
+            <template #extra>
+              <a-button
+                shape="circle"
+                type="text"
+                @click="onSensorClick(sensor)"
+              >
+                <icon-bar-chart :style="{ color: '#fff' }" />
+              </a-button>
+              <a-button
+                shape="circle"
+                type="text"
+                @click="onDeviceInfo(sensor)"
+              >
+                <icon-settings :style="{ color: '#fff' }" />
+              </a-button>
+            </template>
             <div class="content-wrap">
               <div class="content">
-                <h3>{{ sensor.name }}</h3>
                 <div class="desc">
                   <div style="display: flex">
                     <div class="temperature" style="flex: 1">
@@ -102,24 +131,59 @@
                     </div>
                   </div>
                 </div>
-                <div class="update-time">
-                  最近更新: {{ getLastUpdateTime(sensor) }}
-                </div>
+                <a-popover title="设备信息" position="bottom">
+                  <template #content>
+                    <a-space direction="vertical" fill>
+                      <span>
+                        距离校准日期:
+                        {{
+                          sensor.producerConfigInfo?.calibrationPeriod || '--'
+                        }}天</span
+                      >
+                      <span>
+                        设备编码:
+                        {{
+                          sensor.producerConfigInfo?.serialNumber || '--'
+                        }}</span
+                      >
+                    </a-space>
+                  </template>
+                  <div class="device-des">
+                    <a-space direction="vertical" fill>
+                      <span> 最近更新: {{ getLastUpdateTime(sensor) }}</span>
+                      <span> 位置: {{ sensor.areaName }}</span>
+                    </a-space>
+                  </div>
+                </a-popover>
               </div>
             </div>
           </a-card>
         </a-grid-item>
       </a-grid>
     </a-card>
+    <a-modal
+      v-model:visible="isReportVisible"
+      title="温湿度数据报表"
+      width="80%"
+      height="80%"
+      @ok="handleOk"
+      @cancel="handleCancel"
+    >
+      <DeviceDataReport v-if="isReportVisible" :device-eui="deviceEui" />
+    </a-modal>
+    <DeviceInfo ref="deviceInfoRef" />
   </div>
 </template>
 
 <script lang="ts" setup>
   import { ref, onMounted, onUnmounted } from 'vue';
-  import { DeviceAreaService, DeviceDto } from '@/services/sensor-core';
+  import { DeviceAreaService, DeviceListDto } from '@/services/sensor-core';
   import useLoading from '@/hooks/loading';
   import { convertToTree } from '@/utils/convert';
   import { TreeNodeData } from '@arco-design/web-vue';
+
+  import DeviceDataReport from './components/device-data-report.vue';
+  import DeviceInfo from './components/device-info.vue';
 
   // 搜索
   const generateSearchModel = () => {
@@ -140,7 +204,7 @@
 
   const { loading, setLoading } = useLoading(false);
   // 温湿度传感器
-  const temperatureHumiditySensors = ref<DeviceDto[]>([]);
+  const temperatureHumiditySensors = ref<DeviceListDto[]>([]);
   // 获取温湿度传感器
   const fetchSensors = async () => {
     setLoading(true);
@@ -149,7 +213,7 @@
         unPage: true,
         areaId: searchModel.value.areaId,
       });
-      temperatureHumiditySensors.value = (items as DeviceDto[]).filter(
+      temperatureHumiditySensors.value = (items as DeviceListDto[]).filter(
         (device) =>
           device.deviceProfileName?.includes('Temperature') ||
           device.deviceProfileName?.includes('Humidity'),
@@ -222,28 +286,70 @@
   });
 
   // 获取传感器值
-  const getSensorValue = (sensor: DeviceDto, fieldName: string) => {
+  const getSensorValue = (sensor: DeviceListDto, fieldName: string) => {
     return (
       (
-        sensor as DeviceDto & { latestMetricDataList: any[] }
+        sensor as DeviceListDto & { latestMetricDataList: any[] }
       ).latestMetricDataList?.find((data) => data.deviceFieldName === fieldName)
         ?.value || '--'
     );
   };
   // 获取字段描述
-  const getFieldDescription = (sensor: DeviceDto, fieldName: string) => {
+  const getFieldDescription = (sensor: DeviceListDto, fieldName: string) => {
     return (
       (
-        sensor as DeviceDto & { latestMetricDataList?: any[] }
+        sensor as DeviceListDto & { latestMetricDataList?: any[] }
       ).latestMetricDataList?.find((data) => data.deviceFieldName === fieldName)
         ?.description || ''
     );
   };
   // 获取最近更新时间
-  const getLastUpdateTime = (sensor: DeviceDto) => {
-    const latestData = (sensor as DeviceDto & { latestMetricDataList: any[] })
-      .latestMetricDataList?.[0];
+  const getLastUpdateTime = (sensor: DeviceListDto) => {
+    const latestData = (
+      sensor as DeviceListDto & { latestMetricDataList: any[] }
+    ).latestMetricDataList?.[0];
     return latestData ? new Date(latestData.time).toLocaleString() : '未知';
+  };
+
+  // 最小剩余校准天数
+  const minRemainingCalibrationDays: number = 30;
+  // 获取剩余校准天数
+  const getRemainingCalibrationDays: (sensor: DeviceListDto) => number = (
+    sensor: DeviceListDto,
+  ) => {
+    const lastCalibrationTime = sensor.producerConfigInfo?.lastCalibrationTime;
+    const calibrationPeriod = sensor.producerConfigInfo?.calibrationPeriod;
+    if (!lastCalibrationTime || !calibrationPeriod) {
+      return 0;
+    }
+    const currentTime = new Date();
+    const lastCalibrationDate = new Date(lastCalibrationTime);
+    const timeDifference =
+      currentTime.getTime() - lastCalibrationDate.getTime();
+    const daysDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+    return calibrationPeriod - daysDifference;
+  };
+
+  const isReportVisible = ref(false);
+  const deviceEui = ref('');
+
+  const onSensorClick = (sensor: DeviceListDto) => {
+    deviceEui.value = sensor.devEui || '';
+    isReportVisible.value = true;
+  };
+
+  const handleOk = () => {
+    isReportVisible.value = false;
+  };
+
+  const handleCancel = () => {
+    isReportVisible.value = false;
+  };
+
+  const deviceInfoRef = ref();
+
+  const onDeviceInfo = (sensor: DeviceListDto) => {
+    deviceInfoRef.value.openModal(sensor.devEui);
   };
 </script>
 
@@ -251,36 +357,22 @@
   .container {
     padding: 20px;
   }
-
-  .sensor-cards {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-  }
-
   .sensor-card {
-    background-color: #1e1e1e; // 深色背景
-    border-radius: 8px;
-    padding: 20px;
-    width: calc(33.33% - 14px);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-    transition: all 0.3s ease;
-    color: #ffffff; // 白色文字
-
-    &:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+    background: #206ccf;
+    span {
+      color: #ffffff;
+    }
+    .arco-btn-text:hover,
+    .arco-btn-text[type='button']:hover,
+    .arco-btn-text[type='submit']:hover {
+      color: rgb(var(--primary-6));
+      background-color: rgba(255, 255, 255, 0.08);
+      border-color: transparent;
     }
   }
 
   .sensor-info {
     flex: 1;
-  }
-
-  h3 {
-    margin: 0 0 15px;
-    font-size: 18px;
-    color: #ffffff; // 白色标题
   }
 
   .sensor-data {
@@ -328,7 +420,7 @@
     }
   }
 
-  .update-time {
+  .device-des {
     font-size: 12px;
     color: rgba(255, 255, 255, 0.7);
     margin-top: 10px;

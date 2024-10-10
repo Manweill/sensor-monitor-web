@@ -19,7 +19,7 @@ const DASHBOARD: AppRouteRecordRaw = {
       meta: {
         locale: '温湿度监测',
         requiresAuth: false,
-        permissions: ['Pages.TemperatureHumidity'],
+        permissions: ['Pages.Monitor.TemperatureHumidity'],
       },
     },
     {
@@ -30,7 +30,7 @@ const DASHBOARD: AppRouteRecordRaw = {
       meta: {
         locale: '温湿度历史',
         requiresAuth: false,
-        permissions: ['Pages.TemperatureHumidityHistory'],
+        permissions: ['Pages.Monitor.TemperatureHumidityHistory'],
       },
     },
   ],
