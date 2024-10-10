@@ -251,7 +251,7 @@
     //   dataIndex: 'alertMessage',
     // },
     {
-      title: '告警值(最高)',
+      title: '告警值(极值)',
       dataIndex: 'value',
       slotName: 'value',
     },

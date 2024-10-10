@@ -286,6 +286,7 @@
         aggregation: config.value.aggregation,
         startTime: dayjs(date)
           .startOf(config.value.searchDateUnit)
+          // .add(-1, 'milliseconds')
           .toISOString(),
         endTime: dayjs(date).endOf(config.value.searchDateUnit).toISOString(),
       });
