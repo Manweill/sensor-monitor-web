@@ -60,6 +60,9 @@
             />
           </a-input-group>
         </a-form-item>
+        <a-form-item field="powerAlertValue" label="电池告警阈值">
+          <a-input-number v-model="formData.powerAlertValue" />
+        </a-form-item>
       </a-form>
     </a-modal>
   </div>
