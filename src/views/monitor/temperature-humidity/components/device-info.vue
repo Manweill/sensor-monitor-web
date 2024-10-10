@@ -137,20 +137,29 @@
         devEui,
       });
 
-      Object.assign(formData.value, { ...res });
+      Object.assign(formData.value, {
+        ...res,
+        devEui,
+        enableTemperatureAlert: false,
+        enableHumidityAlert: false,
+      });
 
       // 检查温度告警阈值是否不为空，如果不为空则设置enableTemperatureAlert为true
       if (
-        formData.value.temperatureLowerValue !== undefined ||
-        formData.value.temperatureUpperValue !== undefined
+        (formData.value.temperatureLowerValue !== undefined ||
+          formData.value.temperatureUpperValue !== undefined) &&
+        formData.value.temperatureLowerValue !== 0 &&
+        formData.value.temperatureUpperValue !== 0
       ) {
         formData.value.enableTemperatureAlert = true;
       }
 
       // 检查湿度告警阈值是否不为空，如果不为空则设置enableHumidityAlert为true
       if (
-        formData.value.humidityLowerValue !== undefined ||
-        formData.value.humidityUpperValue !== undefined
+        (formData.value.humidityLowerValue !== undefined ||
+          formData.value.humidityUpperValue !== undefined) &&
+        formData.value.humidityLowerValue !== 0 &&
+        formData.value.humidityUpperValue !== 0
       ) {
         formData.value.enableHumidityAlert = true;
       }
