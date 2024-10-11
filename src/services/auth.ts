@@ -2,12 +2,7 @@
 // @ts-nocheck
 /* eslint-disable */
 
-import {
-  IRequestOptions,
-  IRequestConfig,
-  getConfigs,
-  axios,
-} from './serviceOptions';
+import { IRequestOptions, IRequestConfig, getConfigs, axios } from './serviceOptions';
 export const basePath = '/api/auth';
 
 export interface IList<T> extends Array<T> {}
@@ -46,18 +41,11 @@ export class SettingsService {
     return new Promise((resolve, reject) => {
       let url = basePath + '/Settings/getAllSettingsForInit';
 
-      const configs: IRequestConfig = getConfigs(
-        'get',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn(
-        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
-      );
+      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
 
       axios(configs, resolve, reject);
     });
@@ -65,24 +53,15 @@ export class SettingsService {
   /**
    * 获取应用的配置信息
    */
-  static getApplicationSettings(
-    options: IRequestOptions = {},
-  ): Promise<SettingDto[]> {
+  static getApplicationSettings(options: IRequestOptions = {}): Promise<SettingDto[]> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/Settings/getApplicationSettings';
 
-      const configs: IRequestConfig = getConfigs(
-        'get',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn(
-        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
-      );
+      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
 
       axios(configs, resolve, reject);
     });
@@ -90,24 +69,15 @@ export class SettingsService {
   /**
    * 获取厂站的配置信息
    */
-  static getStationSettings(
-    options: IRequestOptions = {},
-  ): Promise<SettingDto[]> {
+  static getStationSettings(options: IRequestOptions = {}): Promise<SettingDto[]> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/Settings/getStationSettings';
 
-      const configs: IRequestConfig = getConfigs(
-        'get',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn(
-        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
-      );
+      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
 
       axios(configs, resolve, reject);
     });
@@ -115,24 +85,15 @@ export class SettingsService {
   /**
    * 获取租户的配置信息
    */
-  static getTenantSettings(
-    options: IRequestOptions = {},
-  ): Promise<SettingDto[]> {
+  static getTenantSettings(options: IRequestOptions = {}): Promise<SettingDto[]> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/Settings/getTenantSettings';
 
-      const configs: IRequestConfig = getConfigs(
-        'get',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn(
-        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
-      );
+      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
 
       axios(configs, resolve, reject);
     });
@@ -144,18 +105,11 @@ export class SettingsService {
     return new Promise((resolve, reject) => {
       let url = basePath + '/Settings/getUserSettings';
 
-      const configs: IRequestConfig = getConfigs(
-        'get',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn(
-        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
-      );
+      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
 
       axios(configs, resolve, reject);
     });
@@ -168,17 +122,12 @@ export class SettingsService {
       /** input */
       input: UpdateSettingInput;
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<any> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/Settings/updateApplicationSettings';
 
-      const configs: IRequestConfig = getConfigs(
-        'post',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('post', 'application/json', url, options);
 
       let data = params['input'];
 
@@ -195,17 +144,12 @@ export class SettingsService {
       /** input */
       input: UpdateSettingInput;
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<any> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/Settings/updateStationSettings';
 
-      const configs: IRequestConfig = getConfigs(
-        'post',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('post', 'application/json', url, options);
 
       let data = params['input'];
 
@@ -222,17 +166,12 @@ export class SettingsService {
       /** input */
       input: UpdateSettingInput;
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<any> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/Settings/updateTenantSettings';
 
-      const configs: IRequestConfig = getConfigs(
-        'post',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('post', 'application/json', url, options);
 
       let data = params['input'];
 
@@ -249,17 +188,12 @@ export class SettingsService {
       /** input */
       input: UpdateSettingInput;
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<any> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/Settings/updateUserSettings';
 
-      const configs: IRequestConfig = getConfigs(
-        'post',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('post', 'application/json', url, options);
 
       let data = params['input'];
 
@@ -291,17 +225,12 @@ export class AuditLogService {
       /** 用户名 */
       userName?: string;
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<any> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/auditLog/exportLog';
 
-      const configs: IRequestConfig = getConfigs(
-        'get',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
       configs.params = {
         browserInfo: params['browserInfo'],
         endDate: params['endDate'],
@@ -309,14 +238,12 @@ export class AuditLogService {
         methodName: params['methodName'],
         serviceName: params['serviceName'],
         startDate: params['startDate'],
-        userName: params['userName'],
+        userName: params['userName']
       };
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn(
-        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
-      );
+      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
 
       axios(configs, resolve, reject);
     });
@@ -355,17 +282,12 @@ export class AuditLogService {
       /** 用户名 */
       userName?: string;
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<PagedResultDto<AuditLogListDto>> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/auditLog/getAuditLogs';
 
-      const configs: IRequestConfig = getConfigs(
-        'get',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
       configs.params = {
         browserInfo: params['browserInfo'],
         endDate: params['endDate'],
@@ -380,14 +302,12 @@ export class AuditLogService {
         sortingDirection: params['sortingDirection'],
         startDate: params['startDate'],
         unPage: params['unPage'],
-        userName: params['userName'],
+        userName: params['userName']
       };
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn(
-        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
-      );
+      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
 
       axios(configs, resolve, reject);
     });
@@ -400,24 +320,17 @@ export class AuditLogService {
       /** id */
       id: string;
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<AuditLogDetailDto> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/auditLog/{id}';
       url = url.replace('{id}', params['id'] + '');
 
-      const configs: IRequestConfig = getConfigs(
-        'get',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn(
-        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
-      );
+      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
 
       axios(configs, resolve, reject);
     });
@@ -432,18 +345,11 @@ export class CaptchaService {
     return new Promise((resolve, reject) => {
       let url = basePath + '/captcha';
 
-      const configs: IRequestConfig = getConfigs(
-        'get',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn(
-        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
-      );
+      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
 
       axios(configs, resolve, reject);
     });
@@ -459,17 +365,12 @@ export class CommonSettingService {
       /** input */
       input: CreateOrUpdateCommonSettingInput;
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<any> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/commonSetting/createOrUpdateCommonSetting';
 
-      const configs: IRequestConfig = getConfigs(
-        'post',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('post', 'application/json', url, options);
 
       let data = params['input'];
 
@@ -486,23 +387,16 @@ export class CommonSettingService {
       /** input */
       input: EntityDto;
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<any> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/commonSetting/deleteCommonSetting';
 
-      const configs: IRequestConfig = getConfigs(
-        'delete',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('delete', 'application/json', url, options);
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn(
-        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
-      );
+      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
 
       axios(configs, resolve, reject);
     });
@@ -515,24 +409,17 @@ export class CommonSettingService {
       /** key */
       key?: string;
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<CommonSettingDto> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/commonSetting/getCommonSettingByKey';
 
-      const configs: IRequestConfig = getConfigs(
-        'get',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
       configs.params = { key: params['key'] };
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn(
-        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
-      );
+      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
 
       axios(configs, resolve, reject);
     });
@@ -557,17 +444,12 @@ export class CommonSettingService {
       /** 是否不分页，默认分页 */
       unPage?: boolean;
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<PagedResultDto<CommonSettingDto>> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/commonSetting/getCommonSettings';
 
-      const configs: IRequestConfig = getConfigs(
-        'get',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
       configs.params = {
         groupName: params['groupName'],
         key: params['key'],
@@ -575,14 +457,12 @@ export class CommonSettingService {
         pageSize: params['pageSize'],
         sorting: params['sorting'],
         sortingDirection: params['sortingDirection'],
-        unPage: params['unPage'],
+        unPage: params['unPage']
       };
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn(
-        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
-      );
+      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
 
       axios(configs, resolve, reject);
     });
@@ -595,24 +475,17 @@ export class CommonSettingService {
       /** 根据分组名进行模糊查找 */
       filter?: string;
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<string[]> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/commonSetting/getGroupNameList';
 
-      const configs: IRequestConfig = getConfigs(
-        'get',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
       configs.params = { filter: params['filter'] };
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn(
-        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
-      );
+      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
 
       axios(configs, resolve, reject);
     });
@@ -627,18 +500,11 @@ export class ConfigurationService {
     return new Promise((resolve, reject) => {
       let url = basePath + '/configuration/getAll';
 
-      const configs: IRequestConfig = getConfigs(
-        'get',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn(
-        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
-      );
+      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
 
       axios(configs, resolve, reject);
     });
@@ -654,17 +520,12 @@ export class EditionService {
       /** input */
       input: EditionEditDto;
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<any> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/edition/createOrUpdateEdition';
 
-      const configs: IRequestConfig = getConfigs(
-        'post',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('post', 'application/json', url, options);
 
       let data = params['input'];
 
@@ -681,23 +542,16 @@ export class EditionService {
       /** input */
       input: EntityDto;
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<any> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/edition/deleteEdition';
 
-      const configs: IRequestConfig = getConfigs(
-        'delete',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('delete', 'application/json', url, options);
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn(
-        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
-      );
+      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
 
       axios(configs, resolve, reject);
     });
@@ -710,24 +564,17 @@ export class EditionService {
       /** id */
       id: string;
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<any> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/edition/export/{id}';
       url = url.replace('{id}', params['id'] + '');
 
-      const configs: IRequestConfig = getConfigs(
-        'get',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn(
-        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
-      );
+      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
 
       axios(configs, resolve, reject);
     });
@@ -744,28 +591,21 @@ export class EditionService {
       /** selectedEditionId */
       selectedEditionId?: string;
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<SubscribableEditionComboboxItemDto[]> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/edition/getEditionComboboxItems';
 
-      const configs: IRequestConfig = getConfigs(
-        'get',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
       configs.params = {
         addAllItem: params['addAllItem'],
         onlyFreeItems: params['onlyFreeItems'],
-        selectedEditionId: params['selectedEditionId'],
+        selectedEditionId: params['selectedEditionId']
       };
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn(
-        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
-      );
+      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
 
       axios(configs, resolve, reject);
     });
@@ -778,24 +618,17 @@ export class EditionService {
       /** 唯一标识 */
       id?: string;
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<EditionEditDto> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/edition/getEditionForEdit';
 
-      const configs: IRequestConfig = getConfigs(
-        'get',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
       configs.params = { id: params['id'] };
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn(
-        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
-      );
+      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
 
       axios(configs, resolve, reject);
     });
@@ -818,31 +651,24 @@ export class EditionService {
       /** 是否不分页，默认分页 */
       unPage?: boolean;
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<PagedResultDto<EditionListDto>> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/edition/getEditions';
 
-      const configs: IRequestConfig = getConfigs(
-        'get',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
       configs.params = {
         filter: params['filter'],
         pageNumber: params['pageNumber'],
         pageSize: params['pageSize'],
         sorting: params['sorting'],
         sortingDirection: params['sortingDirection'],
-        unPage: params['unPage'],
+        unPage: params['unPage']
       };
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn(
-        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
-      );
+      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
 
       axios(configs, resolve, reject);
     });
@@ -855,24 +681,17 @@ export class EditionService {
       /** file */
       file: any;
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<any> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/edition/import';
 
-      const configs: IRequestConfig = getConfigs(
-        'post',
-        'multipart/form-data',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('post', 'multipart/form-data', url, options);
 
       let data = null;
       data = new FormData();
       if (params['file']) {
-        if (
-          Object.prototype.toString.call(params['file']) === '[object Array]'
-        ) {
+        if (Object.prototype.toString.call(params['file']) === '[object Array]') {
           for (const item of params['file']) {
             data.append('file', item as any);
           }
@@ -892,24 +711,15 @@ export class FeatureService {
   /**
    * 获取默认的所有特性列表
    */
-  static getDefaultFeatures(
-    options: IRequestOptions = {},
-  ): Promise<TenantFeature[]> {
+  static getDefaultFeatures(options: IRequestOptions = {}): Promise<TenantFeature[]> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/feature/getDefaultFeatures';
 
-      const configs: IRequestConfig = getConfigs(
-        'get',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn(
-        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
-      );
+      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
 
       axios(configs, resolve, reject);
     });
@@ -922,24 +732,17 @@ export class FeatureService {
       /** 唯一标识 */
       id?: string;
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<TenantFeature[]> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/feature/getFeaturesForEdit';
 
-      const configs: IRequestConfig = getConfigs(
-        'get',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
       configs.params = { id: params['id'] };
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn(
-        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
-      );
+      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
 
       axios(configs, resolve, reject);
     });
@@ -951,18 +754,11 @@ export class FeatureService {
     return new Promise((resolve, reject) => {
       let url = basePath + '/feature/getTenantFeatures';
 
-      const configs: IRequestConfig = getConfigs(
-        'get',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn(
-        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
-      );
+      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
 
       axios(configs, resolve, reject);
     });
@@ -975,24 +771,17 @@ export class FeatureService {
       /** 唯一标识 */
       id?: string;
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<TenantFeature[]> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/feature/getTenantFeaturesByEdition';
 
-      const configs: IRequestConfig = getConfigs(
-        'get',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
       configs.params = { id: params['id'] };
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn(
-        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
-      );
+      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
 
       axios(configs, resolve, reject);
     });
@@ -1005,17 +794,12 @@ export class FeatureService {
       /** 租户id */
       entityDto?: EntityDto;
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<any> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/feature/resetTenantSpecificFeatures';
 
-      const configs: IRequestConfig = getConfigs(
-        'post',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('post', 'application/json', url, options);
 
       let data = params['entityDto'];
 
@@ -1032,17 +816,12 @@ export class FeatureService {
       /** 版本特性 */
       feaInput?: EditionFeatureInputDto;
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<any> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/feature/setEditionFeatures';
 
-      const configs: IRequestConfig = getConfigs(
-        'post',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('post', 'application/json', url, options);
 
       let data = params['feaInput'];
 
@@ -1059,17 +838,12 @@ export class FeatureService {
       /** 租户特性 */
       feaInput?: TenantFeatureInputDto;
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<any> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/feature/updateTenantFeatures';
 
-      const configs: IRequestConfig = getConfigs(
-        'post',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('post', 'application/json', url, options);
 
       let data = params['feaInput'];
 
@@ -1111,17 +885,12 @@ export class LoginLogService {
       /** 登录账号名/手机号 */
       userName?: string;
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<any> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/login/log/export';
 
-      const configs: IRequestConfig = getConfigs(
-        'get',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
       configs.params = {
         authType: params['authType'],
         clientIpAddress: params['clientIpAddress'],
@@ -1134,14 +903,12 @@ export class LoginLogService {
         sortingDirection: params['sortingDirection'],
         startTime: params['startTime'],
         unPage: params['unPage'],
-        userName: params['userName'],
+        userName: params['userName']
       };
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn(
-        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
-      );
+      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
 
       axios(configs, resolve, reject);
     });
@@ -1176,17 +943,12 @@ export class LoginLogService {
       /** 登录账号名/手机号 */
       userName?: string;
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<PagedResultDto<LoginLogDto>> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/login/log/list';
 
-      const configs: IRequestConfig = getConfigs(
-        'get',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
       configs.params = {
         authType: params['authType'],
         clientIpAddress: params['clientIpAddress'],
@@ -1199,14 +961,12 @@ export class LoginLogService {
         sortingDirection: params['sortingDirection'],
         startTime: params['startTime'],
         unPage: params['unPage'],
-        userName: params['userName'],
+        userName: params['userName']
       };
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn(
-        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
-      );
+      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
 
       axios(configs, resolve, reject);
     });
@@ -1222,17 +982,12 @@ export class OrganizationUnitService {
       /** input */
       input: UsersToOrganizationUnitInput;
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<any> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/organizationUnit/addUsersToOrganizationUnit';
 
-      const configs: IRequestConfig = getConfigs(
-        'put',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('put', 'application/json', url, options);
 
       let data = params['input'];
 
@@ -1249,17 +1004,12 @@ export class OrganizationUnitService {
       /** input */
       input: CreateOrganizationUnitInput;
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<OrganizationUnitDto> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/organizationUnit/createOrganizationUnit';
 
-      const configs: IRequestConfig = getConfigs(
-        'post',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('post', 'application/json', url, options);
 
       let data = params['input'];
 
@@ -1276,23 +1026,16 @@ export class OrganizationUnitService {
       /** input */
       input: EntityDto;
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<any> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/organizationUnit/deleteOrganizationUnit';
 
-      const configs: IRequestConfig = getConfigs(
-        'delete',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('delete', 'application/json', url, options);
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn(
-        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
-      );
+      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
 
       axios(configs, resolve, reject);
     });
@@ -1305,17 +1048,12 @@ export class OrganizationUnitService {
       /** input */
       input: GetOrganizationUnitUsersInput;
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<PagedResultDto<NameValueDto_long>> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/organizationUnit/findUsers';
 
-      const configs: IRequestConfig = getConfigs(
-        'put',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('put', 'application/json', url, options);
 
       let data = params['input'];
 
@@ -1332,17 +1070,12 @@ export class OrganizationUnitService {
       /** input */
       input: GetOrganizationUnitUsersInput;
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<PagedResultDto<OrganizationUnitUserListDto>> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/organizationUnit/getOrganizationUnitUsers';
 
-      const configs: IRequestConfig = getConfigs(
-        'put',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('put', 'application/json', url, options);
 
       let data = params['input'];
 
@@ -1359,18 +1092,12 @@ export class OrganizationUnitService {
       /** input */
       input: GetOrganizationUnitUsersForSelectInput;
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<PagedResultDto<OrganizationUnitUserForSelectDto>> {
     return new Promise((resolve, reject) => {
-      let url =
-        basePath + '/organizationUnit/getOrganizationUnitUsersForSelect';
+      let url = basePath + '/organizationUnit/getOrganizationUnitUsersForSelect';
 
-      const configs: IRequestConfig = getConfigs(
-        'put',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('put', 'application/json', url, options);
 
       let data = params['input'];
 
@@ -1382,24 +1109,15 @@ export class OrganizationUnitService {
   /**
    * 获取所有组织机构
    */
-  static getOrganizationUnits(
-    options: IRequestOptions = {},
-  ): Promise<ListResultDto<OrganizationStationUnitDto>> {
+  static getOrganizationUnits(options: IRequestOptions = {}): Promise<ListResultDto<OrganizationStationUnitDto>> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/organizationUnit/getOrganizationUnits';
 
-      const configs: IRequestConfig = getConfigs(
-        'get',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn(
-        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
-      );
+      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
 
       axios(configs, resolve, reject);
     });
@@ -1412,24 +1130,17 @@ export class OrganizationUnitService {
       /** 用户id */
       id?: string;
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<OrganizationUnitDto[]> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/organizationUnit/getOrganizationUnitsByUser';
 
-      const configs: IRequestConfig = getConfigs(
-        'get',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
       configs.params = { id: params['id'] };
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn(
-        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
-      );
+      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
 
       axios(configs, resolve, reject);
     });
@@ -1442,24 +1153,17 @@ export class OrganizationUnitService {
       /** 唯一标识 */
       id?: string;
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<ParentOrganizationOutput[]> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/organizationUnit/getParentOrganizations';
 
-      const configs: IRequestConfig = getConfigs(
-        'get',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
       configs.params = { id: params['id'] };
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn(
-        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
-      );
+      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
 
       axios(configs, resolve, reject);
     });
@@ -1467,24 +1171,15 @@ export class OrganizationUnitService {
   /**
    * 获取当前用户下的所有厂站结构树-（包含普通节点的最小树）
    */
-  static getStationTreeOfLoginUser(
-    options: IRequestOptions = {},
-  ): Promise<OrganizationUnitDto[]> {
+  static getStationTreeOfLoginUser(options: IRequestOptions = {}): Promise<OrganizationUnitDto[]> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/organizationUnit/getStationTreeOfLoginUser';
 
-      const configs: IRequestConfig = getConfigs(
-        'get',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn(
-        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
-      );
+      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
 
       axios(configs, resolve, reject);
     });
@@ -1492,24 +1187,15 @@ export class OrganizationUnitService {
   /**
    * 获取厂站下拉列表
    */
-  static getStations(
-    options: IRequestOptions = {},
-  ): Promise<NameValueDto_long[]> {
+  static getStations(options: IRequestOptions = {}): Promise<NameValueDto_long[]> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/organizationUnit/getStations';
 
-      const configs: IRequestConfig = getConfigs(
-        'get',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn(
-        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
-      );
+      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
 
       axios(configs, resolve, reject);
     });
@@ -1517,24 +1203,15 @@ export class OrganizationUnitService {
   /**
    * 获取当前用户下的所有厂站
    */
-  static getStationsOfLoginUser(
-    options: IRequestOptions = {},
-  ): Promise<NameValueDefaultByDto_long[]> {
+  static getStationsOfLoginUser(options: IRequestOptions = {}): Promise<NameValueDefaultByDto_long[]> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/organizationUnit/getStationsOfLoginUser';
 
-      const configs: IRequestConfig = getConfigs(
-        'get',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn(
-        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
-      );
+      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
 
       axios(configs, resolve, reject);
     });
@@ -1547,17 +1224,12 @@ export class OrganizationUnitService {
       /** input */
       input: MoveOrganizationUnitInput;
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<OrganizationUnitDto> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/organizationUnit/moveOrganizationUnit';
 
-      const configs: IRequestConfig = getConfigs(
-        'put',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('put', 'application/json', url, options);
 
       let data = params['input'];
 
@@ -1574,23 +1246,16 @@ export class OrganizationUnitService {
       /** input */
       input: UserToOrganizationUnitInput;
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<any> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/organizationUnit/removeUserFromOrganizationUnit';
 
-      const configs: IRequestConfig = getConfigs(
-        'delete',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('delete', 'application/json', url, options);
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn(
-        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
-      );
+      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
 
       axios(configs, resolve, reject);
     });
@@ -1605,18 +1270,13 @@ export class OrganizationUnitService {
       /** id */
       id: string;
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<any> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/organizationUnit/setStationEnabled/{id}';
       url = url.replace('{id}', params['id'] + '');
 
-      const configs: IRequestConfig = getConfigs(
-        'post',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('post', 'application/json', url, options);
       configs.params = { enabled: params['enabled'] };
 
       let data = null;
@@ -1634,17 +1294,12 @@ export class OrganizationUnitService {
       /** input */
       input: UpdateOrganizationUnitInput;
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<OrganizationUnitDto> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/organizationUnit/updateOrganizationUnit';
 
-      const configs: IRequestConfig = getConfigs(
-        'put',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('put', 'application/json', url, options);
 
       let data = params['input'];
 
@@ -1664,24 +1319,17 @@ export class TenantPermissionService {
       /** 唯一标识 */
       id?: string;
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<RolePermissionDto[]> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/permission/getEditionPermissionsById';
 
-      const configs: IRequestConfig = getConfigs(
-        'get',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
       configs.params = { id: params['id'] };
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn(
-        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
-      );
+      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
 
       axios(configs, resolve, reject);
     });
@@ -1694,24 +1342,17 @@ export class TenantPermissionService {
       /** 唯一标识 */
       id?: string;
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<RolePermissionDto[]> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/permission/getTenantPermissions';
 
-      const configs: IRequestConfig = getConfigs(
-        'get',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
       configs.params = { id: params['id'] };
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn(
-        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
-      );
+      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
 
       axios(configs, resolve, reject);
     });
@@ -1724,17 +1365,12 @@ export class TenantPermissionService {
       /** input */
       input: EditionPermissionInputDto;
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<any> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/permission/setEditionPermissions';
 
-      const configs: IRequestConfig = getConfigs(
-        'post',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('post', 'application/json', url, options);
 
       let data = params['input'];
 
@@ -1754,17 +1390,12 @@ export class RoleService {
       /** orgaUsersInput */
       orgaUsersInput: BindRoleToOrgInput;
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<any> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/role/bindRoleToOrgans';
 
-      const configs: IRequestConfig = getConfigs(
-        'post',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('post', 'application/json', url, options);
 
       let data = params['orgaUsersInput'];
 
@@ -1781,17 +1412,12 @@ export class RoleService {
       /** roleToUserInput */
       roleToUserInput: BindRoleToUserInput;
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<any> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/role/bindRoleToUsers';
 
-      const configs: IRequestConfig = getConfigs(
-        'post',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('post', 'application/json', url, options);
 
       let data = params['roleToUserInput'];
 
@@ -1808,17 +1434,12 @@ export class RoleService {
       /** input */
       input: RoleCreateOrEditDto;
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<string> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/role/createOrUpdateRole';
 
-      const configs: IRequestConfig = getConfigs(
-        'post',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('post', 'application/json', url, options);
 
       let data = params['input'];
 
@@ -1835,24 +1456,17 @@ export class RoleService {
       /** 唯一标识 */
       id?: string;
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<string> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/role/deleteRole';
 
-      const configs: IRequestConfig = getConfigs(
-        'delete',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('delete', 'application/json', url, options);
       configs.params = { id: params['id'] };
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn(
-        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
-      );
+      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
 
       axios(configs, resolve, reject);
     });
@@ -1864,18 +1478,11 @@ export class RoleService {
     return new Promise((resolve, reject) => {
       let url = basePath + '/role/getAllRoles';
 
-      const configs: IRequestConfig = getConfigs(
-        'get',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn(
-        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
-      );
+      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
 
       axios(configs, resolve, reject);
     });
@@ -1888,24 +1495,17 @@ export class RoleService {
       /** 唯一标识 */
       id?: string;
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<RoleDto> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/role/getRoleDetails';
 
-      const configs: IRequestConfig = getConfigs(
-        'get',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
       configs.params = { id: params['id'] };
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn(
-        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
-      );
+      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
 
       axios(configs, resolve, reject);
     });
@@ -1928,31 +1528,24 @@ export class RoleService {
       /** 是否不分页，默认分页 */
       unPage?: boolean;
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<PagedResultDto<RoleDto>> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/role/getRoles';
 
-      const configs: IRequestConfig = getConfigs(
-        'get',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
       configs.params = {
         filter: params['filter'],
         pageNumber: params['pageNumber'],
         pageSize: params['pageSize'],
         sorting: params['sorting'],
         sortingDirection: params['sortingDirection'],
-        unPage: params['unPage'],
+        unPage: params['unPage']
       };
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn(
-        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
-      );
+      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
 
       axios(configs, resolve, reject);
     });
@@ -1977,17 +1570,12 @@ export class RoleService {
       /** 过滤用户名 */
       userName?: string;
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<PagedResultDto<UserListDto>> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/role/getUserByRoleId';
 
-      const configs: IRequestConfig = getConfigs(
-        'get',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
       configs.params = {
         pageNumber: params['pageNumber'],
         pageSize: params['pageSize'],
@@ -1995,14 +1583,12 @@ export class RoleService {
         sorting: params['sorting'],
         sortingDirection: params['sortingDirection'],
         unPage: params['unPage'],
-        userName: params['userName'],
+        userName: params['userName']
       };
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn(
-        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
-      );
+      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
 
       axios(configs, resolve, reject);
     });
@@ -2015,17 +1601,12 @@ export class RoleService {
       /** roleForUserDto */
       roleForUserDto: UnbindRoleForUserDto;
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<any> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/role/unbindRoleForUsers';
 
-      const configs: IRequestConfig = getConfigs(
-        'post',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('post', 'application/json', url, options);
 
       let data = params['roleForUserDto'];
 
@@ -2042,17 +1623,12 @@ export class RoleService {
       /** input */
       input: UpdateRolePermissionDto;
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<string> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/role/updateRolePermission';
 
-      const configs: IRequestConfig = getConfigs(
-        'post',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('post', 'application/json', url, options);
 
       let data = params['input'];
 
@@ -2067,24 +1643,15 @@ export class SerialNoService {
   /**
    * 获取重置规则下拉数据源
    */
-  static getEnum(
-    options: IRequestOptions = {},
-  ): Promise<SelectListOutputDto[]> {
+  static getEnum(options: IRequestOptions = {}): Promise<SelectListOutputDto[]> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/serialNo/getEnum';
 
-      const configs: IRequestConfig = getConfigs(
-        'get',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn(
-        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
-      );
+      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
 
       axios(configs, resolve, reject);
     });
@@ -2107,31 +1674,24 @@ export class SerialNoService {
       /** 是否不分页，默认分页 */
       unPage?: boolean;
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<PagedResultDto<SerialNoDto>> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/serialNo/getPageData';
 
-      const configs: IRequestConfig = getConfigs(
-        'get',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
       configs.params = {
         billType: params['billType'],
         pageNumber: params['pageNumber'],
         pageSize: params['pageSize'],
         sorting: params['sorting'],
         sortingDirection: params['sortingDirection'],
-        unPage: params['unPage'],
+        unPage: params['unPage']
       };
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn(
-        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
-      );
+      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
 
       axios(configs, resolve, reject);
     });
@@ -2144,24 +1704,17 @@ export class SerialNoService {
       /** id */
       id: string;
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<string> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/serialNo/testNextNo/{id}';
       url = url.replace('{id}', params['id'] + '');
 
-      const configs: IRequestConfig = getConfigs(
-        'get',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn(
-        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
-      );
+      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
 
       axios(configs, resolve, reject);
     });
@@ -2176,27 +1729,17 @@ export class SerialNoService {
       /** serialLength */
       serialLength?: number;
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<string> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/serialNo/testNo';
 
-      const configs: IRequestConfig = getConfigs(
-        'get',
-        'application/json',
-        url,
-        options,
-      );
-      configs.params = {
-        noFormat: params['noFormat'],
-        serialLength: params['serialLength'],
-      };
+      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
+      configs.params = { noFormat: params['noFormat'], serialLength: params['serialLength'] };
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn(
-        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
-      );
+      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
 
       axios(configs, resolve, reject);
     });
@@ -2209,17 +1752,12 @@ export class SerialNoService {
       /** input */
       input: SerialNoEditInput;
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<any> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/serialNo/update';
 
-      const configs: IRequestConfig = getConfigs(
-        'post',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('post', 'application/json', url, options);
 
       let data = params['input'];
 
@@ -2238,18 +1776,11 @@ export class SysCodeTypeService {
     return new Promise((resolve, reject) => {
       let url = basePath + '/sysCodeType/list';
 
-      const configs: IRequestConfig = getConfigs(
-        'get',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn(
-        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
-      );
+      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
 
       axios(configs, resolve, reject);
     });
@@ -2265,17 +1796,12 @@ export class SysCodeValueService {
       /** sysCodeValueDto */
       sysCodeValueDto: SysCodeValueDto;
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<SysCodeValueDto> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/sysCodeValue/add';
 
-      const configs: IRequestConfig = getConfigs(
-        'post',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('post', 'application/json', url, options);
 
       let data = params['sysCodeValueDto'];
 
@@ -2292,23 +1818,16 @@ export class SysCodeValueService {
       /** ids */
       ids: any | null[];
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<any> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/sysCodeValue/delete';
 
-      const configs: IRequestConfig = getConfigs(
-        'delete',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('delete', 'application/json', url, options);
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn(
-        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
-      );
+      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
 
       axios(configs, resolve, reject);
     });
@@ -2321,17 +1840,12 @@ export class SysCodeValueService {
       /** inputDto */
       inputDto: SysCodeValuePagedReqDto;
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<PagedResultDto<SysCodeValueDto>> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/sysCodeValue/list';
 
-      const configs: IRequestConfig = getConfigs(
-        'post',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('post', 'application/json', url, options);
 
       let data = params['inputDto'];
 
@@ -2348,17 +1862,12 @@ export class SysCodeValueService {
       /** inputList */
       inputList: SysCodeValueDto[];
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<any> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/sysCodeValue/saveAll';
 
-      const configs: IRequestConfig = getConfigs(
-        'post',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('post', 'application/json', url, options);
 
       let data = params['inputList'];
 
@@ -2378,24 +1887,17 @@ export class SysMenuService {
       /** id */
       id?: string;
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<any> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/sysMenu/delete';
 
-      const configs: IRequestConfig = getConfigs(
-        'delete',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('delete', 'application/json', url, options);
       configs.params = { id: params['id'] };
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn(
-        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
-      );
+      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
 
       axios(configs, resolve, reject);
     });
@@ -2407,18 +1909,11 @@ export class SysMenuService {
     return new Promise((resolve, reject) => {
       let url = basePath + '/sysMenu/deleteAll';
 
-      const configs: IRequestConfig = getConfigs(
-        'delete',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('delete', 'application/json', url, options);
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn(
-        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
-      );
+      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
 
       axios(configs, resolve, reject);
     });
@@ -2431,24 +1926,17 @@ export class SysMenuService {
       /** id */
       id?: string;
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<any> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/sysMenu/deleteCurrent';
 
-      const configs: IRequestConfig = getConfigs(
-        'delete',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('delete', 'application/json', url, options);
       configs.params = { id: params['id'] };
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn(
-        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
-      );
+      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
 
       axios(configs, resolve, reject);
     });
@@ -2475,17 +1963,12 @@ export class SysMenuService {
       /** 是否不分页，默认分页 */
       unPage?: boolean;
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<PagedResultDto<GetSysMenuListDto>> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/sysMenu/list';
 
-      const configs: IRequestConfig = getConfigs(
-        'get',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
       configs.params = {
         pageNumber: params['pageNumber'],
         pageSize: params['pageSize'],
@@ -2494,14 +1977,12 @@ export class SysMenuService {
         sorting: params['sorting'],
         sortingDirection: params['sortingDirection'],
         title: params['title'],
-        unPage: params['unPage'],
+        unPage: params['unPage']
       };
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn(
-        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
-      );
+      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
 
       axios(configs, resolve, reject);
     });
@@ -2514,17 +1995,12 @@ export class SysMenuService {
       /** input */
       input: SysMenuInputDto[];
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<SysMenuInputDto[]> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/sysMenu/save';
 
-      const configs: IRequestConfig = getConfigs(
-        'post',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('post', 'application/json', url, options);
 
       let data = params['input'];
 
@@ -2544,17 +2020,12 @@ export class TenantService {
       /** input */
       input: CreateTenantInput;
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<any> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/tenant/createTenant';
 
-      const configs: IRequestConfig = getConfigs(
-        'post',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('post', 'application/json', url, options);
 
       let data = params['input'];
 
@@ -2571,23 +2042,16 @@ export class TenantService {
       /** entityDto */
       entityDto: EntityDto;
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<any> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/tenant/deleteTenant';
 
-      const configs: IRequestConfig = getConfigs(
-        'delete',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('delete', 'application/json', url, options);
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn(
-        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
-      );
+      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
 
       axios(configs, resolve, reject);
     });
@@ -2600,24 +2064,17 @@ export class TenantService {
       /** 唯一标识 */
       id?: string;
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<TenantEditDto> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/tenant/getTenantForEdit';
 
-      const configs: IRequestConfig = getConfigs(
-        'get',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
       configs.params = { id: params['id'] };
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn(
-        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
-      );
+      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
 
       axios(configs, resolve, reject);
     });
@@ -2650,17 +2107,12 @@ export class TenantService {
       /** 是否不分页，默认分页 */
       unPage?: boolean;
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<PagedResultDto<TenantListDto>> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/tenant/getTenants';
 
-      const configs: IRequestConfig = getConfigs(
-        'get',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
       configs.params = {
         creationDateEnd: params['creationDateEnd'],
         creationDateStart: params['creationDateStart'],
@@ -2672,14 +2124,12 @@ export class TenantService {
         sortingDirection: params['sortingDirection'],
         subscriptionEndDateEnd: params['subscriptionEndDateEnd'],
         subscriptionEndDateStart: params['subscriptionEndDateStart'],
-        unPage: params['unPage'],
+        unPage: params['unPage']
       };
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn(
-        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
-      );
+      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
 
       axios(configs, resolve, reject);
     });
@@ -2694,21 +2144,13 @@ export class TenantService {
       /** 租户ID */
       tenantId: string;
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<any> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/tenant/host/change-password';
 
-      const configs: IRequestConfig = getConfigs(
-        'post',
-        'application/json',
-        url,
-        options,
-      );
-      configs.params = {
-        newPwd: params['newPwd'],
-        tenantId: params['tenantId'],
-      };
+      const configs: IRequestConfig = getConfigs('post', 'application/json', url, options);
+      configs.params = { newPwd: params['newPwd'], tenantId: params['tenantId'] };
 
       let data = null;
 
@@ -2727,21 +2169,13 @@ export class TenantService {
       /** 租户用户ID */
       userId: string;
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<string> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/tenant/host/impersonation';
 
-      const configs: IRequestConfig = getConfigs(
-        'post',
-        'application/json',
-        url,
-        options,
-      );
-      configs.params = {
-        tenantId: params['tenantId'],
-        userId: params['userId'],
-      };
+      const configs: IRequestConfig = getConfigs('post', 'application/json', url, options);
+      configs.params = { tenantId: params['tenantId'], userId: params['userId'] };
 
       let data = null;
 
@@ -2757,18 +2191,11 @@ export class TenantService {
     return new Promise((resolve, reject) => {
       let url = basePath + '/tenant/host/impersonation-back';
 
-      const configs: IRequestConfig = getConfigs(
-        'get',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn(
-        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
-      );
+      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
 
       axios(configs, resolve, reject);
     });
@@ -2781,17 +2208,12 @@ export class TenantService {
       /** 租户用户ID */
       userId: string;
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<string> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/tenant/host/impersonation-other';
 
-      const configs: IRequestConfig = getConfigs(
-        'post',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('post', 'application/json', url, options);
       configs.params = { userId: params['userId'] };
 
       let data = null;
@@ -2809,24 +2231,17 @@ export class TenantService {
       /** 租户代码 */
       tenantName?: string;
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<IsTenantAvailableOutput> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/tenant/isTenantAvailable';
 
-      const configs: IRequestConfig = getConfigs(
-        'get',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
       configs.params = { tenantName: params['tenantName'] };
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn(
-        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
-      );
+      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
 
       axios(configs, resolve, reject);
     });
@@ -2839,17 +2254,12 @@ export class TenantService {
       /** editDto */
       editDto: TenantEditDto;
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<any> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/tenant/updateTenant';
 
-      const configs: IRequestConfig = getConfigs(
-        'put',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('put', 'application/json', url, options);
 
       let data = params['editDto'];
 
@@ -2878,32 +2288,25 @@ export class TenantService {
       /** 是否不分页，默认分页 */
       unPage?: boolean;
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<PagedResultDto<UserListDto>> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/tenant/{tenantId}/user/list';
       url = url.replace('{tenantId}', params['tenantId'] + '');
 
-      const configs: IRequestConfig = getConfigs(
-        'get',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
       configs.params = {
         filter: params['filter'],
         pageNumber: params['pageNumber'],
         pageSize: params['pageSize'],
         sorting: params['sorting'],
         sortingDirection: params['sortingDirection'],
-        unPage: params['unPage'],
+        unPage: params['unPage']
       };
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn(
-        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
-      );
+      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
 
       axios(configs, resolve, reject);
     });
@@ -2918,18 +2321,11 @@ export class ToDoService {
     return new Promise((resolve, reject) => {
       let url = basePath + '/todo/getTodoEnums';
 
-      const configs: IRequestConfig = getConfigs(
-        'get',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn(
-        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
-      );
+      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
 
       axios(configs, resolve, reject);
     });
@@ -2956,17 +2352,12 @@ export class ToDoService {
       /** 是否不分页，默认分页 */
       unPage?: boolean;
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<PagedResultDto<TodoInfoDto>> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/todo/getTodos';
 
-      const configs: IRequestConfig = getConfigs(
-        'get',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
       configs.params = {
         pageNumber: params['pageNumber'],
         pageSize: params['pageSize'],
@@ -2975,14 +2366,12 @@ export class ToDoService {
         title: params['title'],
         type: params['type'],
         typeName: params['typeName'],
-        unPage: params['unPage'],
+        unPage: params['unPage']
       };
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn(
-        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
-      );
+      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
 
       axios(configs, resolve, reject);
     });
@@ -2995,18 +2384,13 @@ export class ToDoService {
       /** id */
       id: string;
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<any> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/todo/ignore/{id}';
       url = url.replace('{id}', params['id'] + '');
 
-      const configs: IRequestConfig = getConfigs(
-        'post',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('post', 'application/json', url, options);
 
       let data = null;
 
@@ -3026,17 +2410,12 @@ export class TokenAuthService {
       /** input */
       input: LoginRequest;
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<string> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/token-auth/authenticate';
 
-      const configs: IRequestConfig = getConfigs(
-        'post',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('post', 'application/json', url, options);
 
       let data = params['input'];
 
@@ -3052,12 +2431,7 @@ export class TokenAuthService {
     return new Promise((resolve, reject) => {
       let url = basePath + '/token-auth/logout';
 
-      const configs: IRequestConfig = getConfigs(
-        'post',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('post', 'application/json', url, options);
 
       let data = null;
 
@@ -3073,18 +2447,11 @@ export class TokenAuthService {
     return new Promise((resolve, reject) => {
       let url = basePath + '/token-auth/refresh';
 
-      const configs: IRequestConfig = getConfigs(
-        'get',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn(
-        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
-      );
+      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
 
       axios(configs, resolve, reject);
     });
@@ -3096,18 +2463,11 @@ export class TokenAuthService {
     return new Promise((resolve, reject) => {
       let url = basePath + '/token-auth/scan-code/key';
 
-      const configs: IRequestConfig = getConfigs(
-        'get',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn(
-        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
-      );
+      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
 
       axios(configs, resolve, reject);
     });
@@ -3120,24 +2480,17 @@ export class TokenAuthService {
       /** key */
       key: string;
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<any> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/token-auth/scan-code/login/{key}';
       url = url.replace('{key}', params['key'] + '');
 
-      const configs: IRequestConfig = getConfigs(
-        'get',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn(
-        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
-      );
+      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
 
       axios(configs, resolve, reject);
     });
@@ -3150,24 +2503,17 @@ export class TokenAuthService {
       /** key */
       key: string;
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<BaseApiResult_string> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/token-auth/scan-code/token/{key}';
       url = url.replace('{key}', params['key'] + '');
 
-      const configs: IRequestConfig = getConfigs(
-        'get',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn(
-        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
-      );
+      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
 
       axios(configs, resolve, reject);
     });
@@ -3183,17 +2529,12 @@ export class UserService {
       /** cpi */
       cpi: ChangePasswordInput;
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<any> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/user/changePassword';
 
-      const configs: IRequestConfig = getConfigs(
-        'post',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('post', 'application/json', url, options);
 
       let data = params['cpi'];
 
@@ -3210,17 +2551,12 @@ export class UserService {
       /** createOrUpdateUserInput */
       createOrUpdateUserInput: CreateOrUpdateUserInput;
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<any> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/user/createOrUpdateUser';
 
-      const configs: IRequestConfig = getConfigs(
-        'post',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('post', 'application/json', url, options);
 
       let data = params['createOrUpdateUserInput'];
 
@@ -3237,17 +2573,12 @@ export class UserService {
       /** createOrUpdateUserInput */
       createOrUpdateUserInput: CreateOrUpdateUserInput;
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<any> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/user/createOrUpdateUserExistByUserName';
 
-      const configs: IRequestConfig = getConfigs(
-        'post',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('post', 'application/json', url, options);
 
       let data = params['createOrUpdateUserInput'];
 
@@ -3264,23 +2595,16 @@ export class UserService {
       /** entityDto */
       entityDto: EntityDto;
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<any> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/user/deleteUser';
 
-      const configs: IRequestConfig = getConfigs(
-        'delete',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('delete', 'application/json', url, options);
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn(
-        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
-      );
+      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
 
       axios(configs, resolve, reject);
     });
@@ -3293,23 +2617,16 @@ export class UserService {
       /** entityDtos */
       entityDtos: EntityDto[];
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<any> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/user/deleteUsers';
 
-      const configs: IRequestConfig = getConfigs(
-        'delete',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('delete', 'application/json', url, options);
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn(
-        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
-      );
+      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
 
       axios(configs, resolve, reject);
     });
@@ -3321,18 +2638,11 @@ export class UserService {
     return new Promise((resolve, reject) => {
       let url = basePath + '/user/getAllUsers';
 
-      const configs: IRequestConfig = getConfigs(
-        'get',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn(
-        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
-      );
+      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
 
       axios(configs, resolve, reject);
     });
@@ -3344,18 +2654,11 @@ export class UserService {
     return new Promise((resolve, reject) => {
       let url = basePath + '/user/getCurrentRoles';
 
-      const configs: IRequestConfig = getConfigs(
-        'get',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn(
-        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
-      );
+      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
 
       axios(configs, resolve, reject);
     });
@@ -3384,17 +2687,12 @@ export class UserService {
       /** 是否不分页，默认分页 */
       unPage?: boolean;
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<PagedResultDto<UserListDto>> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/user/getOrgaUsers';
 
-      const configs: IRequestConfig = getConfigs(
-        'get',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
       configs.params = {
         filter: params['filter'],
         orgaId: params['orgaId'],
@@ -3404,14 +2702,12 @@ export class UserService {
         roleName: params['roleName'],
         sorting: params['sorting'],
         sortingDirection: params['sortingDirection'],
-        unPage: params['unPage'],
+        unPage: params['unPage']
       };
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn(
-        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
-      );
+      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
 
       axios(configs, resolve, reject);
     });
@@ -3419,24 +2715,15 @@ export class UserService {
   /**
    * 获取当前用户详情
    */
-  static getUserInfo(
-    options: IRequestOptions = {},
-  ): Promise<GetUserForEditOutput> {
+  static getUserInfo(options: IRequestOptions = {}): Promise<GetUserForEditOutput> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/user/getUserInfo';
 
-      const configs: IRequestConfig = getConfigs(
-        'get',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn(
-        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
-      );
+      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
 
       axios(configs, resolve, reject);
     });
@@ -3469,17 +2756,12 @@ export class UserService {
       /** 是否不分页，默认分页 */
       unPage?: boolean;
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<PagedResultDto<UserListDto>> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/user/getUsers';
 
-      const configs: IRequestConfig = getConfigs(
-        'get',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
       configs.params = {
         filter: params['filter'],
         onlyLockedUsers: params['onlyLockedUsers'],
@@ -3491,14 +2773,12 @@ export class UserService {
         roleName: params['roleName'],
         sorting: params['sorting'],
         sortingDirection: params['sortingDirection'],
-        unPage: params['unPage'],
+        unPage: params['unPage']
       };
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn(
-        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
-      );
+      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
 
       axios(configs, resolve, reject);
     });
@@ -3523,17 +2803,12 @@ export class UserService {
       /** 是否不分页，默认分页 */
       unPage?: boolean;
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<PagedResultDto<UserListDto>> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/user/getUsersByRoleCodes';
 
-      const configs: IRequestConfig = getConfigs(
-        'get',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
       configs.params = {
         allRoles: params['allRoles'],
         pageNumber: params['pageNumber'],
@@ -3541,14 +2816,12 @@ export class UserService {
         roleCodeList: params['roleCodeList'],
         sorting: params['sorting'],
         sortingDirection: params['sortingDirection'],
-        unPage: params['unPage'],
+        unPage: params['unPage']
       };
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn(
-        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
-      );
+      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
 
       axios(configs, resolve, reject);
     });
@@ -3571,31 +2844,24 @@ export class UserService {
       /** 是否不分页，默认分页 */
       unPage?: boolean;
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<PagedResultDto<UserForSelectDto>> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/user/getUsersByRoleNames';
 
-      const configs: IRequestConfig = getConfigs(
-        'get',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
       configs.params = {
         pageNumber: params['pageNumber'],
         pageSize: params['pageSize'],
         roleNames: params['roleNames'],
         sorting: params['sorting'],
         sortingDirection: params['sortingDirection'],
-        unPage: params['unPage'],
+        unPage: params['unPage']
       };
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn(
-        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
-      );
+      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
 
       axios(configs, resolve, reject);
     });
@@ -3608,24 +2874,17 @@ export class UserService {
       /** 唯一标识 */
       id?: string;
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<GetUserForEditOutput> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/user/getUsersForEdit';
 
-      const configs: IRequestConfig = getConfigs(
-        'get',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
       configs.params = { id: params['id'] };
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn(
-        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
-      );
+      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
 
       axios(configs, resolve, reject);
     });
@@ -3642,28 +2901,17 @@ export class UserService {
       /** 账户名 */
       userName?: string;
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<UserListForLoginDto[]> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/user/getUsersForLogin';
 
-      const configs: IRequestConfig = getConfigs(
-        'get',
-        'application/json',
-        url,
-        options,
-      );
-      configs.params = {
-        name: params['name'],
-        surName: params['surName'],
-        userName: params['userName'],
-      };
+      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
+      configs.params = { name: params['name'], surName: params['surName'], userName: params['userName'] };
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn(
-        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
-      );
+      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
 
       axios(configs, resolve, reject);
     });
@@ -3675,18 +2923,11 @@ export class UserService {
     return new Promise((resolve, reject) => {
       let url = basePath + '/user/getUsersToExcel';
 
-      const configs: IRequestConfig = getConfigs(
-        'get',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn(
-        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
-      );
+      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
 
       axios(configs, resolve, reject);
     });
@@ -3699,17 +2940,12 @@ export class UserService {
       /** input */
       input: ChangePwdInput;
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<any> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/user/list/change-pwd';
 
-      const configs: IRequestConfig = getConfigs(
-        'post',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('post', 'application/json', url, options);
 
       let data = params['input'];
 
@@ -3728,17 +2964,12 @@ export class UserService {
       /** signature或者profile */
       type: string;
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<any> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/user/saveMyselfPicture';
 
-      const configs: IRequestConfig = getConfigs(
-        'post',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('post', 'application/json', url, options);
       configs.params = { minioId: params['minioId'], type: params['type'] };
 
       let data = null;
@@ -3760,22 +2991,13 @@ export class UserService {
       /** userId */
       userId: string;
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<any> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/user/saveUserPicture';
 
-      const configs: IRequestConfig = getConfigs(
-        'post',
-        'application/json',
-        url,
-        options,
-      );
-      configs.params = {
-        minioId: params['minioId'],
-        type: params['type'],
-        userId: params['userId'],
-      };
+      const configs: IRequestConfig = getConfigs('post', 'application/json', url, options);
+      configs.params = { minioId: params['minioId'], type: params['type'], userId: params['userId'] };
 
       let data = null;
 
@@ -3792,17 +3014,12 @@ export class UserService {
       /** setDefaultStationInput */
       setDefaultStationInput: SetDefaultStationInput;
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<any> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/user/setDefaultStation';
 
-      const configs: IRequestConfig = getConfigs(
-        'post',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('post', 'application/json', url, options);
 
       let data = params['setDefaultStationInput'];
 
@@ -3819,17 +3036,12 @@ export class UserService {
       /** entityDto */
       entityDto: EntityDto;
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<any> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/user/unlockUser';
 
-      const configs: IRequestConfig = getConfigs(
-        'post',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('post', 'application/json', url, options);
 
       let data = params['entityDto'];
 
@@ -3846,17 +3058,12 @@ export class UserService {
       /** input */
       input: UpdateUserInfo;
     } = {} as any,
-    options: IRequestOptions = {},
+    options: IRequestOptions = {}
   ): Promise<any> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/user/updateUserInfoBySelf';
 
-      const configs: IRequestConfig = getConfigs(
-        'post',
-        'application/json',
-        url,
-        options,
-      );
+      const configs: IRequestConfig = getConfigs('post', 'application/json', url, options);
 
       let data = params['input'];
 
@@ -5271,47 +4478,47 @@ export interface Validator {
 }
 export enum EnumGetOrganizationUnitUsersForSelectInputSortingDirection {
   'ASC' = 'ASC',
-  'DESC' = 'DESC',
+  'DESC' = 'DESC'
 }
 export enum EnumGetOrganizationUnitUsersInputSortingDirection {
   'ASC' = 'ASC',
-  'DESC' = 'DESC',
+  'DESC' = 'DESC'
 }
 export enum EnumGetSysMenuListDtoType {
   'System' = 'System',
-  'Custom' = 'Custom',
+  'Custom' = 'Custom'
 }
 export enum EnumIsTenantAvailableOutputState {
   'Available' = 'Available',
   'InActive' = 'InActive',
-  'NotFound' = 'NotFound',
+  'NotFound' = 'NotFound'
 }
 export enum EnumLoginLogDtoAuthType {
   'UsernamePassword' = 'UsernamePassword',
-  'MobileCaptcha' = 'MobileCaptcha',
+  'MobileCaptcha' = 'MobileCaptcha'
 }
 export enum EnumSerialNoDtoResetType {
   'Day' = 'Day',
   'Month' = 'Month',
   'Year' = 'Year',
-  'Never' = 'Never',
+  'Never' = 'Never'
 }
 export enum EnumSerialNoEditInputResetType {
   'Day' = 'Day',
   'Month' = 'Month',
   'Year' = 'Year',
-  'Never' = 'Never',
+  'Never' = 'Never'
 }
 export enum EnumSysCodeValuePagedReqDtoListMode {
   'ALL' = 'ALL',
   'ENABLED' = 'ENABLED',
-  'DISABLED' = 'DISABLED',
+  'DISABLED' = 'DISABLED'
 }
 export enum EnumSysCodeValuePagedReqDtoSortingDirection {
   'ASC' = 'ASC',
-  'DESC' = 'DESC',
+  'DESC' = 'DESC'
 }
 export enum EnumSysMenuInputDtoType {
   'System' = 'System',
-  'Custom' = 'Custom',
+  'Custom' = 'Custom'
 }
