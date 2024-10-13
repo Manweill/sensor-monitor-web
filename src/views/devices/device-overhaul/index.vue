@@ -77,7 +77,13 @@
           {{
             dayjs(record.lastCalibrationTime)
               .add(record.calibrationPeriod, 'day')
-              .format('YYYY-MM-DD HH:mm:ss')
+              .format('YYYY-MM-DD HH:mm:ss') +
+            `（剩余${durationWithTime(
+              dayjs(record.lastCalibrationTime).add(
+                record.calibrationPeriod,
+                'day',
+              ),
+            )}）`
           }}
         </template>
         <template #calibrationPeriodStatus="{ record }">
@@ -192,6 +198,7 @@
   import { useRouter } from 'vue-router';
   import { ValidatedError } from '@arco-design/web-vue/es/form/interface';
   import dayjs from 'dayjs';
+  import { durationWithTime } from '@/utils/dayjs-utils';
 
   const router = useRouter();
 

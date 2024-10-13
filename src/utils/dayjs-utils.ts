@@ -37,3 +37,10 @@ export function durationWithNow(date?: Date) {
   const duration = dayjs().diff(dayjs(date), 'seconds');
   return durationFormat(duration);
 }
+
+/** 持续时间 */
+export function durationWithTime(date?: Date) {
+  if (!date) return undefined;
+  const duration = dayjs(date).diff(new Date(), 'seconds');
+  return durationFormat(duration);
+}
