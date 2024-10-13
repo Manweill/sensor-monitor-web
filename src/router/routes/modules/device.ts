@@ -85,6 +85,16 @@ const DASHBOARD: AppRouteRecordRaw = {
     //   },
     // },
     {
+      path: 'device-overhaul',
+      name: 'DeviceOverhaul',
+      component: () => import('@/views/devices/device-overhaul/index.vue'),
+      meta: {
+        locale: '待检验设备报表',
+        requiresAuth: true,
+        permissions: ['Pages.Device.List'],
+      },
+    },
+    {
       path: 'device-alert-message',
       name: 'AlertMessage',
       component: () => import('@/views/devices/alert-message/index.vue'),
