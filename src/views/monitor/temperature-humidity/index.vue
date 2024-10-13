@@ -59,7 +59,10 @@
           :key="sensor.id"
           :span="{ xs: 12, sm: 12, md: 12, lg: 12, xl: 6, xxl: 6 }"
         >
-          <a-card :bordered="false" class="sensor-card">
+          <a-card
+            :bordered="false"
+            :class="['sensor-card', { offline: !sensor.online }]"
+          >
             <template #title>
               <a-space>
                 <a-tooltip
@@ -106,7 +109,8 @@
                           getFieldDescription(sensor, 'temperature')
                         }}</span>
                       </div>
-                      <span class="value"
+                      <span
+                        :class="`value-${deviceTemperatureAlertStatus(sensor)}`"
                         >{{ getSensorValue(sensor, 'temperature') }}°C</span
                       >
                     </div>
@@ -125,7 +129,8 @@
                           getFieldDescription(sensor, 'humidity')
                         }}</span>
                       </div>
-                      <span class="value"
+                      <span
+                        :class="`value-${deviceHumidityAlertStatus(sensor)}`"
                         >{{ getSensorValue(sensor, 'humidity') }}%</span
                       >
                     </div>
@@ -141,11 +146,35 @@
                         }}天</span
                       >
                       <span>
+                        生产厂家:
+                        {{ sensor.producerConfigInfo?.producer || '--' }}</span
+                      >
+                      <span>
+                        产品型号:
+                        {{ sensor.producerConfigInfo?.modelNumber || '--' }}
+                      </span>
+                      <span>
                         设备编码:
                         {{
                           sensor.producerConfigInfo?.serialNumber || '--'
                         }}</span
                       >
+                      <span>
+                        投运日期:
+                        {{
+                          dayjs(sensor.producerConfigInfo?.serviceTime).format(
+                            'YYYY-MM-DD',
+                          ) || '--'
+                        }}
+                      </span>
+                      <span>
+                        上次校准日期:
+                        {{
+                          dayjs(
+                            sensor.producerConfigInfo?.lastCalibrationTime,
+                          ).format('YYYY-MM-DD') || '--'
+                        }}
+                      </span>
                     </a-space>
                   </template>
                   <div class="device-des">
@@ -177,6 +206,7 @@
 
 <script lang="ts" setup>
   import { ref, onMounted, onUnmounted } from 'vue';
+  import dayjs from 'dayjs';
   import { DeviceAreaService, DeviceListDto } from '@/services/sensor-core';
   import useLoading from '@/hooks/loading';
   import { convertToTree } from '@/utils/convert';
@@ -330,6 +360,52 @@
     return calibrationPeriod - daysDifference;
   };
 
+  // 获取温度报警状态
+  const deviceTemperatureAlertStatus = (sensor: DeviceListDto) => {
+    const temperature = Number(
+      sensor.latestMetricDataList?.find(
+        (data) => data.deviceFieldName === 'temperature',
+      )?.value,
+    );
+
+    if (
+      !Number.isNaN(temperature) &&
+      sensor?.producerConfigInfo?.temperatureUpperValue &&
+      sensor?.producerConfigInfo?.temperatureLowerValue
+    ) {
+      if (
+        temperature >
+          (sensor?.producerConfigInfo?.temperatureUpperValue || 0) ||
+        temperature < (sensor?.producerConfigInfo?.temperatureLowerValue || 0)
+      ) {
+        return 'warning';
+      }
+    }
+    return 'normal';
+  };
+
+  // 获取湿度报警状态
+  const deviceHumidityAlertStatus = (sensor: DeviceListDto) => {
+    const humidity = Number(
+      sensor.latestMetricDataList?.find(
+        (data) => data.deviceFieldName === 'humidity',
+      )?.value,
+    );
+    if (
+      !Number.isNaN(humidity) &&
+      sensor?.producerConfigInfo?.humidityUpperValue &&
+      sensor?.producerConfigInfo?.humidityLowerValue
+    ) {
+      if (
+        humidity > (sensor?.producerConfigInfo?.humidityUpperValue || 0) ||
+        humidity < (sensor?.producerConfigInfo?.humidityLowerValue || 0)
+      ) {
+        return 'warning';
+      }
+    }
+    return 'normal';
+  };
+
   const isReportVisible = ref(false);
   const deviceEui = ref('');
 
@@ -370,6 +446,9 @@
       border-color: transparent;
     }
   }
+  .offline {
+    background: rgb(var(--gray-6));
+  }
 
   .sensor-info {
     flex: 1;
@@ -409,14 +488,20 @@
   }
 
   .temperature {
-    .value {
+    .value-normal {
       color: #ffd700; // 金色，与蓝色背景形成对比
+    }
+    .value-warning {
+      color: #ff4d4f; // 红色，表示报警
     }
   }
 
   .humidity {
-    .value {
+    .value-normal {
       color: #00ffff; // 青色，与蓝色背景形成对比
+    }
+    .value-warning {
+      color: #ff4d4f; // 红色，表示报警
     }
   }
 

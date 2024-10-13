@@ -287,8 +287,8 @@
         startTime: dayjs(date)
           .startOf(config.value.searchDateUnit)
           .add(-1, 'milliseconds')
-          .toISOString(),
-        endTime: dayjs(date).endOf(config.value.searchDateUnit).toISOString(),
+          .toDate(),
+        endTime: dayjs(date).endOf(config.value.searchDateUnit).toDate(),
       });
 
       metricsData.value = metrics as Metrics;
@@ -433,6 +433,7 @@
               axisLine: {
                 show: true,
               },
+              scale: true,
             },
           ],
           series: [
