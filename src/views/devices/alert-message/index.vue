@@ -115,9 +115,13 @@
         </template>
 
         <template #confirm="{ record }">
-          <span v-if="record.resolved" class="circle pass"></span>
-          <span v-else class="circle"></span>
-          {{ record.confirm ? '已确认' : '未确认' }}
+          <span v-if="record.resolved" class="pass"
+            ><span class="circle pass"></span>已确认</span
+          >
+          <span v-else class="danger"
+            ><span class="circle danger"></span>未确认</span
+          >
+          <!--          {{ record.confirm ? '已确认' : '未确认' }}-->
         </template>
         <template #confirmTime="{ record }">
           {{
