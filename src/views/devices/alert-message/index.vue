@@ -37,7 +37,7 @@
               </a-col>
               <a-col :span="12">
                 <a-form-item field="name" label="是否已消除">
-                  <a-select v-model="searchModel.resolved">
+                  <a-select v-model="searchModel.confirm" allow-clear>
                     <a-option :value="true">已确认</a-option>
                     <a-option :value="false">未确认</a-option>
                   </a-select>
@@ -115,7 +115,7 @@
         </template>
 
         <template #confirm="{ record }">
-          <span v-if="record.resolved" class="pass"
+          <span v-if="record.confirm" class="pass"
             ><span class="circle pass"></span>已确认</span
           >
           <span v-else class="danger"
@@ -227,9 +227,8 @@
   // 搜索
   const generateSearchModel = () => {
     return {
-      searchTime: [Date.now(), Date.now()],
-      resolved: false,
-      confirm: false,
+      searchTime: [],
+      confirm: undefined,
       deviceEui: '',
     };
   };
@@ -299,8 +298,8 @@
         await AlertMessageService.getDeviceAlertTimeInfoList({
           ...pagination,
           ...searchModel.value,
-          startTime: dayjs(startTime).startOf('d').toDate(),
-          endTime: dayjs(endTime).endOf('d').toDate(),
+          startTime: startTime && dayjs(startTime).startOf('d').toDate(),
+          endTime: endTime && dayjs(endTime).endOf('d').toDate(),
         });
       tableData.value = items as AlertMessageListDto[];
       pagination.total = totalCount as unknown as number;

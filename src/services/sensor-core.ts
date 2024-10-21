@@ -2,7 +2,12 @@
 // @ts-nocheck
 /* eslint-disable */
 
-import { IRequestOptions, IRequestConfig, getConfigs, axios } from './serviceOptions';
+import {
+  IRequestOptions,
+  IRequestConfig,
+  getConfigs,
+  axios,
+} from './serviceOptions';
 export const basePath = '/api/core';
 
 export interface IList<T> extends Array<T> {}
@@ -42,17 +47,24 @@ export class AlertMessageService {
       /** id */
       id: string;
     } = {} as any,
-    options: IRequestOptions = {}
+    options: IRequestOptions = {},
   ): Promise<AlertMessageDetailOutputDto> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/alert-message/get-alert-message-detail/{id}';
       url = url.replace('{id}', params['id'] + '');
 
-      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
+      const configs: IRequestConfig = getConfigs(
+        'get',
+        'application/json',
+        url,
+        options,
+      );
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
+      console.warn(
+        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
+      );
 
       axios(configs, resolve, reject);
     });
@@ -83,12 +95,17 @@ export class AlertMessageService {
       /** 是否不分页，默认分页 */
       unPage?: boolean;
     } = {} as any,
-    options: IRequestOptions = {}
+    options: IRequestOptions = {},
   ): Promise<PagedResultDto<AlertMessageListDto>> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/alert-message/get-alert-messages';
 
-      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
+      const configs: IRequestConfig = getConfigs(
+        'get',
+        'application/json',
+        url,
+        options,
+      );
       configs.params = {
         deviceEui: params['deviceEui'],
         deviceField: params['deviceField'],
@@ -99,12 +116,14 @@ export class AlertMessageService {
         sorting: params['sorting'],
         sortingDirection: params['sortingDirection'],
         startTime: params['startTime'],
-        unPage: params['unPage']
+        unPage: params['unPage'],
       };
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
+      console.warn(
+        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
+      );
 
       axios(configs, resolve, reject);
     });
@@ -117,7 +136,11 @@ export class AlertMessageService {
       /**  */
       alertFieldName?: string;
       /**  */
+      confirm?: boolean;
+      /**  */
       deviceEui?: string;
+      /**  */
+      endTime?: Date;
       /** 页码 */
       pageNumber?: number;
       /** 每页显示的记录数 */
@@ -126,28 +149,40 @@ export class AlertMessageService {
       sorting?: string;
       /** 排序的方式 */
       sortingDirection?: string;
+      /**  */
+      startTime?: Date;
       /** 是否不分页，默认分页 */
       unPage?: boolean;
     } = {} as any,
-    options: IRequestOptions = {}
+    options: IRequestOptions = {},
   ): Promise<PagedResultDto<DeviceAlertTimeInfoListDto>> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/alert-message/get-device-alert-time-info-list';
 
-      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
+      const configs: IRequestConfig = getConfigs(
+        'get',
+        'application/json',
+        url,
+        options,
+      );
       configs.params = {
         alertFieldName: params['alertFieldName'],
+        confirm: params['confirm'],
         deviceEUI: params['deviceEui'],
+        endTime: params['endTime'],
         pageNumber: params['pageNumber'],
         pageSize: params['pageSize'],
         sorting: params['sorting'],
         sortingDirection: params['sortingDirection'],
-        unPage: params['unPage']
+        startTime: params['startTime'],
+        unPage: params['unPage'],
       };
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
+      console.warn(
+        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
+      );
 
       axios(configs, resolve, reject);
     });
@@ -160,17 +195,29 @@ export class AlertMessageService {
       /** deviceAlertTimeInfoId */
       deviceAlertTimeInfoId: string;
     } = {} as any,
-    options: IRequestOptions = {}
+    options: IRequestOptions = {},
   ): Promise<DeviceAlertTimeInfoListDto> {
     return new Promise((resolve, reject) => {
-      let url = basePath + '/alert-message/get-device-alert-time-info/{deviceAlertTimeInfoId}';
-      url = url.replace('{deviceAlertTimeInfoId}', params['deviceAlertTimeInfoId'] + '');
+      let url =
+        basePath +
+        '/alert-message/get-device-alert-time-info/{deviceAlertTimeInfoId}';
+      url = url.replace(
+        '{deviceAlertTimeInfoId}',
+        params['deviceAlertTimeInfoId'] + '',
+      );
 
-      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
+      const configs: IRequestConfig = getConfigs(
+        'get',
+        'application/json',
+        url,
+        options,
+      );
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
+      console.warn(
+        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
+      );
 
       axios(configs, resolve, reject);
     });
@@ -185,17 +232,27 @@ export class AlertMessageService {
       /** 告警设备的物联ID */
       deviceEui?: string;
     } = {} as any,
-    options: IRequestOptions = {}
+    options: IRequestOptions = {},
   ): Promise<any> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/alert-message/remove-alert-messages';
 
-      const configs: IRequestConfig = getConfigs('delete', 'application/json', url, options);
-      configs.params = { alertMessageIds: params['alertMessageIds'], deviceEui: params['deviceEui'] };
+      const configs: IRequestConfig = getConfigs(
+        'delete',
+        'application/json',
+        url,
+        options,
+      );
+      configs.params = {
+        alertMessageIds: params['alertMessageIds'],
+        deviceEui: params['deviceEui'],
+      };
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
+      console.warn(
+        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
+      );
 
       axios(configs, resolve, reject);
     });
@@ -208,17 +265,24 @@ export class AlertMessageService {
       /** id */
       id?: string;
     } = {} as any,
-    options: IRequestOptions = {}
+    options: IRequestOptions = {},
   ): Promise<any> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/alert-message/resolve-alert-message';
 
-      const configs: IRequestConfig = getConfigs('delete', 'application/json', url, options);
+      const configs: IRequestConfig = getConfigs(
+        'delete',
+        'application/json',
+        url,
+        options,
+      );
       configs.params = { id: params['id'] };
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
+      console.warn(
+        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
+      );
 
       axios(configs, resolve, reject);
     });
@@ -231,12 +295,17 @@ export class AlertMessageService {
       /** input */
       input: SaveAlertMessageInputDto;
     } = {} as any,
-    options: IRequestOptions = {}
+    options: IRequestOptions = {},
   ): Promise<string> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/alert-message/save-alert-message';
 
-      const configs: IRequestConfig = getConfigs('post', 'application/json', url, options);
+      const configs: IRequestConfig = getConfigs(
+        'post',
+        'application/json',
+        url,
+        options,
+      );
 
       let data = params['input'];
 
@@ -256,17 +325,25 @@ export class ChirpStackDeviceService {
       /** devEui */
       devEui: string;
     } = {} as any,
-    options: IRequestOptions = {}
+    options: IRequestOptions = {},
   ): Promise<any> {
     return new Promise((resolve, reject) => {
-      let url = basePath + '/chirpStack/device/FlushDownLinkDeviceQueue/{devEui}';
+      let url =
+        basePath + '/chirpStack/device/FlushDownLinkDeviceQueue/{devEui}';
       url = url.replace('{devEui}', params['devEui'] + '');
 
-      const configs: IRequestConfig = getConfigs('delete', 'application/json', url, options);
+      const configs: IRequestConfig = getConfigs(
+        'delete',
+        'application/json',
+        url,
+        options,
+      );
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
+      console.warn(
+        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
+      );
 
       axios(configs, resolve, reject);
     });
@@ -281,17 +358,27 @@ export class ChirpStackDeviceService {
       /** 设备的物联ID，不能为空 */
       devEui?: string;
     } = {} as any,
-    options: IRequestOptions = {}
+    options: IRequestOptions = {},
   ): Promise<GetDownLinkDeviceQueueResponseDto> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/chirpStack/device/GetDownLinkDeviceQueue';
 
-      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
-      configs.params = { countOnly: params['countOnly'], devEui: params['devEui'] };
+      const configs: IRequestConfig = getConfigs(
+        'get',
+        'application/json',
+        url,
+        options,
+      );
+      configs.params = {
+        countOnly: params['countOnly'],
+        devEui: params['devEui'],
+      };
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
+      console.warn(
+        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
+      );
 
       axios(configs, resolve, reject);
     });
@@ -304,12 +391,17 @@ export class ChirpStackDeviceService {
       /** inputDto */
       inputDto: CreateChirpStackDeviceInputDto;
     } = {} as any,
-    options: IRequestOptions = {}
+    options: IRequestOptions = {},
   ): Promise<any> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/chirpStack/device/createChirpStackDevice';
 
-      const configs: IRequestConfig = getConfigs('post', 'application/json', url, options);
+      const configs: IRequestConfig = getConfigs(
+        'post',
+        'application/json',
+        url,
+        options,
+      );
 
       let data = params['inputDto'];
 
@@ -328,12 +420,17 @@ export class ChirpStackDeviceService {
       /** input */
       input: CreateAndUpdateDeviceOtaaKeyInputDto;
     } = {} as any,
-    options: IRequestOptions = {}
+    options: IRequestOptions = {},
   ): Promise<any> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/chirpStack/device/createDeviceOTAAKey';
 
-      const configs: IRequestConfig = getConfigs('post', 'application/json', url, options);
+      const configs: IRequestConfig = getConfigs(
+        'post',
+        'application/json',
+        url,
+        options,
+      );
       configs.params = { devEui: params['devEui'] };
 
       let data = params['input'];
@@ -353,12 +450,17 @@ export class ChirpStackDeviceService {
       /** input */
       input: CreateDeviceQueueItemInputDto;
     } = {} as any,
-    options: IRequestOptions = {}
+    options: IRequestOptions = {},
   ): Promise<string> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/chirpStack/device/createDeviceQueueItem';
 
-      const configs: IRequestConfig = getConfigs('post', 'application/json', url, options);
+      const configs: IRequestConfig = getConfigs(
+        'post',
+        'application/json',
+        url,
+        options,
+      );
       configs.params = { devEui: params['devEui'] };
 
       let data = params['input'];
@@ -376,17 +478,24 @@ export class ChirpStackDeviceService {
       /** devEui */
       devEui: string;
     } = {} as any,
-    options: IRequestOptions = {}
+    options: IRequestOptions = {},
   ): Promise<any> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/chirpStack/device/deleteDeviceOTAAKey/{devEui}';
       url = url.replace('{devEui}', params['devEui'] + '');
 
-      const configs: IRequestConfig = getConfigs('delete', 'application/json', url, options);
+      const configs: IRequestConfig = getConfigs(
+        'delete',
+        'application/json',
+        url,
+        options,
+      );
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
+      console.warn(
+        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
+      );
 
       axios(configs, resolve, reject);
     });
@@ -399,17 +508,25 @@ export class ChirpStackDeviceService {
       /** deviceEui */
       deviceEui: string;
     } = {} as any,
-    options: IRequestOptions = {}
+    options: IRequestOptions = {},
   ): Promise<ChirpStackDeviceInfoDto> {
     return new Promise((resolve, reject) => {
-      let url = basePath + '/chirpStack/device/getChirpStackDeviceInfo/{deviceEui}';
+      let url =
+        basePath + '/chirpStack/device/getChirpStackDeviceInfo/{deviceEui}';
       url = url.replace('{deviceEui}', params['deviceEui'] + '');
 
-      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
+      const configs: IRequestConfig = getConfigs(
+        'get',
+        'application/json',
+        url,
+        options,
+      );
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
+      console.warn(
+        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
+      );
 
       axios(configs, resolve, reject);
     });
@@ -428,22 +545,29 @@ export class ChirpStackDeviceService {
       /** 开始时间 */
       startTime?: string;
     } = {} as any,
-    options: IRequestOptions = {}
+    options: IRequestOptions = {},
   ): Promise<DeviceLinkMetricsResponseDto> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/chirpStack/device/getDeviceLinkMetrics';
 
-      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
+      const configs: IRequestConfig = getConfigs(
+        'get',
+        'application/json',
+        url,
+        options,
+      );
       configs.params = {
         aggregation: params['aggregation'],
         devEui: params['devEui'],
         endTime: params['endTime'],
-        startTime: params['startTime']
+        startTime: params['startTime'],
       };
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
+      console.warn(
+        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
+      );
 
       axios(configs, resolve, reject);
     });
@@ -462,22 +586,29 @@ export class ChirpStackDeviceService {
       /** 开始时间 */
       startTime?: string;
     } = {} as any,
-    options: IRequestOptions = {}
+    options: IRequestOptions = {},
   ): Promise<DeviceMetricResponseDto> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/chirpStack/device/getDeviceMetrics';
 
-      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
+      const configs: IRequestConfig = getConfigs(
+        'get',
+        'application/json',
+        url,
+        options,
+      );
       configs.params = {
         aggregation: params['aggregation'],
         devEui: params['devEui'],
         endTime: params['endTime'],
-        startTime: params['startTime']
+        startTime: params['startTime'],
       };
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
+      console.warn(
+        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
+      );
 
       axios(configs, resolve, reject);
     });
@@ -490,17 +621,24 @@ export class ChirpStackDeviceService {
       /** devEui */
       devEui: string;
     } = {} as any,
-    options: IRequestOptions = {}
+    options: IRequestOptions = {},
   ): Promise<GetOtaaKeyInfoDto> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/chirpStack/device/getOTAAKeysByDevEui/{devEui}';
       url = url.replace('{devEui}', params['devEui'] + '');
 
-      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
+      const configs: IRequestConfig = getConfigs(
+        'get',
+        'application/json',
+        url,
+        options,
+      );
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
+      console.warn(
+        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
+      );
 
       axios(configs, resolve, reject);
     });
@@ -513,17 +651,24 @@ export class ChirpStackDeviceService {
       /** devEUI */
       devEui: string;
     } = {} as any,
-    options: IRequestOptions = {}
+    options: IRequestOptions = {},
   ): Promise<any> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/chirpStack/device/removeChirpStackDevice/{devEUI}';
       url = url.replace('{devEUI}', params['devEui'] + '');
 
-      const configs: IRequestConfig = getConfigs('delete', 'application/json', url, options);
+      const configs: IRequestConfig = getConfigs(
+        'delete',
+        'application/json',
+        url,
+        options,
+      );
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
+      console.warn(
+        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
+      );
 
       axios(configs, resolve, reject);
     });
@@ -536,12 +681,17 @@ export class ChirpStackDeviceService {
       /** inputDto */
       inputDto: UpdateChirpStackDeviceInputDto;
     } = {} as any,
-    options: IRequestOptions = {}
+    options: IRequestOptions = {},
   ): Promise<any> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/chirpStack/device/updateChirpStackDevice';
 
-      const configs: IRequestConfig = getConfigs('post', 'application/json', url, options);
+      const configs: IRequestConfig = getConfigs(
+        'post',
+        'application/json',
+        url,
+        options,
+      );
 
       let data = params['inputDto'];
 
@@ -560,12 +710,17 @@ export class ChirpStackDeviceService {
       /** input */
       input: CreateAndUpdateDeviceOtaaKeyInputDto;
     } = {} as any,
-    options: IRequestOptions = {}
+    options: IRequestOptions = {},
   ): Promise<string> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/chirpStack/device/updateDeviceOTAAKey';
 
-      const configs: IRequestConfig = getConfigs('put', 'application/json', url, options);
+      const configs: IRequestConfig = getConfigs(
+        'put',
+        'application/json',
+        url,
+        options,
+      );
       configs.params = { devEui: params['devEui'] };
 
       let data = params['input'];
@@ -586,17 +741,26 @@ export class ChirpStackDeviceProfileService {
       /** profileId */
       profileId: string;
     } = {} as any,
-    options: IRequestOptions = {}
+    options: IRequestOptions = {},
   ): Promise<DeviceProfileDetailDto> {
     return new Promise((resolve, reject) => {
-      let url = basePath + '/chirpStack/deviceProfile/getDeviceProfileDetailByProfileId/{profileId}';
+      let url =
+        basePath +
+        '/chirpStack/deviceProfile/getDeviceProfileDetailByProfileId/{profileId}';
       url = url.replace('{profileId}', params['profileId'] + '');
 
-      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
+      const configs: IRequestConfig = getConfigs(
+        'get',
+        'application/json',
+        url,
+        options,
+      );
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
+      console.warn(
+        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
+      );
 
       axios(configs, resolve, reject);
     });
@@ -609,17 +773,24 @@ export class ChirpStackDeviceProfileService {
       /** 设备配置文件的名称，不传，则查询所有的文件 */
       search?: string;
     } = {} as any,
-    options: IRequestOptions = {}
+    options: IRequestOptions = {},
   ): Promise<DeviceProfileDto[]> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/chirpStack/deviceProfile/getDeviceProfileList';
 
-      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
+      const configs: IRequestConfig = getConfigs(
+        'get',
+        'application/json',
+        url,
+        options,
+      );
       configs.params = { search: params['search'] };
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
+      console.warn(
+        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
+      );
 
       axios(configs, resolve, reject);
     });
@@ -647,12 +818,19 @@ export class DeviceAlertRuleConfigService {
       /** 是否不分页，默认分页 */
       unPage?: boolean;
     } = {} as any,
-    options: IRequestOptions = {}
+    options: IRequestOptions = {},
   ): Promise<PagedResultDto<DeviceAlertRuleConfigListDto>> {
     return new Promise((resolve, reject) => {
-      let url = basePath + '/device-alert-rule-config/get-device-alert-rule-config-list';
+      let url =
+        basePath +
+        '/device-alert-rule-config/get-device-alert-rule-config-list';
 
-      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
+      const configs: IRequestConfig = getConfigs(
+        'get',
+        'application/json',
+        url,
+        options,
+      );
       configs.params = {
         devEui: params['devEui'],
         pageNumber: params['pageNumber'],
@@ -660,12 +838,14 @@ export class DeviceAlertRuleConfigService {
         profileId: params['profileId'],
         sorting: params['sorting'],
         sortingDirection: params['sortingDirection'],
-        unPage: params['unPage']
+        unPage: params['unPage'],
       };
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
+      console.warn(
+        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
+      );
 
       axios(configs, resolve, reject);
     });
@@ -678,17 +858,26 @@ export class DeviceAlertRuleConfigService {
       /** id */
       id: string;
     } = {} as any,
-    options: IRequestOptions = {}
+    options: IRequestOptions = {},
   ): Promise<DeviceAlertRuleConfigDetailDto> {
     return new Promise((resolve, reject) => {
-      let url = basePath + '/device-alert-rule-config/get-device-alert-rule-config/{id}';
+      let url =
+        basePath +
+        '/device-alert-rule-config/get-device-alert-rule-config/{id}';
       url = url.replace('{id}', params['id'] + '');
 
-      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
+      const configs: IRequestConfig = getConfigs(
+        'get',
+        'application/json',
+        url,
+        options,
+      );
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
+      console.warn(
+        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
+      );
 
       axios(configs, resolve, reject);
     });
@@ -701,17 +890,26 @@ export class DeviceAlertRuleConfigService {
       /** id */
       id: string;
     } = {} as any,
-    options: IRequestOptions = {}
+    options: IRequestOptions = {},
   ): Promise<any> {
     return new Promise((resolve, reject) => {
-      let url = basePath + '/device-alert-rule-config/remove-device-alert-rule-config/{id}';
+      let url =
+        basePath +
+        '/device-alert-rule-config/remove-device-alert-rule-config/{id}';
       url = url.replace('{id}', params['id'] + '');
 
-      const configs: IRequestConfig = getConfigs('delete', 'application/json', url, options);
+      const configs: IRequestConfig = getConfigs(
+        'delete',
+        'application/json',
+        url,
+        options,
+      );
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
+      console.warn(
+        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
+      );
 
       axios(configs, resolve, reject);
     });
@@ -724,12 +922,18 @@ export class DeviceAlertRuleConfigService {
       /** input */
       input: SaveDeviceAlertRuleConfigInputDto;
     } = {} as any,
-    options: IRequestOptions = {}
+    options: IRequestOptions = {},
   ): Promise<string> {
     return new Promise((resolve, reject) => {
-      let url = basePath + '/device-alert-rule-config/save-device-alert-rule-config';
+      let url =
+        basePath + '/device-alert-rule-config/save-device-alert-rule-config';
 
-      const configs: IRequestConfig = getConfigs('post', 'application/json', url, options);
+      const configs: IRequestConfig = getConfigs(
+        'post',
+        'application/json',
+        url,
+        options,
+      );
 
       let data = params['input'];
 
@@ -744,15 +948,24 @@ export class DeviceDataStatisticsService {
   /**
    * 首页上设备相关统计数据的获取
    */
-  static getDeviceDataStatistics(options: IRequestOptions = {}): Promise<HomePageBusinessDataDto> {
+  static getDeviceDataStatistics(
+    options: IRequestOptions = {},
+  ): Promise<HomePageBusinessDataDto> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/device-data-statistics/get-data-statistics';
 
-      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
+      const configs: IRequestConfig = getConfigs(
+        'get',
+        'application/json',
+        url,
+        options,
+      );
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
+      console.warn(
+        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
+      );
 
       axios(configs, resolve, reject);
     });
@@ -768,12 +981,17 @@ export class DeviceGatewayService {
       /** input */
       input: CreateGatewaysInputDto;
     } = {} as any,
-    options: IRequestOptions = {}
+    options: IRequestOptions = {},
   ): Promise<any> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/device-gateway/create-gateways';
 
-      const configs: IRequestConfig = getConfigs('post', 'application/json', url, options);
+      const configs: IRequestConfig = getConfigs(
+        'post',
+        'application/json',
+        url,
+        options,
+      );
 
       let data = params['input'];
 
@@ -798,23 +1016,30 @@ export class DeviceGatewayService {
       /**  */
       tenantId?: string;
     } = {} as any,
-    options: IRequestOptions = {}
+    options: IRequestOptions = {},
   ): Promise<GatewayDataListDto> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/device-gateway/get-gateways-list';
 
-      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
+      const configs: IRequestConfig = getConfigs(
+        'get',
+        'application/json',
+        url,
+        options,
+      );
       configs.params = {
         limit: params['limit'],
         multicastGroupId: params['multicastGroupId'],
         offset: params['offset'],
         search: params['search'],
-        tenantId: params['tenantId']
+        tenantId: params['tenantId'],
       };
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
+      console.warn(
+        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
+      );
 
       axios(configs, resolve, reject);
     });
@@ -827,17 +1052,24 @@ export class DeviceGatewayService {
       /** gatewayId */
       gatewayId: string;
     } = {} as any,
-    options: IRequestOptions = {}
+    options: IRequestOptions = {},
   ): Promise<DeviceGatewayDetailDto> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/device-gateway/get-gateways/{gatewayId}';
       url = url.replace('{gatewayId}', params['gatewayId'] + '');
 
-      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
+      const configs: IRequestConfig = getConfigs(
+        'get',
+        'application/json',
+        url,
+        options,
+      );
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
+      console.warn(
+        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
+      );
 
       axios(configs, resolve, reject);
     });
@@ -850,17 +1082,24 @@ export class DeviceGatewayService {
       /** gatewayId */
       gatewayId: string;
     } = {} as any,
-    options: IRequestOptions = {}
+    options: IRequestOptions = {},
   ): Promise<any> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/device-gateway/remove-gateways/{gatewayId}';
       url = url.replace('{gatewayId}', params['gatewayId'] + '');
 
-      const configs: IRequestConfig = getConfigs('delete', 'application/json', url, options);
+      const configs: IRequestConfig = getConfigs(
+        'delete',
+        'application/json',
+        url,
+        options,
+      );
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
+      console.warn(
+        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
+      );
 
       axios(configs, resolve, reject);
     });
@@ -875,12 +1114,17 @@ export class DeviceGatewayService {
       /** input */
       input: UpdateGatewaysInputDto;
     } = {} as any,
-    options: IRequestOptions = {}
+    options: IRequestOptions = {},
   ): Promise<any> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/device-gateway/update-gateways';
 
-      const configs: IRequestConfig = getConfigs('put', 'application/json', url, options);
+      const configs: IRequestConfig = getConfigs(
+        'put',
+        'application/json',
+        url,
+        options,
+      );
       configs.params = { gatewayId: params['gatewayId'] };
 
       let data = params['input'];
@@ -911,24 +1155,31 @@ export class DeviceTypeFieldService {
       /** 是否不分页，默认分页 */
       unPage?: boolean;
     } = {} as any,
-    options: IRequestOptions = {}
+    options: IRequestOptions = {},
   ): Promise<PagedResultDto<DeviceTypeFieldDto>> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/device-type-field/get-device-type-field-list';
 
-      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
+      const configs: IRequestConfig = getConfigs(
+        'get',
+        'application/json',
+        url,
+        options,
+      );
       configs.params = {
         pageNumber: params['pageNumber'],
         pageSize: params['pageSize'],
         profileId: params['profileId'],
         sorting: params['sorting'],
         sortingDirection: params['sortingDirection'],
-        unPage: params['unPage']
+        unPage: params['unPage'],
       };
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
+      console.warn(
+        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
+      );
 
       axios(configs, resolve, reject);
     });
@@ -941,17 +1192,24 @@ export class DeviceTypeFieldService {
       /** id */
       id: string;
     } = {} as any,
-    options: IRequestOptions = {}
+    options: IRequestOptions = {},
   ): Promise<DeviceTypeDetailDto> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/device-type-field/get-device-type-field/{id}';
       url = url.replace('{id}', params['id'] + '');
 
-      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
+      const configs: IRequestConfig = getConfigs(
+        'get',
+        'application/json',
+        url,
+        options,
+      );
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
+      console.warn(
+        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
+      );
 
       axios(configs, resolve, reject);
     });
@@ -964,17 +1222,24 @@ export class DeviceTypeFieldService {
       /** id */
       id: string;
     } = {} as any,
-    options: IRequestOptions = {}
+    options: IRequestOptions = {},
   ): Promise<any> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/device-type-field/remove-device-type-field/{id}';
       url = url.replace('{id}', params['id'] + '');
 
-      const configs: IRequestConfig = getConfigs('delete', 'application/json', url, options);
+      const configs: IRequestConfig = getConfigs(
+        'delete',
+        'application/json',
+        url,
+        options,
+      );
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
+      console.warn(
+        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
+      );
 
       axios(configs, resolve, reject);
     });
@@ -987,12 +1252,17 @@ export class DeviceTypeFieldService {
       /** input */
       input: DeviceTypeFieldDto;
     } = {} as any,
-    options: IRequestOptions = {}
+    options: IRequestOptions = {},
   ): Promise<string> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/device-type-field/save-device-type-field';
 
-      const configs: IRequestConfig = getConfigs('post', 'application/json', url, options);
+      const configs: IRequestConfig = getConfigs(
+        'post',
+        'application/json',
+        url,
+        options,
+      );
 
       let data = params['input'];
 
@@ -1009,12 +1279,17 @@ export class DeviceTypeFieldService {
       /** input */
       input: DeviceTypeFieldDto[];
     } = {} as any,
-    options: IRequestOptions = {}
+    options: IRequestOptions = {},
   ): Promise<any> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/device-type-field/save-device-type-fields';
 
-      const configs: IRequestConfig = getConfigs('post', 'application/json', url, options);
+      const configs: IRequestConfig = getConfigs(
+        'post',
+        'application/json',
+        url,
+        options,
+      );
 
       let data = params['input'];
 
@@ -1034,17 +1309,24 @@ export class DeviceService {
       /** devEui */
       devEui: string;
     } = {} as any,
-    options: IRequestOptions = {}
+    options: IRequestOptions = {},
   ): Promise<any> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/device/FlushDownLinkDeviceQueue/{devEui}';
       url = url.replace('{devEui}', params['devEui'] + '');
 
-      const configs: IRequestConfig = getConfigs('delete', 'application/json', url, options);
+      const configs: IRequestConfig = getConfigs(
+        'delete',
+        'application/json',
+        url,
+        options,
+      );
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
+      console.warn(
+        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
+      );
 
       axios(configs, resolve, reject);
     });
@@ -1059,17 +1341,27 @@ export class DeviceService {
       /** 设备的物联ID，不能为空 */
       devEui?: string;
     } = {} as any,
-    options: IRequestOptions = {}
+    options: IRequestOptions = {},
   ): Promise<GetDownLinkDeviceQueueResponseDto> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/device/GetDownLinkDeviceQueue';
 
-      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
-      configs.params = { countOnly: params['countOnly'], devEui: params['devEui'] };
+      const configs: IRequestConfig = getConfigs(
+        'get',
+        'application/json',
+        url,
+        options,
+      );
+      configs.params = {
+        countOnly: params['countOnly'],
+        devEui: params['devEui'],
+      };
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
+      console.warn(
+        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
+      );
 
       axios(configs, resolve, reject);
     });
@@ -1084,12 +1376,17 @@ export class DeviceService {
       /** input */
       input: CreateAndUpdateDeviceOtaaKeyInputDto;
     } = {} as any,
-    options: IRequestOptions = {}
+    options: IRequestOptions = {},
   ): Promise<any> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/device/createDeviceOTAAKey';
 
-      const configs: IRequestConfig = getConfigs('post', 'application/json', url, options);
+      const configs: IRequestConfig = getConfigs(
+        'post',
+        'application/json',
+        url,
+        options,
+      );
       configs.params = { devEui: params['devEui'] };
 
       let data = params['input'];
@@ -1109,12 +1406,17 @@ export class DeviceService {
       /** input */
       input: CreateDeviceQueueItemInputDto;
     } = {} as any,
-    options: IRequestOptions = {}
+    options: IRequestOptions = {},
   ): Promise<string> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/device/createDeviceQueueItem';
 
-      const configs: IRequestConfig = getConfigs('post', 'application/json', url, options);
+      const configs: IRequestConfig = getConfigs(
+        'post',
+        'application/json',
+        url,
+        options,
+      );
       configs.params = { devEui: params['devEui'] };
 
       let data = params['input'];
@@ -1132,17 +1434,24 @@ export class DeviceService {
       /** id */
       id: string;
     } = {} as any,
-    options: IRequestOptions = {}
+    options: IRequestOptions = {},
   ): Promise<any> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/device/deleteById/{id}';
       url = url.replace('{id}', params['id'] + '');
 
-      const configs: IRequestConfig = getConfigs('delete', 'application/json', url, options);
+      const configs: IRequestConfig = getConfigs(
+        'delete',
+        'application/json',
+        url,
+        options,
+      );
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
+      console.warn(
+        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
+      );
 
       axios(configs, resolve, reject);
     });
@@ -1157,17 +1466,27 @@ export class DeviceService {
       /** 区域节点 */
       nodeId?: string;
     } = {} as any,
-    options: IRequestOptions = {}
+    options: IRequestOptions = {},
   ): Promise<any> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/device/deleteDevice';
 
-      const configs: IRequestConfig = getConfigs('delete', 'application/json', url, options);
-      configs.params = { deviceId: params['deviceId'], nodeId: params['nodeId'] };
+      const configs: IRequestConfig = getConfigs(
+        'delete',
+        'application/json',
+        url,
+        options,
+      );
+      configs.params = {
+        deviceId: params['deviceId'],
+        nodeId: params['nodeId'],
+      };
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
+      console.warn(
+        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
+      );
 
       axios(configs, resolve, reject);
     });
@@ -1180,17 +1499,24 @@ export class DeviceService {
       /** devEui */
       devEui: string;
     } = {} as any,
-    options: IRequestOptions = {}
+    options: IRequestOptions = {},
   ): Promise<any> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/device/deleteDeviceOTAAKey/{devEui}';
       url = url.replace('{devEui}', params['devEui'] + '');
 
-      const configs: IRequestConfig = getConfigs('delete', 'application/json', url, options);
+      const configs: IRequestConfig = getConfigs(
+        'delete',
+        'application/json',
+        url,
+        options,
+      );
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
+      console.warn(
+        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
+      );
 
       axios(configs, resolve, reject);
     });
@@ -1203,17 +1529,24 @@ export class DeviceService {
       /** id */
       id: string;
     } = {} as any,
-    options: IRequestOptions = {}
+    options: IRequestOptions = {},
   ): Promise<any> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/device/deleteLogicDeviceById/{id}';
       url = url.replace('{id}', params['id'] + '');
 
-      const configs: IRequestConfig = getConfigs('delete', 'application/json', url, options);
+      const configs: IRequestConfig = getConfigs(
+        'delete',
+        'application/json',
+        url,
+        options,
+      );
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
+      console.warn(
+        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
+      );
 
       axios(configs, resolve, reject);
     });
@@ -1226,17 +1559,24 @@ export class DeviceService {
       /** id */
       id: string;
     } = {} as any,
-    options: IRequestOptions = {}
+    options: IRequestOptions = {},
   ): Promise<DeviceDetailDto> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/device/getDetailById/{id}';
       url = url.replace('{id}', params['id'] + '');
 
-      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
+      const configs: IRequestConfig = getConfigs(
+        'get',
+        'application/json',
+        url,
+        options,
+      );
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
+      console.warn(
+        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
+      );
 
       axios(configs, resolve, reject);
     });
@@ -1251,26 +1591,33 @@ export class DeviceService {
       /** 设备的物联ID */
       devEui?: string;
       /** 结束时间 */
-      endTime?: Date;
+      endTime?: string;
       /** 开始时间 */
-      startTime?: Date;
+      startTime?: string;
     } = {} as any,
-    options: IRequestOptions = {}
+    options: IRequestOptions = {},
   ): Promise<DeviceMetricResponseDto> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/device/getDeviceAlertReportData';
 
-      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
+      const configs: IRequestConfig = getConfigs(
+        'get',
+        'application/json',
+        url,
+        options,
+      );
       configs.params = {
         aggregation: params['aggregation'],
         devEui: params['devEui'],
         endTime: params['endTime'],
-        startTime: params['startTime']
+        startTime: params['startTime'],
       };
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
+      console.warn(
+        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
+      );
 
       axios(configs, resolve, reject);
     });
@@ -1289,22 +1636,29 @@ export class DeviceService {
       /** 开始时间 */
       startTime?: string;
     } = {} as any,
-    options: IRequestOptions = {}
+    options: IRequestOptions = {},
   ): Promise<DeviceLinkMetricsResponseDto> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/device/getDeviceLinkMetrics';
 
-      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
+      const configs: IRequestConfig = getConfigs(
+        'get',
+        'application/json',
+        url,
+        options,
+      );
       configs.params = {
         aggregation: params['aggregation'],
         devEui: params['devEui'],
         endTime: params['endTime'],
-        startTime: params['startTime']
+        startTime: params['startTime'],
       };
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
+      console.warn(
+        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
+      );
 
       axios(configs, resolve, reject);
     });
@@ -1331,12 +1685,17 @@ export class DeviceService {
       /** 设备的遥测属性key */
       telemetryField?: string;
     } = {} as any,
-    options: IRequestOptions = {}
+    options: IRequestOptions = {},
   ): Promise<DeviceMetricFlatRecordResponseDto> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/device/getDeviceMetricFlatRecords';
 
-      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
+      const configs: IRequestConfig = getConfigs(
+        'get',
+        'application/json',
+        url,
+        options,
+      );
       configs.params = {
         deviceEUI: params['deviceEui'],
         deviceName: params['deviceName'],
@@ -1345,12 +1704,14 @@ export class DeviceService {
         pageSize: params['pageSize'],
         paged: params['paged'],
         startTime: params['startTime'],
-        telemetryField: params['telemetryField']
+        telemetryField: params['telemetryField'],
       };
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
+      console.warn(
+        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
+      );
 
       axios(configs, resolve, reject);
     });
@@ -1377,12 +1738,17 @@ export class DeviceService {
       /** 设备的遥测属性key */
       telemetryField?: string;
     } = {} as any,
-    options: IRequestOptions = {}
+    options: IRequestOptions = {},
   ): Promise<DeviceMetricRecordResponseDto> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/device/getDeviceMetricRecords';
 
-      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
+      const configs: IRequestConfig = getConfigs(
+        'get',
+        'application/json',
+        url,
+        options,
+      );
       configs.params = {
         deviceEUI: params['deviceEui'],
         deviceName: params['deviceName'],
@@ -1391,12 +1757,14 @@ export class DeviceService {
         pageSize: params['pageSize'],
         paged: params['paged'],
         startTime: params['startTime'],
-        telemetryField: params['telemetryField']
+        telemetryField: params['telemetryField'],
       };
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
+      console.warn(
+        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
+      );
 
       axios(configs, resolve, reject);
     });
@@ -1415,22 +1783,29 @@ export class DeviceService {
       /** 开始时间 */
       startTime?: string;
     } = {} as any,
-    options: IRequestOptions = {}
+    options: IRequestOptions = {},
   ): Promise<DeviceMetricResponseDto> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/device/getDeviceMetrics';
 
-      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
+      const configs: IRequestConfig = getConfigs(
+        'get',
+        'application/json',
+        url,
+        options,
+      );
       configs.params = {
         aggregation: params['aggregation'],
         devEui: params['devEui'],
         endTime: params['endTime'],
-        startTime: params['startTime']
+        startTime: params['startTime'],
       };
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
+      console.warn(
+        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
+      );
 
       axios(configs, resolve, reject);
     });
@@ -1443,17 +1818,24 @@ export class DeviceService {
       /** devEui */
       devEui: string;
     } = {} as any,
-    options: IRequestOptions = {}
+    options: IRequestOptions = {},
   ): Promise<GetOtaaKeyInfoDto> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/device/getOTAAKeysByDevEui/{devEui}';
       url = url.replace('{devEui}', params['devEui'] + '');
 
-      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
+      const configs: IRequestConfig = getConfigs(
+        'get',
+        'application/json',
+        url,
+        options,
+      );
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
+      console.warn(
+        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
+      );
 
       axios(configs, resolve, reject);
     });
@@ -1476,24 +1858,31 @@ export class DeviceService {
       /** 是否不分页，默认分页 */
       unPage?: boolean;
     } = {} as any,
-    options: IRequestOptions = {}
+    options: IRequestOptions = {},
   ): Promise<PagedResultDto<DeviceListDto>> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/device/listAll';
 
-      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
+      const configs: IRequestConfig = getConfigs(
+        'get',
+        'application/json',
+        url,
+        options,
+      );
       configs.params = {
         name: params['name'],
         pageNumber: params['pageNumber'],
         pageSize: params['pageSize'],
         sorting: params['sorting'],
         sortingDirection: params['sortingDirection'],
-        unPage: params['unPage']
+        unPage: params['unPage'],
       };
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
+      console.warn(
+        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
+      );
 
       axios(configs, resolve, reject);
     });
@@ -1506,12 +1895,17 @@ export class DeviceService {
       /** inputDto */
       inputDto: DeviceDto;
     } = {} as any,
-    options: IRequestOptions = {}
+    options: IRequestOptions = {},
   ): Promise<string> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/device/saveDevice';
 
-      const configs: IRequestConfig = getConfigs('post', 'application/json', url, options);
+      const configs: IRequestConfig = getConfigs(
+        'post',
+        'application/json',
+        url,
+        options,
+      );
 
       let data = params['inputDto'];
 
@@ -1530,12 +1924,17 @@ export class DeviceService {
       /** input */
       input: CreateAndUpdateDeviceOtaaKeyInputDto;
     } = {} as any,
-    options: IRequestOptions = {}
+    options: IRequestOptions = {},
   ): Promise<string> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/device/updateDeviceOTAAKey';
 
-      const configs: IRequestConfig = getConfigs('put', 'application/json', url, options);
+      const configs: IRequestConfig = getConfigs(
+        'put',
+        'application/json',
+        url,
+        options,
+      );
       configs.params = { devEui: params['devEui'] };
 
       let data = params['input'];
@@ -1556,12 +1955,17 @@ export class DeviceAreaService {
       /** input */
       input: BatchBindDeviceAreaInputDto;
     } = {} as any,
-    options: IRequestOptions = {}
+    options: IRequestOptions = {},
   ): Promise<any> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/deviceArea/batchBind';
 
-      const configs: IRequestConfig = getConfigs('post', 'application/json', url, options);
+      const configs: IRequestConfig = getConfigs(
+        'post',
+        'application/json',
+        url,
+        options,
+      );
 
       let data = params['input'];
 
@@ -1578,12 +1982,17 @@ export class DeviceAreaService {
       /** deviceIds */
       deviceIds: any | null[];
     } = {} as any,
-    options: IRequestOptions = {}
+    options: IRequestOptions = {},
   ): Promise<any> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/deviceArea/batchUnbind';
 
-      const configs: IRequestConfig = getConfigs('post', 'application/json', url, options);
+      const configs: IRequestConfig = getConfigs(
+        'post',
+        'application/json',
+        url,
+        options,
+      );
 
       let data = params['deviceIds'];
 
@@ -1600,12 +2009,17 @@ export class DeviceAreaService {
       /** input */
       input: BatchUnbindByAreaAndDeviceInputDto;
     } = {} as any,
-    options: IRequestOptions = {}
+    options: IRequestOptions = {},
   ): Promise<any> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/deviceArea/batchUnbindByAreaAndDevice';
 
-      const configs: IRequestConfig = getConfigs('post', 'application/json', url, options);
+      const configs: IRequestConfig = getConfigs(
+        'post',
+        'application/json',
+        url,
+        options,
+      );
 
       let data = params['input'];
 
@@ -1622,12 +2036,17 @@ export class DeviceAreaService {
       /** input */
       input: DeviceAreaInputDto;
     } = {} as any,
-    options: IRequestOptions = {}
+    options: IRequestOptions = {},
   ): Promise<DeviceAreaDto> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/deviceArea/createDeviceArea';
 
-      const configs: IRequestConfig = getConfigs('post', 'application/json', url, options);
+      const configs: IRequestConfig = getConfigs(
+        'post',
+        'application/json',
+        url,
+        options,
+      );
 
       let data = params['input'];
 
@@ -1644,17 +2063,24 @@ export class DeviceAreaService {
       /** areaId */
       areaId: string;
     } = {} as any,
-    options: IRequestOptions = {}
+    options: IRequestOptions = {},
   ): Promise<any> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/deviceArea/deleteDeviceArea/{areaId}';
       url = url.replace('{areaId}', params['areaId'] + '');
 
-      const configs: IRequestConfig = getConfigs('delete', 'application/json', url, options);
+      const configs: IRequestConfig = getConfigs(
+        'delete',
+        'application/json',
+        url,
+        options,
+      );
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
+      console.warn(
+        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
+      );
 
       axios(configs, resolve, reject);
     });
@@ -1662,15 +2088,24 @@ export class DeviceAreaService {
   /**
    * 获取所有设备区域
    */
-  static getAllDeviceArea(options: IRequestOptions = {}): Promise<ListResultDto<DeviceAreaDto>> {
+  static getAllDeviceArea(
+    options: IRequestOptions = {},
+  ): Promise<ListResultDto<DeviceAreaDto>> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/deviceArea/getAllDeviceArea';
 
-      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
+      const configs: IRequestConfig = getConfigs(
+        'get',
+        'application/json',
+        url,
+        options,
+      );
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
+      console.warn(
+        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
+      );
 
       axios(configs, resolve, reject);
     });
@@ -1697,12 +2132,17 @@ export class DeviceAreaService {
       /** 是否不分页，默认分页 */
       unPage?: boolean;
     } = {} as any,
-    options: IRequestOptions = {}
+    options: IRequestOptions = {},
   ): Promise<PagedResultDto<DeviceListDto>> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/deviceArea/getDeviceListByArea';
 
-      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
+      const configs: IRequestConfig = getConfigs(
+        'get',
+        'application/json',
+        url,
+        options,
+      );
       configs.params = {
         areaId: params['areaId'],
         deviceName: params['deviceName'],
@@ -1711,12 +2151,14 @@ export class DeviceAreaService {
         pageSize: params['pageSize'],
         sorting: params['sorting'],
         sortingDirection: params['sortingDirection'],
-        unPage: params['unPage']
+        unPage: params['unPage'],
       };
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
+      console.warn(
+        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
+      );
 
       axios(configs, resolve, reject);
     });
@@ -1729,12 +2171,17 @@ export class DeviceAreaService {
       /** input */
       input: MoveDeviceAreaInputDto;
     } = {} as any,
-    options: IRequestOptions = {}
+    options: IRequestOptions = {},
   ): Promise<DeviceAreaDto> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/deviceArea/moveDeviceArea';
 
-      const configs: IRequestConfig = getConfigs('post', 'application/json', url, options);
+      const configs: IRequestConfig = getConfigs(
+        'post',
+        'application/json',
+        url,
+        options,
+      );
 
       let data = params['input'];
 
@@ -1751,12 +2198,17 @@ export class DeviceAreaService {
       /** input */
       input: UpdateAreasDeviceSortDto[];
     } = {} as any,
-    options: IRequestOptions = {}
+    options: IRequestOptions = {},
   ): Promise<any> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/deviceArea/updateAreasDeviceSort';
 
-      const configs: IRequestConfig = getConfigs('post', 'application/json', url, options);
+      const configs: IRequestConfig = getConfigs(
+        'post',
+        'application/json',
+        url,
+        options,
+      );
 
       let data = params['input'];
 
@@ -1773,12 +2225,17 @@ export class DeviceAreaService {
       /** input */
       input: UpdateDeviceAreaInputDto;
     } = {} as any,
-    options: IRequestOptions = {}
+    options: IRequestOptions = {},
   ): Promise<DeviceAreaDto> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/deviceArea/updateDeviceArea';
 
-      const configs: IRequestConfig = getConfigs('post', 'application/json', url, options);
+      const configs: IRequestConfig = getConfigs(
+        'post',
+        'application/json',
+        url,
+        options,
+      );
 
       let data = params['input'];
 
@@ -1812,12 +2269,17 @@ export class DeviceMetricDataService {
       /** 是否不分页，默认分页 */
       unPage?: boolean;
     } = {} as any,
-    options: IRequestOptions = {}
+    options: IRequestOptions = {},
   ): Promise<DeviceMetricAggregationDataDetailDto> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/deviceMetricData/get-device-metric-data';
 
-      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
+      const configs: IRequestConfig = getConfigs(
+        'get',
+        'application/json',
+        url,
+        options,
+      );
       configs.params = {
         deviceId: params['deviceId'],
         endTime: params['endTime'],
@@ -1826,12 +2288,14 @@ export class DeviceMetricDataService {
         sorting: params['sorting'],
         sortingDirection: params['sortingDirection'],
         startTime: params['startTime'],
-        unPage: params['unPage']
+        unPage: params['unPage'],
       };
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
+      console.warn(
+        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
+      );
 
       axios(configs, resolve, reject);
     });
@@ -1860,12 +2324,18 @@ export class DeviceMetricDataService {
       /** 是否不分页，默认分页 */
       unPage?: boolean;
     } = {} as any,
-    options: IRequestOptions = {}
+    options: IRequestOptions = {},
   ): Promise<PagedResultDto<DeviceMetricListDataDto>> {
     return new Promise((resolve, reject) => {
-      let url = basePath + '/deviceMetricData/getDeviceMetricListDataByDeviceEui';
+      let url =
+        basePath + '/deviceMetricData/getDeviceMetricListDataByDeviceEui';
 
-      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
+      const configs: IRequestConfig = getConfigs(
+        'get',
+        'application/json',
+        url,
+        options,
+      );
       configs.params = {
         devEui: params['devEui'],
         deviceFieldName: params['deviceFieldName'],
@@ -1875,12 +2345,14 @@ export class DeviceMetricDataService {
         sorting: params['sorting'],
         sortingDirection: params['sortingDirection'],
         startTime: params['startTime'],
-        unPage: params['unPage']
+        unPage: params['unPage'],
       };
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
+      console.warn(
+        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
+      );
 
       axios(configs, resolve, reject);
     });
@@ -1909,12 +2381,18 @@ export class DeviceMetricDataService {
       /** 是否不分页，默认分页 */
       unPage?: boolean;
     } = {} as any,
-    options: IRequestOptions = {}
+    options: IRequestOptions = {},
   ): Promise<PagedResultDto<DeviceMetricListDataDto>> {
     return new Promise((resolve, reject) => {
-      let url = basePath + '/deviceMetricData/getDeviceMetricListDataByDeviceId';
+      let url =
+        basePath + '/deviceMetricData/getDeviceMetricListDataByDeviceId';
 
-      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
+      const configs: IRequestConfig = getConfigs(
+        'get',
+        'application/json',
+        url,
+        options,
+      );
       configs.params = {
         deviceFieldName: params['deviceFieldName'],
         deviceId: params['deviceId'],
@@ -1924,12 +2402,14 @@ export class DeviceMetricDataService {
         sorting: params['sorting'],
         sortingDirection: params['sortingDirection'],
         startTime: params['startTime'],
-        unPage: params['unPage']
+        unPage: params['unPage'],
       };
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
+      console.warn(
+        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
+      );
 
       axios(configs, resolve, reject);
     });
@@ -1945,17 +2425,26 @@ export class DeviceConfigInfoService {
       /** devEui */
       devEui: string;
     } = {} as any,
-    options: IRequestOptions = {}
+    options: IRequestOptions = {},
   ): Promise<DeviceProducerConfigInputDto> {
     return new Promise((resolve, reject) => {
-      let url = basePath + '/device_producer_config/get_device_producer_config/{devEui}';
+      let url =
+        basePath +
+        '/device_producer_config/get_device_producer_config/{devEui}';
       url = url.replace('{devEui}', params['devEui'] + '');
 
-      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
+      const configs: IRequestConfig = getConfigs(
+        'get',
+        'application/json',
+        url,
+        options,
+      );
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
+      console.warn(
+        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
+      );
 
       axios(configs, resolve, reject);
     });
@@ -1968,12 +2457,18 @@ export class DeviceConfigInfoService {
       /** input */
       input: SaveDeviceProducerConfigInputDto;
     } = {} as any,
-    options: IRequestOptions = {}
+    options: IRequestOptions = {},
   ): Promise<string> {
     return new Promise((resolve, reject) => {
-      let url = basePath + '/device_producer_config/save_device_producer_config';
+      let url =
+        basePath + '/device_producer_config/save_device_producer_config';
 
-      const configs: IRequestConfig = getConfigs('post', 'application/json', url, options);
+      const configs: IRequestConfig = getConfigs(
+        'post',
+        'application/json',
+        url,
+        options,
+      );
 
       let data = params['input'];
 
@@ -1992,11 +2487,18 @@ export class StorehouseEnumService {
     return new Promise((resolve, reject) => {
       let url = basePath + '/storehouseEnum/getEnums';
 
-      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
+      const configs: IRequestConfig = getConfigs(
+        'get',
+        'application/json',
+        url,
+        options,
+      );
 
       /** 适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body */
 
-      console.warn('适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body');
+      console.warn(
+        '适配移动开发（iOS13 等版本），只有 POST、PUT 等请求允许带body',
+      );
 
       axios(configs, resolve, reject);
     });
@@ -3604,102 +4106,102 @@ export enum EnumAlertMessageDetailOutputDtoAlertLevel {
   'CRIT' = 'CRIT',
   'WARN' = 'WARN',
   'INFO' = 'INFO',
-  'NORMAL' = 'NORMAL'
+  'NORMAL' = 'NORMAL',
 }
 export enum EnumAlertMessageListDtoAlertLevel {
   'CRIT' = 'CRIT',
   'WARN' = 'WARN',
   'INFO' = 'INFO',
-  'NORMAL' = 'NORMAL'
+  'NORMAL' = 'NORMAL',
 }
 export enum EnumDeviceAlertRuleConfigDetailDtoAlertLevel {
   'CRIT' = 'CRIT',
   'WARN' = 'WARN',
   'INFO' = 'INFO',
-  'NORMAL' = 'NORMAL'
+  'NORMAL' = 'NORMAL',
 }
 export enum EnumDeviceAlertRuleConfigDetailDtoAlertType {
   'ONLY_DEVICE' = 'ONLY_DEVICE',
-  'COMMON_DEVICE' = 'COMMON_DEVICE'
+  'COMMON_DEVICE' = 'COMMON_DEVICE',
 }
 export enum EnumDeviceAlertRuleConfigDetailDtoComparisonOperator {
   'LESS_THAN' = 'LESS_THAN',
   'GREATER_THAN' = 'GREATER_THAN',
   'IN_SECTION' = 'IN_SECTION',
-  'NOT_IN_SECTION' = 'NOT_IN_SECTION'
+  'NOT_IN_SECTION' = 'NOT_IN_SECTION',
 }
 export enum EnumDeviceAlertRuleConfigListDtoAlertLevel {
   'CRIT' = 'CRIT',
   'WARN' = 'WARN',
   'INFO' = 'INFO',
-  'NORMAL' = 'NORMAL'
+  'NORMAL' = 'NORMAL',
 }
 export enum EnumDeviceAlertRuleConfigListDtoAlertType {
   'ONLY_DEVICE' = 'ONLY_DEVICE',
-  'COMMON_DEVICE' = 'COMMON_DEVICE'
+  'COMMON_DEVICE' = 'COMMON_DEVICE',
 }
 export enum EnumDeviceAlertRuleConfigListDtoComparisonOperator {
   'LESS_THAN' = 'LESS_THAN',
   'GREATER_THAN' = 'GREATER_THAN',
   'IN_SECTION' = 'IN_SECTION',
-  'NOT_IN_SECTION' = 'NOT_IN_SECTION'
+  'NOT_IN_SECTION' = 'NOT_IN_SECTION',
 }
 export enum EnumDeviceAlertTimeInfoListDtoAlertLevel {
   'CRIT' = 'CRIT',
   'WARN' = 'WARN',
   'INFO' = 'INFO',
-  'NORMAL' = 'NORMAL'
+  'NORMAL' = 'NORMAL',
 }
 export enum EnumDeviceFieldDtoFieldType {
   'DOUBLE' = 'DOUBLE',
   'STRING' = 'STRING',
   'BOOLEAN' = 'BOOLEAN',
-  'LONG' = 'LONG'
+  'LONG' = 'LONG',
 }
 export enum EnumDeviceFieldDtoType {
   'ONLY_READ' = 'ONLY_READ',
   'ONLY_WRITE' = 'ONLY_WRITE',
-  'READ_AND_WRITE' = 'READ_AND_WRITE'
+  'READ_AND_WRITE' = 'READ_AND_WRITE',
 }
 export enum EnumDeviceLatestMetricDataDtoDataType {
   'DOUBLE' = 'DOUBLE',
   'STRING' = 'STRING',
   'BOOLEAN' = 'BOOLEAN',
-  'LONG' = 'LONG'
+  'LONG' = 'LONG',
 }
 export enum EnumDeviceMetricFlatRecordResponseItemDtoDataType {
   'DOUBLE' = 'DOUBLE',
   'STRING' = 'STRING',
   'BOOLEAN' = 'BOOLEAN',
-  'LONG' = 'LONG'
+  'LONG' = 'LONG',
 }
 export enum EnumDeviceTelemetriesDataDtoDataType {
   'DOUBLE' = 'DOUBLE',
   'STRING' = 'STRING',
   'BOOLEAN' = 'BOOLEAN',
-  'LONG' = 'LONG'
+  'LONG' = 'LONG',
 }
 export enum EnumDeviceTypeDetailDtoDataType {
   'DOUBLE' = 'DOUBLE',
   'STRING' = 'STRING',
   'BOOLEAN' = 'BOOLEAN',
-  'LONG' = 'LONG'
+  'LONG' = 'LONG',
 }
 export enum EnumDeviceTypeDetailDtoType {
   'ONLY_READ' = 'ONLY_READ',
   'ONLY_WRITE' = 'ONLY_WRITE',
-  'READ_AND_WRITE' = 'READ_AND_WRITE'
+  'READ_AND_WRITE' = 'READ_AND_WRITE',
 }
 export enum EnumDeviceTypeFieldDtoDataType {
   'DOUBLE' = 'DOUBLE',
   'STRING' = 'STRING',
   'BOOLEAN' = 'BOOLEAN',
-  'LONG' = 'LONG'
+  'LONG' = 'LONG',
 }
 export enum EnumDeviceTypeFieldDtoType {
   'ONLY_READ' = 'ONLY_READ',
   'ONLY_WRITE' = 'ONLY_WRITE',
-  'READ_AND_WRITE' = 'READ_AND_WRITE'
+  'READ_AND_WRITE' = 'READ_AND_WRITE',
 }
 export enum EnumGatewayLocationDtoSource {
   'UNKNOWN' = 'UNKNOWN',
@@ -3708,21 +4210,21 @@ export enum EnumGatewayLocationDtoSource {
   'GEO_RESOLVER_TDOA' = 'GEO_RESOLVER_TDOA',
   'GEO_RESOLVER_RSSI' = 'GEO_RESOLVER_RSSI',
   'GEO_RESOLVER_GNSS' = 'GEO_RESOLVER_GNSS',
-  'GEO_RESOLVER_WIFI' = 'GEO_RESOLVER_WIFI'
+  'GEO_RESOLVER_WIFI' = 'GEO_RESOLVER_WIFI',
 }
 export enum EnumSaveDeviceAlertRuleConfigInputDtoAlertLevel {
   'CRIT' = 'CRIT',
   'WARN' = 'WARN',
   'INFO' = 'INFO',
-  'NORMAL' = 'NORMAL'
+  'NORMAL' = 'NORMAL',
 }
 export enum EnumSaveDeviceAlertRuleConfigInputDtoAlertType {
   'ONLY_DEVICE' = 'ONLY_DEVICE',
-  'COMMON_DEVICE' = 'COMMON_DEVICE'
+  'COMMON_DEVICE' = 'COMMON_DEVICE',
 }
 export enum EnumSaveDeviceAlertRuleConfigInputDtoComparisonOperator {
   'LESS_THAN' = 'LESS_THAN',
   'GREATER_THAN' = 'GREATER_THAN',
   'IN_SECTION' = 'IN_SECTION',
-  'NOT_IN_SECTION' = 'NOT_IN_SECTION'
+  'NOT_IN_SECTION' = 'NOT_IN_SECTION',
 }
