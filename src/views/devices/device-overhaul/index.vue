@@ -179,7 +179,7 @@
     try {
       const { items } = await DeviceAreaService.getDeviceListByArea({
         unPage: true,
-        areaId: searchModel.value.areaId,
+        deviceName: searchModel.value.deviceName,
       });
       tableData.value = (items as DeviceListDto[])
         .map((item) => ({
