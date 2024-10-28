@@ -18,7 +18,7 @@ const DASHBOARD: AppRouteRecordRaw = {
       component: () => import('@/views/monitor/temperature-humidity/index.vue'),
       meta: {
         locale: '温湿度监测',
-        requiresAuth: false,
+        requiresAuth: true,
         permissions: ['Pages.Monitor.TemperatureHumidity'],
       },
     },
@@ -29,8 +29,8 @@ const DASHBOARD: AppRouteRecordRaw = {
         import('@/views/monitor/temperature-humidity-history/index.vue'),
       meta: {
         locale: '温湿度历史',
-        requiresAuth: false,
-        permissions: ['Pages.Monitor.TemperatureHumidityHistory'],
+        requiresAuth: true,
+        permissions: ['Pages.Monitor.TemperatureHumidity.History'],
       },
     },
   ],

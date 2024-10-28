@@ -32,6 +32,16 @@ const DASHBOARD: AppRouteRecordRaw = {
         permissions: ['Pages.Statistic.Analysis.Monthly.Report'],
       },
     },
+    {
+      path: 'device-overhaul',
+      name: 'DeviceOverhaul',
+      component: () => import('@/views/reports/device-overhaul/index.vue'),
+      meta: {
+        locale: '待检验设备报表',
+        requiresAuth: true,
+        permissions: ['Pages.Statistic.Analysis.DeviceOverhaul'],
+      },
+    },
     // {
     //   path: 'yearly-report',
     //   name: 'YearlyReport',
