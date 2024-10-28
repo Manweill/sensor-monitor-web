@@ -101,7 +101,7 @@ const DASHBOARD: AppRouteRecordRaw = {
       meta: {
         locale: '设备告警日志',
         requiresAuth: true,
-        permissions: ['Pages.Device.Alert.Message'],
+        permissions: ['Pages.Device.Alert.MessageLog'],
       },
     },
   ],
