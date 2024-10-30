@@ -364,7 +364,7 @@
       dataIndex: 'alertLevelStrName',
     },
     {
-      title: '告警标题',
+      title: '告警类别',
       dataIndex: 'alertTitle',
     },
     {

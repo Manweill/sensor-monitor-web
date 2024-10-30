@@ -194,7 +194,7 @@
   });
 
   // 图表
-  const showChart = ref(false);
+  const showChart = ref(true);
 
   const toggleChart = () => {
     showChart.value = !showChart.value;

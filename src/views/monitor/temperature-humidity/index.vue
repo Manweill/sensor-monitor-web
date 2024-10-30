@@ -75,7 +75,7 @@
                       getRemainingCalibrationDays(sensor) >
                       minRemainingCalibrationDays
                         ? 'success'
-                        : 'warning'
+                        : 'danger'
                     "
                   />
                 </a-tooltip>
@@ -104,7 +104,8 @@
                   <div style="display: flex">
                     <div class="temperature" style="flex: 1">
                       <div class="sensor-icon">
-                        <icon-sun />
+                        <!-- <icon-sun /> -->
+                        <a-image :src="temperatureImg" width="16" />
                         <span>{{
                           getFieldDescription(sensor, 'temperature')
                         }}</span>
@@ -124,7 +125,8 @@
                     />
                     <div class="humidity" style="flex: 1">
                       <div class="sensor-icon">
-                        <icon-experiment />
+                        <!-- <icon-experiment /> -->
+                        <a-image :src="humidityImg" width="16" />
                         <span>{{
                           getFieldDescription(sensor, 'humidity')
                         }}</span>
@@ -192,7 +194,7 @@
     </a-card>
     <a-modal
       v-model:visible="isReportVisible"
-      title="温湿度数据报表"
+      :title="`${deviceName} - 温湿度数据报表`"
       width="80%"
       height="80%"
       @ok="handleOk"
@@ -211,6 +213,8 @@
   import useLoading from '@/hooks/loading';
   import { convertToTree } from '@/utils/convert';
   import { TreeNodeData } from '@arco-design/web-vue';
+  import temperatureImg from '@/assets/images/temperature-icon.png';
+  import humidityImg from '@/assets/images/humidity-icon.png';
 
   import DeviceDataReport from './components/device-data-report.vue';
   import DeviceInfo from './components/device-info.vue';
@@ -330,7 +334,7 @@
       (
         sensor as DeviceListDto & { latestMetricDataList?: any[] }
       ).latestMetricDataList?.find((data) => data.deviceFieldName === fieldName)
-        ?.description || ''
+        ?.description || '--'
     );
   };
   // 获取最近更新时间
@@ -408,9 +412,11 @@
 
   const isReportVisible = ref(false);
   const deviceEui = ref('');
+  const deviceName = ref('');
 
   const onSensorClick = (sensor: DeviceListDto) => {
     deviceEui.value = sensor.devEui || '';
+    deviceName.value = sensor.name || '';
     isReportVisible.value = true;
   };
 
@@ -489,19 +495,19 @@
 
   .temperature {
     .value-normal {
-      color: #ffd700; // 金色，与蓝色背景形成对比
+      color: rgb(var(--green-4));
     }
-    .value-warning {
-      color: #ff4d4f; // 红色，表示报警
+    .value-warningÒ {
+      color: rgb(var(--red-6)); // 红色，表示报警
     }
   }
 
   .humidity {
     .value-normal {
-      color: #00ffff; // 青色，与蓝色背景形成对比
+      color: rgb(var(--green-4));
     }
     .value-warning {
-      color: #ff4d4f; // 红色，表示报警
+      color: rgb(var(--red-6)); // 红色，表示报警
     }
   }
 

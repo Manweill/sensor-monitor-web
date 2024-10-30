@@ -1,5 +1,5 @@
 <template>
-  <a-layout-footer class="footer">{{ appName }} v1.0.1</a-layout-footer>
+  <a-layout-footer class="footer">{{ appName }} v1.0.2</a-layout-footer>
 </template>
 
 <script lang="ts" setup>
